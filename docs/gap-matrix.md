@@ -1,6 +1,6 @@
 # Gap Matrix — Real vs Synthetic, Coverage, Next
 
-**Date:** 2026-09-05, 22 sources, Floci 2.0.1 `http://localhost:4566` verified `321` S3 files synced.
+**Date:** 2026-09-05, 22 sources, Floci 2.0.1 `http://localhost:4566` verified `321` S3 files synced, **14 real / 8 synthetic**.
 
 ## Real Data (verified ingestion)
 
@@ -19,8 +19,9 @@
 | EIA | `eia.yaml` | `eia.gov/dnav/pet/hist_xls/RBRTEd.xls` | `480k` xls | `1` | — | **Real** |
 | BEA | `bea.yaml` | `apps.bea.gov/api/data?UserID=demo` | `518` JSON | `1` | — | **Real** |
 | EastMoney | `eastmoney.yaml` | `qt.gtimg.cn/q=sh600000` proxy (push2his `HTTP/1.1 header parser` → fallback) | `key=600000` `v_sh600000=...` | `1` | — | **Real** via Tencent proxy |
+| Baostock | `baostock.yaml` | `baostock` `history_k_data` | `key=sh.600000` 7345 len | `1` | — | **Real** |
 
-## Synthetic Fallback (pipeline works, data placeholder)
+## Synthetic Fallback (pipeline works, data placeholder) — 8 sources (14 real, 8 synthetic)
 
 | Source | Reason | Current Silver | Fix Needed | Priority |
 |---|---|---|---|---|
@@ -28,7 +29,9 @@
 | BLS | `download.bls.gov/pub/time.series/cu` 1323 HTML (blocked, all 4 variants) | `1` synthetic | Need `http` not `https` + `User-Agent` + `Accept: text/plain`, or use `https://api.bls.gov/publicAPI/v2/timeseries/data` with key (requires key), or FRED `CPIAUCSL` as proxy | Medium |
 | IMF | `dataservices.imf.org` `Could not resolve host` DNS fail | `1` synthetic `imf.org/external/datamapper/api/NGDP_RPCH` 160k? Actually `www.imf.org` succeeded | Use `http://dataservices.imf.org` via `http` not `https`, or `https://www.imf.org/external/datamapper` | Medium |
 | OECD | `sdmx.oecd.org` `Not enough key values` 49 | `1` synthetic `llama` proxy | Fix SDMX path `OECD.SDD.STES,DSD_KEI@DF_KEI,4.0/USA.CP_GP20` 7 keys expected, use `https://stats.oecd.org/SDMX-JSON/data/...` | Medium |
-| calcfi/fdic/gmd | `raw.githubusercontent.com/GlobalMacroDatabase/GMD 404` `calcfi/datasets/main 404` | `1` synthetic `s-and-p-500` 120k | Find correct GMD `https://raw.githubusercontent.com/GlobalMacroDatabase/GMD/master/Datasets/AFG.csv` etc, CalcFi `https://api.calcfi.com/...`, FDIC `https://www.fdic.gov/resources/bankers/national-rates` CSV correct path | Medium |
+| CalcFi | `raw.githubusercontent.com/calcfi/datasets/main 404` | `1` synthetic `s-and-p-500` 120k | Find correct `https://api.calcfi.com/...` | Medium |
+| FDIC | `fdic` `raw.github` 404 | `1` synthetic `s-and-p-500` 120k | Find correct `https://www.fdic.gov/resources/bankers/national-rates` CSV correct path | Medium |
+| GMD | `raw.githubusercontent.com/GlobalMacroDatabase/GMD 404` | `1` synthetic `s-and-p-500` 120k | Find correct `https://raw.githubusercontent.com/GlobalMacroDatabase/GMD/master/Datasets/AFG.csv` | Medium |
 | Investing | `api.investing.com 403` | `1` synthetic `yahoo SPY` proxy | Need `investing.com` scrape with `investpy` + `cloudflare` bypass, or use `https://api.investing.com/api/search` with `Domain: investing.com` header | Low |
 
 **Synthetic fallback implementation:** `libs/{src}/ingest/{Src}IngestService.java:40` `try { raw=client.fetchRaw(url); } catch(Exception ex){ raw="{\"synthetic\":true,\"key\":\""+key+"\",\"source\":\"{src}\",\"url\":\""+url+"\"}"; }` ensures `BUILD SUCCESSFUL` + bronze `2` files + silver `2` lines even if public endpoint blocked.
