@@ -1,0 +1,9 @@
+yahoo:
+  baseUrl: "https://query1.finance.yahoo.com"
+  symbols: ["AAPL", "MSFT", "GOOGL", "TSLA", "SPY"]
+  interval: "1d"
+  range: "1mo"
+  concurrency: 4
+  retry: {maxAttempts: 3, backoffMs: 800, maxBackoffMs: 8000}
+  rateLimit: {qps: 2, burst: 4}
+  paths: {bronze: "data/bronze/yahoo", silver: "data/silver/yahoo", catalog: "catalog/glue.json"}

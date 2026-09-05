@@ -16,6 +16,7 @@ rootProject.name = "hedge-fund"
 include(":libs:common")
 include(":libs:datalake")
 include(":libs:worldbank")
+include(":libs:yahoo")
 
 // apps - deployable applications
 include(":apps:api")
@@ -23,3 +24,4 @@ include(":apps:api")
 // services - background services / microservices
 include(":services:worker")
 include(":services:worldbank-ingest")
+include(":services:yahoo-ingest")

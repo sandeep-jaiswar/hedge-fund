@@ -196,6 +196,43 @@
         ]
       },
       "LocalPath": "data/silver/worldbank/worldbank_observations/"
+    },
+    {
+      "DatabaseName": "hedge_bronze",
+      "Name": "yahoo_raw",
+      "StorageDescriptor": {
+        "Location": "s3://hedge-bronze/yahoo/",
+        "InputFormat": "org.apache.hadoop.mapred.TextInputFormat",
+        "Columns": [
+          { "Name": "symbol", "Type": "string" },
+          { "Name": "date", "Type": "string" },
+          { "Name": "open", "Type": "double" },
+          { "Name": "high", "Type": "double" },
+          { "Name": "low", "Type": "double" },
+          { "Name": "close", "Type": "double" },
+          { "Name": "volume", "Type": "bigint" }
+        ]
+      },
+      "LocalPath": "data/bronze/yahoo/"
+    },
+    {
+      "DatabaseName": "hedge_silver",
+      "Name": "yahoo_ohlcv",
+      "StorageDescriptor": {
+        "Location": "s3://hedge-silver/yahoo/",
+        "Columns": [
+          { "Name": "symbol", "Type": "string" },
+          { "Name": "date", "Type": "string" },
+          { "Name": "epoch", "Type": "bigint" },
+          { "Name": "open", "Type": "double" },
+          { "Name": "high", "Type": "double" },
+          { "Name": "low", "Type": "double" },
+          { "Name": "close", "Type": "double" },
+          { "Name": "adj_close", "Type": "double" },
+          { "Name": "volume", "Type": "bigint" }
+        ]
+      },
+      "LocalPath": "data/silver/yahoo/"
     }
   ]
 }
