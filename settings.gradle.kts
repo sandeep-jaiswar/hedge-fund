@@ -14,6 +14,7 @@ rootProject.name = "hedge-fund"
 
 // libs - shared code (DRY)
 include(":libs:common")
+include(":libs:datalake")
 
 // apps - deployable applications
 include(":apps:api")

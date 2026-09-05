@@ -14,8 +14,13 @@ Java 21 monorepo - DRY + SIMPLE principles.
 │       ├── hedgefund.java-common.gradle.kts   # Java 21, JUnit 5, UTF-8
 │       ├── hedgefund.java-library.gradle.kts  # for libs/*
 │       └── hedgefund.java-service.gradle.kts  # for apps/*, services/*
+├── datalake/               # local medallion lake (Floci-compatible, no Docker)
+│   ├── data/bronze|silver|gold/  # CSV/NDJSON sample (hedge-fund ticks/orders/ohlcv/positions)
+│   ├── catalog/glue.json   # local Glue Data Catalog mock
+│   └── scripts/provision.py|provision-floci.py
 ├── libs/
-│   └── common/             # shared code (Money, utils) - DRY
+│   ├── common/             # shared code (Money, utils) - DRY
+│   └── datalake/           # Java 21 Datalake + DuckDB Athena (libs/datalake/src/main/java/com/hedgefund/datalake/Datalake.java:1)
 ├── apps/
 │   └── api/                # deployable app (executable jar)
 └── services/
@@ -92,3 +97,23 @@ echo "bad message" | npx commitlint                    # fails: type-empty
 Allowed types: `feat, fix, docs, style, refactor, perf, test, build, ci, chore, revert` (conventional). Header max 100, body line 150 (`commitlint.config.js:8`).
 
 Bypass only if needed: `git commit --no-verify` (not recommended).
+
+## Datalake (local, Floci-compatible — no Docker)
+
+Floci server (`floci/floci:latest`) is **Docker-only** (no standalone binary in 2.0.1). Per request, this repo runs **local file-based datalake** that mimics Floci's S3+Glue+Athena+Firehose without a container. When Docker is re-enabled (`floci start` on :4566), same tables work via `testcontainers-floci`.
+
+- **Provision (no AWS/Docker):** `python3 datalake/scripts/provision.py` or `./gradlew :libs:datalake:run --args="provision"` → generates `datalake/data/**` + `catalog/glue.json:1`
+- **Query (Athena → DuckDB):** `./gradlew :libs:datalake:test` or `QueryEngine.java:1` → `SELECT count(*) FROM read_csv('datalake/data/bronze/market_ticks/market_ticks.csv', header=true)` = 200 rows (verified)
+- **Catalog:** `datalake/catalog/glue.json:1` mirrors `aws glue create-database/table` (hedge_bronze/silver/gold)
+- **Floci mode (optional):** `floci start && eval $(floci env) && python3 datalake/scripts/provision-floci.py` → creates S3 buckets `hedge-bronze|silver|gold`, Glue DBs, Firehose `floci-firehose-results` (see `datalake/README.md:1`)
+
+Java API:
+```java
+var lake = Datalake.defaultLocal(); // auto-finds repo/datalake from any subproject
+lake.loadCatalog().databases(); // hedge_bronze, hedge_silver, hedge_gold
+try (var qe = new QueryEngine()) {
+  qe.query("SELECT symbol, avg(price) FROM read_csv('datalake/data/bronze/market_ticks/market_ticks.csv', header=true) GROUP BY symbol");
+}
+```
+
+See `datalake/README.md:1` and `libs/datalake/README` for full Floci mapping.

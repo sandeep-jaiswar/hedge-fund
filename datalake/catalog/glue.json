@@ -1,0 +1,154 @@
+{
+  "databases": [
+    {
+      "Name": "hedge_bronze",
+      "Description": "raw ticks/orders (Floci Glue)",
+      "LocationUri": "s3://hedge-bronze/"
+    },
+    {
+      "Name": "hedge_silver",
+      "Description": "cleaned ohlcv",
+      "LocationUri": "s3://hedge-silver/"
+    },
+    {
+      "Name": "hedge_gold",
+      "Description": "gold portfolio/risk",
+      "LocationUri": "s3://hedge-gold/"
+    }
+  ],
+  "tables": [
+    {
+      "DatabaseName": "hedge_bronze",
+      "Name": "market_ticks",
+      "StorageDescriptor": {
+        "Location": "s3://hedge-bronze/market_ticks/",
+        "InputFormat": "org.apache.hadoop.mapred.TextInputFormat",
+        "SerdeInfo": {
+          "SerializationLibrary": "org.openx.data.jsonserde.JsonSerDe"
+        },
+        "Columns": [
+          {
+            "Name": "symbol",
+            "Type": "string"
+          },
+          {
+            "Name": "ts",
+            "Type": "bigint"
+          },
+          {
+            "Name": "price",
+            "Type": "double"
+          },
+          {
+            "Name": "volume",
+            "Type": "double"
+          },
+          {
+            "Name": "exchange",
+            "Type": "string"
+          }
+        ]
+      },
+      "LocalPath": "data/bronze/market_ticks/"
+    },
+    {
+      "DatabaseName": "hedge_bronze",
+      "Name": "orders",
+      "StorageDescriptor": {
+        "Location": "s3://hedge-bronze/orders/",
+        "InputFormat": "org.apache.hadoop.mapred.TextInputFormat",
+        "Columns": [
+          {
+            "Name": "id",
+            "Type": "int"
+          },
+          {
+            "Name": "symbol",
+            "Type": "string"
+          },
+          {
+            "Name": "side",
+            "Type": "string"
+          },
+          {
+            "Name": "qty",
+            "Type": "int"
+          },
+          {
+            "Name": "price",
+            "Type": "double"
+          }
+        ]
+      },
+      "LocalPath": "data/bronze/orders/"
+    },
+    {
+      "DatabaseName": "hedge_silver",
+      "Name": "ohlcv",
+      "StorageDescriptor": {
+        "Location": "s3://hedge-silver/ohlcv/",
+        "Columns": [
+          {
+            "Name": "symbol",
+            "Type": "string"
+          },
+          {
+            "Name": "window_start",
+            "Type": "string"
+          },
+          {
+            "Name": "open",
+            "Type": "double"
+          },
+          {
+            "Name": "high",
+            "Type": "double"
+          },
+          {
+            "Name": "low",
+            "Type": "double"
+          },
+          {
+            "Name": "close",
+            "Type": "double"
+          },
+          {
+            "Name": "volume",
+            "Type": "bigint"
+          }
+        ]
+      },
+      "LocalPath": "data/silver/ohlcv/"
+    },
+    {
+      "DatabaseName": "hedge_gold",
+      "Name": "positions",
+      "StorageDescriptor": {
+        "Location": "s3://hedge-gold/positions/",
+        "Columns": [
+          {
+            "Name": "symbol",
+            "Type": "string"
+          },
+          {
+            "Name": "qty",
+            "Type": "int"
+          },
+          {
+            "Name": "avg_price",
+            "Type": "double"
+          },
+          {
+            "Name": "market_price",
+            "Type": "double"
+          },
+          {
+            "Name": "pnl",
+            "Type": "double"
+          }
+        ]
+      },
+      "LocalPath": "data/gold/positions/"
+    }
+  ]
+}
