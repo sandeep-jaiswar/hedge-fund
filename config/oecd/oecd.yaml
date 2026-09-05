@@ -1,0 +1,7 @@
+oecd:
+  baseUrl: "https://sdmx.oecd.org"
+  symbols: ["GDP"]
+  concurrency: 2
+  retry: {maxAttempts: 3, backoffMs: 800, maxBackoffMs: 8000}
+  rateLimit: {qps: 2, burst: 4}
+  paths: {bronze: "data/bronze/oecd", silver: "data/silver/oecd", catalog: "catalog/glue.json"}
