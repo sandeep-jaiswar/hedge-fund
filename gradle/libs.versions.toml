@@ -1,0 +1,17 @@
+[versions]
+java = "21"
+junit = "5.11.3"
+mockito = "5.14.2"
+slf4j = "2.0.16"
+logback = "1.5.8"
+jackson = "2.18.2"
+
+[libraries]
+junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit" }
+mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockito" }
+slf4j-api = { module = "org.slf4j:slf4j-api", version.ref = "slf4j" }
+logback-classic = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
+jackson-databind = { module = "com.fasterxml.jackson.core:jackson-databind", version.ref = "jackson" }
+
+[plugins]
+# keep versions here for DRY - single source of truth
