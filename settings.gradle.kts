@@ -15,9 +15,11 @@ rootProject.name = "hedge-fund"
 // libs - shared code (DRY)
 include(":libs:common")
 include(":libs:datalake")
+include(":libs:worldbank")
 
 // apps - deployable applications
 include(":apps:api")
 
 // services - background services / microservices
 include(":services:worker")
+include(":services:worldbank-ingest")

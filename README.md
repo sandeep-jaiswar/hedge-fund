@@ -20,11 +20,13 @@ Java 21 monorepo - DRY + SIMPLE principles.
 │   └── scripts/provision.py|provision-floci.py
 ├── libs/
 │   ├── common/             # shared code (Money, utils) - DRY
-│   └── datalake/           # Java 21 Datalake + DuckDB Athena (libs/datalake/src/main/java/com/hedgefund/datalake/Datalake.java:1)
+│   ├── datalake/           # Java 21 Datalake + DuckDB Athena (libs/datalake/src/main/java/com/hedgefund/datalake/Datalake.java:1)
+│   └── worldbank/          # World Bank feed (config, client, store) libs/worldbank/src/main/java/com/hedgefund/worldbank/client/WorldBankClient.java:1
 ├── apps/
 │   └── api/                # deployable app (executable jar)
 └── services/
-    └── worker/             # background service (executable jar)
+    ├── worker/             # background service (executable jar)
+    └── worldbank-ingest/   # World Bank ingest runner (countries=all) services/worldbank-ingest/src/main/java/com/hedgefund/worldbank/ingest/Main.java:1
 ```
 
 ## Principles
@@ -117,3 +119,16 @@ try (var qe = new QueryEngine()) {
 ```
 
 See `datalake/README.md:1` and `libs/datalake/README` for full Floci mapping.
+
+## World Bank Feed (countries=all, full crawl)
+
+Java 21, configurable, fast (virtual threads), scalable (parallel pages, rate-limited) → `datalake` bronze/silver. Schema mirrors API: `DataPoint.java:1` (`indicator{id,value}, country{id,value}, countryiso3code, date, value, unit, obs_status, decimal`).
+
+- **Config:** `config/worldbank/worldbank.yaml:1` (`countries: [all]`, `source: "2"` WDI 1498 indicators, `date: "2015:2024"`, `perPage:1000`, `concurrency:8`, `qps:5`) + `config/worldbank/worldbank-full.yaml:1` (`fullCrawl:true`)
+- **Run (countries=all):** `./gradlew :services:worldbank-ingest:run --args="--config config/worldbank/worldbank.yaml"` → `datalake/data/bronze/worldbank/indicator=batch_*/date=*/data.ndjson` + `silver/worldbank/worldbank_observations/observations.csv` (15 cols, deduped)
+- **Full crawl:** `./gradlew :services:worldbank-ingest:run --args="--config config/worldbank/worldbank-full.yaml"` → lists 1498 via `GET /indicator?source=2` (paginated), 75 batches × 20 indicators, `countries=all` (264 + aggregates) — validated 77193 rows for `date=2022,maxPages=1`
+- **Query:** `SELECT * FROM read_csv('datalake/data/silver/worldbank/worldbank_observations/observations.csv', header=true) WHERE indicator_id='SP.POP.TOTL'`
+- **Floci (now running 2.0.1):** `floci doctor` ✓, `s3://hedge-bronze/worldbank/` + `s3://hedge-silver/worldbank/` on `http://localhost:4566`, sync via `python3 datalake/scripts/sync-worldbank-to-floci.py`
+- **Tests:** `WorldBankClientTest.java:1` (WireMock countries=all + full list pagination) `BUILD SUCCESSFUL`
+
+Implementation: `libs/worldbank/src/main/java/com/hedgefund/worldbank/{config/WorldBankConfig.java:1,client/WorldBankClient.java:1,store/BronzeWriter.java:1,store/SilverTransformer.java:1,ingest/WorldBankIngestService.java:1}`

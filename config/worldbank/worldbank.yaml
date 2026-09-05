@@ -1,0 +1,42 @@
+# World Bank feed - configurable, fast, scalable
+# Full crawl: fullCrawl:true lists all 16k indicators via /indicator?per_page=1000
+worldbank:
+  baseUrl: "https://api.worldbank.org/v2"
+  fullCrawl: false
+  indicators:
+    - "NY.GDP.MKTP.CD"
+    - "NY.GDP.MKTP.KD.ZG"
+    - "FP.CPI.TOTL.ZG"
+    - "SL.UEM.TOTL.ZS"
+    - "NE.EXP.GNFS.ZS"
+    - "DT.DOD.DECT.CD"
+    - "SI.POV.DDAY"
+    - "SP.POP.TOTL"
+  countries: ["all"]
+  source: "2"
+  date: "2015:2024"
+  # mrv: 5
+  # frequency: Y
+  perPage: 1000
+  maxPages: 0
+  maxIndicatorsPerRequest: 20
+  maxCountriesPerRequest: 20
+  concurrency: 8
+  retry:
+    maxAttempts: 3
+    backoffMs: 500
+    maxBackoffMs: 8000
+  rateLimit:
+    qps: 5
+    burst: 10
+  paths:
+    bronze: "data/bronze/worldbank"
+    silver: "data/silver/worldbank"
+    catalog: "catalog/glue.json"
+
+# examples:
+# full crawl sample (be careful - 16k * 264 * years):
+#  worldbank:
+#    fullCrawl: true
+#    date: "2020:2024"
+#    concurrency: 8

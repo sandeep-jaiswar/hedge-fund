@@ -39,3 +39,8 @@ npm-debug.log*
 # Env
 .env
 .env.local
+
+# Datalake - World Bank bulk (countries=all) is large, ignore bulk, keep small samples
+datalake/data/bronze/worldbank/
+datalake/data/silver/worldbank/
+datalake/data/bronze/worldbank/_watermark.json

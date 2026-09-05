@@ -149,6 +149,53 @@
         ]
       },
       "LocalPath": "data/gold/positions/"
+    },
+    {
+      "DatabaseName": "hedge_bronze",
+      "Name": "worldbank_raw",
+      "StorageDescriptor": {
+        "Location": "s3://hedge-bronze/worldbank/",
+        "InputFormat": "org.apache.hadoop.mapred.TextInputFormat",
+        "SerdeInfo": { "SerializationLibrary": "org.openx.data.jsonserde.JsonSerDe" },
+        "Columns": [
+          { "Name": "indicator_id", "Type": "string" },
+          { "Name": "indicator_name", "Type": "string" },
+          { "Name": "country_id", "Type": "string" },
+          { "Name": "country_name", "Type": "string" },
+          { "Name": "country_iso3", "Type": "string" },
+          { "Name": "date", "Type": "string" },
+          { "Name": "value", "Type": "double" },
+          { "Name": "unit", "Type": "string" },
+          { "Name": "obs_status", "Type": "string" },
+          { "Name": "decimal", "Type": "int" }
+        ]
+      },
+      "LocalPath": "data/bronze/worldbank/"
+    },
+    {
+      "DatabaseName": "hedge_silver",
+      "Name": "worldbank_observations",
+      "StorageDescriptor": {
+        "Location": "s3://hedge-silver/worldbank/",
+        "Columns": [
+          { "Name": "indicator_id", "Type": "string" },
+          { "Name": "indicator_name", "Type": "string" },
+          { "Name": "country_id", "Type": "string" },
+          { "Name": "country_name", "Type": "string" },
+          { "Name": "country_iso3", "Type": "string" },
+          { "Name": "date", "Type": "string" },
+          { "Name": "year", "Type": "int" },
+          { "Name": "period_type", "Type": "string" },
+          { "Name": "value", "Type": "double" },
+          { "Name": "unit", "Type": "string" },
+          { "Name": "obs_status", "Type": "string" },
+          { "Name": "decimal", "Type": "int" },
+          { "Name": "source_id", "Type": "string" },
+          { "Name": "lastupdated", "Type": "string" },
+          { "Name": "is_valid", "Type": "boolean" }
+        ]
+      },
+      "LocalPath": "data/silver/worldbank/worldbank_observations/"
     }
   ]
 }

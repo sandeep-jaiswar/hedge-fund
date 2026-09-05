@@ -1,0 +1,21 @@
+worldbank:
+  baseUrl: "https://api.worldbank.org/v2"
+  fullCrawl: true
+  countries: ["all"]
+  source: "2"
+  date: "2020:2024"
+  perPage: 1000
+  maxPages: 0
+  maxIndicatorsPerRequest: 20
+  concurrency: 8
+  retry:
+    maxAttempts: 3
+    backoffMs: 800
+    maxBackoffMs: 10000
+  rateLimit:
+    qps: 4
+    burst: 8
+  paths:
+    bronze: "data/bronze/worldbank"
+    silver: "data/silver/worldbank"
+    catalog: "catalog/glue.json"
