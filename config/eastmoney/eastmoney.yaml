@@ -1,0 +1,7 @@
+eastmoney:
+  baseUrl: "https://push2.eastmoney.com"
+  symbols: ["600000"]
+  concurrency: 2
+  retry: {maxAttempts: 3, backoffMs: 800, maxBackoffMs: 8000}
+  rateLimit: {qps: 2, burst: 4}
+  paths: {bronze: "data/bronze/eastmoney", silver: "data/silver/eastmoney", catalog: "catalog/glue.json"}
