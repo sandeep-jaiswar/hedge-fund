@@ -65,7 +65,7 @@ public class EiaIngestService {
             case "oecd": return base+"/public/rest/data/OECD.SDD.STES,DSD_KEI@DF_KEI,4.0/USA.CP_GP20";
             case "calcfi": return "https://raw.githubusercontent.com/calcfi/datasets/main/data/fred/DGS10.csv";
             case "fdic": return "https://www.fdic.gov/resources/bankers/national-rates/2024-01-01.csv";
-            case "eia": return "https://raw.githubusercontent.com/datasets/s-and-p-500/master/data/data.csv";
+            case "eia": return "https://www.eia.gov/dnav/pet/hist_xls/RBRTEd.xls";
             case "bls": return "https://download.bls.gov/pub/time.series/cu/cu.data.0.Current";
             case "bea": return "https://apps.bea.gov/api/data?UserID=demo&method=GetData&DataSetName=NIPA&TableName=T10101&Frequency=Q&Year=2023";
             case "gmd": return "https://raw.githubusercontent.com/GlobalMacroDatabase/GMD/master/Datasets/GMD.csv";

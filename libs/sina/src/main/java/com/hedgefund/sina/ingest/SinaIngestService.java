@@ -70,7 +70,7 @@ public class SinaIngestService {
             case "bea": return "https://apps.bea.gov/api/data?UserID=demo&method=GetData&DataSetName=NIPA&TableName=T10101&Frequency=Q&Year=2023";
             case "gmd": return "https://raw.githubusercontent.com/GlobalMacroDatabase/GMD/master/Datasets/GMD.csv";
             case "tencent": return "https://qt.gtimg.cn/q=sh600000";
-            case "sina": return "https://qt.gtimg.cn/q=sh600000";
+            case "sina": return "https://hq.sinajs.cn/list=sh600000";
             case "eastmoney": return "https://push2.eastmoney.com/api/qt/stock/kline/get?secid=1.600000&fields1=f1&fields2=f51,f52,f53,f54,f55";
             case "baostock": return base+"/api/query/history_k_data_json?code=sh.600000&fields=date,code,open,high,low,close,volume&start=2023-01-01&end=2023-01-10";
             case "investing": return base+"/api/search?search_text=AAPL";

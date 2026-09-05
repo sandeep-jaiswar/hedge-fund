@@ -32,7 +32,7 @@ public class SinaClient {
             try{
                 throttle();
                 HttpRequest.Builder b=HttpRequest.newBuilder(URI.create(url)).timeout(Duration.ofSeconds(30)).GET()
-                    .header("User-Agent","Mozilla/5.0 HedgeFund/1.0").header("Accept","*/*");
+                    .header("User-Agent","Mozilla/5.0 HedgeFund/1.0").header("Referer","https://finance.sina.com.cn").header("Accept-Language","zh-CN,zh;q=0.9").header("Accept","*/*");
                 // SEC requires Host header and extra UA
                 if(url.contains("sec.gov")) b.header("Accept-Encoding","gzip");
                 HttpResponse<String> resp=http.send(b.build(), HttpResponse.BodyHandlers.ofString());

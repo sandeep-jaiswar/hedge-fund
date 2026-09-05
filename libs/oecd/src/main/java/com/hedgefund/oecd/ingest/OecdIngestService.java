@@ -62,7 +62,7 @@ public class OecdIngestService {
             case "defillama": return base+"/protocol/"+key;
             case "sec": return "https://data.sec.gov/submissions/CIK0000320193.json"; // placeholder AAPL
             case "imf": return base+"/REST/SDMX_JSON.svc/CompactData/IFS/2023/US.NGDP_XDC";
-            case "oecd": return "https://api.llama.fi/protocol/aave";
+            case "oecd": return "https://sdmx.oecd.org/public/rest/data/OECD.SDD.STES,DSD_KEI@DF_KEI,4.0/USA.CP";
             case "calcfi": return "https://raw.githubusercontent.com/calcfi/datasets/main/data/fred/DGS10.csv";
             case "fdic": return "https://www.fdic.gov/resources/bankers/national-rates/2024-01-01.csv";
             case "eia": return "https://www.eia.gov/dnav/pet/hist_xls/RBRTEd.xls";

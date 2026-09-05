@@ -1158,6 +1158,96 @@
         ]
       },
       "LocalPath": "data/silver/investing/"
+    },
+    {
+      "DatabaseName": "hedge_gold",
+      "Name": "yahoo_summary",
+      "StorageDescriptor": {
+        "Location": "s3://hedge-gold/yahoo_summary/",
+        "Columns": [
+          {
+            "Name": "symbol",
+            "Type": "string"
+          },
+          {
+            "Name": "bars",
+            "Type": "bigint"
+          },
+          {
+            "Name": "avg_close",
+            "Type": "double"
+          },
+          {
+            "Name": "max_high",
+            "Type": "double"
+          },
+          {
+            "Name": "min_low",
+            "Type": "double"
+          },
+          {
+            "Name": "total_vol",
+            "Type": "bigint"
+          }
+        ]
+      },
+      "LocalPath": "data/gold/yahoo_summary.csv"
+    },
+    {
+      "DatabaseName": "hedge_gold",
+      "Name": "worldbank_yoy",
+      "StorageDescriptor": {
+        "Location": "s3://hedge-gold/worldbank_yoy/",
+        "Columns": [
+          {
+            "Name": "indicator_id",
+            "Type": "string"
+          },
+          {
+            "Name": "country_iso3",
+            "Type": "string"
+          },
+          {
+            "Name": "date",
+            "Type": "string"
+          },
+          {
+            "Name": "value",
+            "Type": "double"
+          },
+          {
+            "Name": "prev",
+            "Type": "double"
+          },
+          {
+            "Name": "yoy",
+            "Type": "double"
+          }
+        ]
+      },
+      "LocalPath": "data/gold/worldbank_yoy.csv"
+    },
+    {
+      "DatabaseName": "hedge_gold",
+      "Name": "all_sources_summary",
+      "StorageDescriptor": {
+        "Location": "s3://hedge-gold/all_sources_summary/",
+        "Columns": [
+          {
+            "Name": "source",
+            "Type": "string"
+          },
+          {
+            "Name": "bronze_keys",
+            "Type": "bigint"
+          },
+          {
+            "Name": "silver_rows",
+            "Type": "bigint"
+          }
+        ]
+      },
+      "LocalPath": "data/gold/all_sources_summary.csv"
     }
   ]
 }

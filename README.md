@@ -142,3 +142,16 @@ Add deps to `gradle/libs.versions.toml` only.
 
 See `docs/sources/worldbank.md`.
 
+## Gold Layer
+
+`services/gold-aggregator` `com.hedgefund.gold.Main` DuckDB `COPY` → `datalake/data/gold/yahoo_summary.csv` `avg_close, bars` (5→10 symbols), `worldbank_yoy.csv` `SP.POP.TOTL YoY`, `all_sources_summary.csv` 22 sources `bronze_keys,silver_rows` (`worldbank 77,77193`). `datalake/catalog/glue.json` `hedge_gold.yahoo_summary/worldbank_yoy/all_sources_summary`.
+
+```bash
+./gradlew :services:gold-aggregator:run
+cat datalake/data/gold/all_sources_summary.csv
+```
+
+## Gap Matrix
+
+See `docs/gap-matrix.md` — 13 real (worldbank,yahoo,cboe,binance,coinbase,defillama,tencent,sina,treasury,sec,eia,bea,eastmoney proxy) vs 9 synthetic (fred RST_STREAM, BLS 1323 HTML, IMF DNS, OECD key, calcfi/fdic/gmd 404, investing 403) with `synthetic fallback` ensures `BUILD SUCCESSFUL`. Coverage gaps: yahoo `5→10` done, worldbank `2022→2015:2024` full ready, binance `3→10` done, gold typed for fred/treasury/sec pending.
+

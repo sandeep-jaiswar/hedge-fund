@@ -21,7 +21,7 @@ datalake/
 │   │   ├── yahoo/yahoo_ohlcv.csv (symbol,date,epoch,open,high,low,close,adj_close,volume) 115 rows
 │   │   ├── binance/binance.csv, coinbase/coinbase.csv, ... gmd/gmd.csv (2-6 lines each generic)
 │   │   └── gold not yet
-│   └── gold/                  # aggregated (positions)
+│   └── gold/                  # aggregated (4) yahoo_summary.csv (5 symbols avg), worldbank_yoy.csv (SP.POP.TOTL YoY 25k), all_sources_summary.csv (22 sources), positions/
 ├── catalog/glue.json          # 48 tables: hedge_bronze (25), hedge_silver (22), hedge_gold (1)
 └── scripts/
     ├── provision.py           # sample market_ticks/orders/ohlcv/positions

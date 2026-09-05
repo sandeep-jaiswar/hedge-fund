@@ -57,7 +57,7 @@ public class TreasuryIngestService {
             case "binance": return base+"/api/v3/klines?symbol="+key+"&interval="+cfg.interval()+"&limit="+cfg.limit();
             case "coinbase": return base+"/v2/prices/"+key+"/spot";
             case "fred": return base+"/graph/fredgraph.csv?id="+key;
-            case "treasury": return "https://raw.githubusercontent.com/datasets/s-and-p-500/master/data/data.csv";
+            case "treasury": return "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/daily-treasury-rates.csv/2024/all?type=daily_treasury_yield_curve";
             case "cboe": return "https://cdn.cboe.com/api/global/delayed_quotes/charts/historical/_VIX?interval=1d";
             case "defillama": return base+"/protocol/"+key;
             case "sec": return "https://data.sec.gov/submissions/CIK0000320193.json"; // placeholder AAPL

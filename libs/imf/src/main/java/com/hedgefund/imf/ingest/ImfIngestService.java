@@ -61,7 +61,7 @@ public class ImfIngestService {
             case "cboe": return "https://cdn.cboe.com/api/global/delayed_quotes/charts/historical/_VIX?interval=1d";
             case "defillama": return base+"/protocol/"+key;
             case "sec": return "https://data.sec.gov/submissions/CIK0000320193.json"; // placeholder AAPL
-            case "imf": return "https://api.llama.fi/protocol/aave";
+            case "imf": return "https://www.imf.org/external/datamapper/api/NGDP_RPCH?periods=2023";
             case "oecd": return base+"/public/rest/data/OECD.SDD.STES,DSD_KEI@DF_KEI,4.0/USA.CP_GP20";
             case "calcfi": return "https://raw.githubusercontent.com/calcfi/datasets/main/data/fred/DGS10.csv";
             case "fdic": return "https://www.fdic.gov/resources/bankers/national-rates/2024-01-01.csv";

@@ -1,0 +1,9 @@
+binance:
+  baseUrl: "https://api.binance.com"
+  symbols: ["BTCUSDT", "ETHUSDT", "BNBUSDT", "SOLUSDT", "ADAUSDT", "XRPUSDT", "DOGEUSDT", "AVAXUSDT", "DOTUSDT", "MATICUSDT"]
+  interval: "1d"
+  limit: 90
+  concurrency: 4
+  retry: {maxAttempts: 3, backoffMs: 800, maxBackoffMs: 8000}
+  rateLimit: {qps: 2, burst: 4}
+  paths: {bronze: "data/bronze/binance", silver: "data/silver/binance", catalog: "catalog/glue.json"}

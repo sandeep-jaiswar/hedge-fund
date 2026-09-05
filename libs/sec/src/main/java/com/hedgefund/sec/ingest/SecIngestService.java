@@ -60,7 +60,7 @@ public class SecIngestService {
             case "treasury": return "https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v1/accounting/od/avg_interest_rates?filter=record_date:gte:2023-01-01&page[size]=100";
             case "cboe": return "https://cdn.cboe.com/api/global/delayed_quotes/charts/historical/_VIX?interval=1d";
             case "defillama": return base+"/protocol/"+key;
-            case "sec": return "https://api.github.com/repos/sec-edgar/sec-edgar/contents/"; // placeholder AAPL
+            case "sec": return "https://data.sec.gov/submissions/CIK0000320193.json"; // placeholder AAPL
             case "imf": return base+"/REST/SDMX_JSON.svc/CompactData/IFS/2023/US.NGDP_XDC";
             case "oecd": return base+"/public/rest/data/OECD.SDD.STES,DSD_KEI@DF_KEI,4.0/USA.CP_GP20";
             case "calcfi": return "https://raw.githubusercontent.com/calcfi/datasets/main/data/fred/DGS10.csv";

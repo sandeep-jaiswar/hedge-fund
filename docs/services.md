@@ -7,14 +7,14 @@ All services are `hedgefund.java-service` (executable jar, `Main --config`), Jav
 | # | Service | Lib | Config | Verified | Bronze → Silver |
 |---|---|---|---|---|---|
 | 1 | `worldbank-ingest` | `libs/worldbank` | `config/worldbank/worldbank.yaml` (`countries:[all]`, `source:2`, `date:2015:2024`, `perPage:1000`, `concurrency:8`, `qps:5`) + `worldbank-full.yaml` (`fullCrawl:true`) | 77193 rows `2022` | `worldbank_raw` → `worldbank_observations` 15 cols |
-| 2 | `yahoo-ingest` | `libs/yahoo` | `config/yahoo/yahoo.yaml` (`symbols:[AAPL,MSFT,GOOGL,TSLA,SPY]`, `interval:1d`, `range:1mo`) | 115 rows | `yahoo_raw` → `yahoo_ohlcv` 9 cols |
+| 2 | `yahoo-ingest` | `libs/yahoo` | `config/yahoo/yahoo.yaml` 5×`1mo` + `yahoo-full.yaml` 10×`1y` (`AAPL,MSFT,GOOGL,TSLA,SPY,^GSPC,^IXIC,NVDA,JPM,BTC-USD`) | 115 → 2634 rows | `yahoo_raw` → `yahoo_ohlcv` 9 cols |
 | 3 | `cboe-ingest` | `libs/cboe` | `config/cboe/cboe.yaml` (`symbols:[VIX]`) via `yahoo ^VIX` proxy (cdn 403) | len 3698 | `cboe_raw` → `cboe` |
 | 4 | `investing-ingest` | `libs/investing` | `config/investing/investing.yaml` | synthetic fallback | `investing_raw` → `investing` |
 | 5 | `tencent-ingest` | `libs/tencent` | `config/tencent/tencent.yaml` | `sh600000` 510 len | `tencent_raw` → `tencent` |
 | 6 | `sina-ingest` | `libs/sina` | `config/sina/sina.yaml` | fallback | `sina_raw` → `sina` |
 | 7 | `eastmoney-ingest` | `libs/eastmoney` | `config/eastmoney/eastmoney.yaml` | fallback | `eastmoney_raw` → `eastmoney` |
 | 8 | `baostock-ingest` | `libs/baostock` | `config/baostock/baostock.yaml` | `sh.600000` 7345 len | `baostock_raw` → `baostock` |
-| 9 | `binance-ingest` | `libs/binance` | `config/binance/binance.yaml` (`symbols:[BTCUSDT,ETHUSDT,BNBUSDT]`, `interval:1d`, `limit:30`) | 5565/5497 len | `binance_raw` → `binance` |
+| 9 | `binance-ingest` | `libs/binance` | `config/binance/binance.yaml` 3×30 + `binance-full.yaml` 10×90 | 3→10 keys | `binance_raw` → `binance` |
 | 10 | `coinbase-ingest` | `libs/coinbase` | `config/coinbase/coinbase.yaml` (`products:[BTC-USD,ETH-USD]`) | 61/60 len | `coinbase_raw` → `coinbase` |
 | 11 | `defillama-ingest` | `libs/defillama` | `config/defillama/defillama.yaml` (`protocols:[aave,uniswap]`) | 10M/1.9M len | `defillama_raw` → `defillama` |
 | 12 | `imf-ingest` | `libs/imf` | `config/imf/imf.yaml` (llama proxy) | fallback | `imf_raw` → `imf` |

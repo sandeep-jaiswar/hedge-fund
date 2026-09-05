@@ -14,7 +14,7 @@ public class EastmoneyClient {
     private long lastRequestAt=0;
     public EastmoneyClient(EastmoneyConfig cfg){
         this.cfg=cfg;
-        this.http=HttpClient.newBuilder().version(HttpClient.Version.HTTP_1_1).connectTimeout(Duration.ofSeconds(15)).executor(Executors.newVirtualThreadPerTaskExecutor()).build();
+        this.http=HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(15)).executor(Executors.newVirtualThreadPerTaskExecutor()).build();
         this.om=new ObjectMapper(); om.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,false);
     }
     private synchronized void throttle() throws InterruptedException {
@@ -32,9 +32,7 @@ public class EastmoneyClient {
             try{
                 throttle();
                 HttpRequest.Builder b=HttpRequest.newBuilder(URI.create(url)).timeout(Duration.ofSeconds(30)).GET()
-                    .header("User-Agent","Mozilla/5.0 HedgeFund/1.0").header("Accept","*/*");
-                // SEC requires Host header and extra UA
-                if(url.contains("sec.gov")) b.header("Accept-Encoding","gzip");
+                    .header("User-Agent","Mozilla/5.0 HedgeFund/1.0").header("Referer","https://quote.eastmoney.com/").header("Accept","*/*");
                 HttpResponse<String> resp=http.send(b.build(), HttpResponse.BodyHandlers.ofString());
                 if(resp.statusCode()==429 || resp.statusCode()>=500) throw new java.io.IOException("HTTP "+resp.statusCode()+" "+resp.body().substring(0,Math.min(300,resp.body().length())));
                 if(resp.statusCode()!=200) throw new java.io.IOException("HTTP "+resp.statusCode()+" "+resp.body().substring(0,Math.min(400,resp.body().length())));
