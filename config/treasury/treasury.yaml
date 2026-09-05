@@ -1,0 +1,6 @@
+treasury:
+  baseUrl: "https://home.treasury.gov"
+  concurrency: 2
+  retry: {maxAttempts: 3, backoffMs: 800, maxBackoffMs: 8000}
+  rateLimit: {qps: 1, burst: 2}
+  paths: {bronze: "data/bronze/treasury", silver: "data/silver/treasury", catalog: "catalog/glue.json"}
