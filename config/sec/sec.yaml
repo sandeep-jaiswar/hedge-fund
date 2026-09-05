@@ -1,0 +1,7 @@
+sec:
+  baseUrl: "https://www.sec.gov"
+  tickers: ["AAPL", "MSFT"]
+  concurrency: 2
+  retry: {maxAttempts: 3, backoffMs: 800, maxBackoffMs: 8000}
+  rateLimit: {qps: 1, burst: 2}
+  paths: {bronze: "data/bronze/sec", silver: "data/silver/sec", catalog: "catalog/glue.json"}
