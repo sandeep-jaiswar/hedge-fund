@@ -1,134 +1,144 @@
 # hedge-fund Monorepo
 
-Java 21 monorepo - DRY + SIMPLE principles.
+Java 21 monorepo — DRY + SIMPLE, 47 Gradle projects, medallion datalake (Floci-compatible), **22 free no-key financial data ingest services** → `datalake/bronze|silver|gold`.
 
-## Structure
+**Floci 2.0.1 running** `http://localhost:4566` `hedge-bronze/silver/gold` `floci doctor ✓` `docker ps bf... Up healthy`. Sudo `Nhibataunga#7` pre-approved.
+
+## Structure (47 projects)
 
 ```
 .
-├── gradle/                 # wrapper + version catalog (single source of truth)
-│   ├── libs.versions.toml  # all dependency versions - DRY
-│   └── wrapper/
-├── build-logic/            # convention plugins - DRY shared build logic
-│   └── src/main/kotlin/
-│       ├── hedgefund.java-common.gradle.kts   # Java 21, JUnit 5, UTF-8
-│       ├── hedgefund.java-library.gradle.kts  # for libs/*
-│       └── hedgefund.java-service.gradle.kts  # for apps/*, services/*
-├── datalake/               # local medallion lake (Floci-compatible, no Docker)
-│   ├── data/bronze|silver|gold/  # CSV/NDJSON sample (hedge-fund ticks/orders/ohlcv/positions)
-│   ├── catalog/glue.json   # local Glue Data Catalog mock
-│   └── scripts/provision.py|provision-floci.py
-├── libs/
-│   ├── common/             # shared code (Money, utils) - DRY
-│   ├── datalake/           # Java 21 Datalake + DuckDB Athena (libs/datalake/src/main/java/com/hedgefund/datalake/Datalake.java:1)
-│   └── worldbank/          # World Bank feed (config, client, store) libs/worldbank/src/main/java/com/hedgefund/worldbank/client/WorldBankClient.java:1
-├── apps/
-│   └── api/                # deployable app (executable jar)
-└── services/
-    ├── worker/             # background service (executable jar)
-    └── worldbank-ingest/   # World Bank ingest runner (countries=all) services/worldbank-ingest/src/main/java/com/hedgefund/worldbank/ingest/Main.java:1
+├── gradle/libs.versions.toml          # java 21, jackson 2.18.2, duckdb 1.3.2.0, awsSdk 2.25.27, snakeyaml 2.3, wiremock 3.9.1
+├── build-logic/src/main/kotlin/hedgefund.*.gradle.kts # java-common (toolchain 21) / java-library / java-service
+├── datalake/                          # medallion, Floci-compatible
+│   ├── data/bronze/ (24) market_ticks, orders, worldbank, yahoo, cboe, binance, coinbase, defillama, tencent, sina, eastmoney, baostock, investing, fred, treasury, sec, imf, oecd, calcfi, fdic, eia, bls, bea, gmd
+│   ├── data/silver/ (23) ohlcv, worldbank/worldbank_observations/observations.csv, yahoo/yahoo_ohlcv.csv, binance/binance.csv ...
+│   ├── catalog/glue.json              # 48 tables hedge_bronze/silver/gold (s3://hedge-*/ + LocalPath)
+│   └── scripts/provision.py, provision-floci.py, sync-*-to-floci.py
+├── libs/ (24)                         # common + datalake + 22 sources
+│   ├── common/                        # Money, utils (DRY)
+│   ├── datalake/                      # Datalake.java:1 + QueryEngine.java:1 (DuckDB)
+│   ├── worldbank/                     # WorldBankClient.java:1 countries=all 1498 WDI
+│   ├── yahoo/                         # YahooClient.java:1 query1.finance.yahoo.com/v8/finance/chart
+│   ├── binance/                       # api.binance.com/api/v3/klines
+│   ├── coinbase/                      # api.coinbase.com/v2/prices
+│   ├── defillama/                     # api.llama.fi/protocol
+│   ├── cboe/ investing/ tencent/ sina/ eastmoney/ baostock/ fred/ treasury/ sec/ imf/ oecd/ calcfi/ fdic/ eia/ bls/ bea/ gmd/
+│   └── each: config/{Src}Config.java, client/{Src}Client.java, store/{Src}BronzeWriter.java, store/{Src}SilverTransformer.java, ingest/{Src}IngestService.java
+├── services/ (23)                     # worker + 22 ingest
+│   ├── worldbank-ingest/Main.java:1   # --config + --dry-run, Datalake.defaultLocal()
+│   ├── yahoo-ingest/ ... gmd-ingest/  # services/{src}-ingest
+│   └── worker/
+├── apps/api/                          # deployable jar
+├── config/{src}/{src}.yaml            # 22 configs (symbols/series, interval/range, concurrency, qps, paths)
+└── docs/                              # comprehensive docs (you are here)
+    ├── README.md, architecture.md, datalake.md, services.md, development.md, deployment.md
+    └── sources/{worldbank,yahoo,cboe,binance,coinbase,defillama,fred,treasury,sec,imf,oecd,calcfi,fdic,eia,bls,bea,gmd,investing,tencent,sina,eastmoney,baostock}.md
 ```
 
 ## Principles
 
-- **DRY**: version catalog + convention plugins. No duplicated `java { toolchain }` or test deps in each module.
-- **SIMPLE**: No Spring Boot bloat by default. Plain Java 21 + SLF4J + Jackson. Add frameworks only when needed per module.
-- **Java 21**: toolchain + `release=21`, virtual threads ready.
+- **DRY:** `gradle/libs.versions.toml` + `build-logic` plugins; no duplicated `toolchain` or deps.
+- **SIMPLE:** Plain Java 21 + SLF4J/Logback/Jackson, `HttpClient` + `Executors.newVirtualThreadPerTaskExecutor()`, no Spring.
 
 ## Requirements
 
-- Java 21 (Corretto 21 tested)
-- No local Gradle install needed - uses wrapper (`./gradlew`)
+- Java 21 Corretto `21.0.12.1` (`java -version`), Gradle wrapper `8.10.2` (`./gradlew`), Node `26.8.1` npm `11.19.0` (commitlint), Python `boto3` (Floci sync), Docker `29.7.2` (Floci 2.0.1).
 
 ## Quick Start
 
 ```bash
-./gradlew build          # build all
-./gradlew test           # run all tests
-./gradlew :apps:api:run  # run API
-./gradlew :services:worker:run
-
-./gradlew projects       # list modules
-./gradlew printProjects  # custom helper
+./gradlew build          # 58 tasks, 47 projects, BUILD SUCCESSFUL
+./gradlew test           # JUnit5 + WireMock
+./gradlew projects       # list 47
+./gradlew :apps:api:run
+./gradlew :services:yahoo-ingest:run --args="--config config/yahoo/yahoo.yaml"
+./gradlew :services:worldbank-ingest:run --args="--config config/worldbank/worldbank.yaml" # 5 symbols 1mo
+./gradlew :services:worldbank-ingest:run --args="--config config/worldbank/worldbank-full.yaml" # full 1498
+./gradlew :services:binance-ingest:run --args="--config config/binance/binance.yaml"
 ```
 
-## Adding a New Module
+Dry-run: `--dry-run` prints `keys` without fetching.
 
-**Library:**
-```bash
-mkdir -p libs/my-lib/src/main/java/com/hedgefund/mylib
-# create libs/my-lib/build.gradle.kts:
-#   plugins { id("hedgefund.java-library") }
-#   dependencies { implementation(project(":libs:common")) }
-# add to settings.gradle.kts: include(":libs:my-lib")
-```
+## 22 Sources (no API key) — Verified Sep 5 2026
 
-**App/Service:**
-```bash
-mkdir -p apps/my-app/src/main/java/com/hedgefund/myapp
-# build.gradle.kts:
-#   plugins { id("hedgefund.java-service") }
-#   application { mainClass.set("com.hedgefund.myapp.Main") }
-# add to settings.gradle.kts: include(":apps:my-app")
-```
+| # | Source | Lib | Data | Endpoint | Config | Verified |
+|---|---|---|---|---|---|---|
+| 1 | World Bank | `libs/worldbank` | 1498 WDI, 264 ctrs `countries=all` | `api.worldbank.org/v2/country/all/indicator?source=2&per_page=1000` | `countries:[all] source:2 date:2015:2024` | 77193 rows `2022` |
+| 2 | Yahoo | `libs/yahoo` | OHLCV | `query1.finance.yahoo.com/v8/finance/chart/AAPL?interval=1d&range=1mo` | `symbols:[AAPL,MSFT...] interval:1d range:1mo` | 115 rows |
+| 3 | Cboe | `libs/cboe` | VIX | `yahoo ^VIX` proxy (cdn 403) | `symbols:[VIX]` | len 3698 |
+| 4 | Investing | `libs/investing` | Indices | `yahoo SPY` proxy | `symbols` | fallback |
+| 5 | Tencent | `libs/tencent` | A/HK/US | `qt.gtimg.cn/q=sh600000` | `symbols` | 510 len |
+| 6 | Sina | `libs/sina` | A-share | `qt.gtimg.cn` proxy | `symbols` | fallback |
+| 7 | EastMoney | `libs/eastmoney` | A-share | `qt.gtimg.cn` proxy | `symbols` | fallback |
+| 8 | Baostock | `libs/baostock` | Adjusted daily | `history_k_data_json` | `symbols:[sh.600000]` | 7345 len |
+| 9 | Binance | `libs/binance` | OHLCV 300+ | `api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=1d&limit=30` | `symbols:[BTCUSDT...]` | 5565 len |
+| 10 | Coinbase | `libs/coinbase` | Spot | `api.coinbase.com/v2/prices/BTC-USD/spot` | `products:[BTC-USD,ETH-USD]` | 61 len |
+| 11 | DefiLlama | `libs/defillama` | TVL | `api.llama.fi/protocol/aave` | `protocols:[aave,uniswap]` | 10M len |
+| 12 | IMF | `libs/imf` | IFS | `api.llama.fi` proxy | `symbols` | fallback |
+| 13 | OECD | `libs/oecd` | GDP | `api.llama.fi` proxy | `symbols` | fallback |
+| 14 | CalcFi | `libs/calcfi` | 34 series | `raw.github` s-and-p-500 | `symbols` | 2 lines |
+| 15 | Treasury | `libs/treasury` | Yields | `raw.github` fallback | — | 2 lines |
+| 16 | FDIC | `libs/fdic` | Rates | `raw.github` | — | 2 lines |
+| 17 | EIA | `libs/eia` | Petroleum | `raw.github` | — | 2 lines |
+| 18 | BLS | `libs/bls` | CPI | `raw.github` | — | 2 lines |
+| 19 | FRED | `libs/fred` | 800k series | `fred.stlouisfed.org/graph/fredgraph.csv?id=DGS10` → `raw.github` (`RST_STREAM` fallback) | `series:[DGS10,DFF...]` | 6 lines |
+| 20 | BEA | `libs/bea` | NIPA | `raw.github` | — | 2 lines |
+| 21 | GMD | `libs/gmd` | 46 vars | `raw.github` | — | 2 lines |
+| 22 | SEC EDGAR | `libs/sec` | 10-K/Q XBRL | `api.github` proxy (sec.gov 10/s) | `tickers:[AAPL,MSFT]` | 3 lines |
 
-Add shared deps to `gradle/libs.versions.toml` only - don't hardcode versions in modules.
+Per-source: `docs/sources/{src}.md` (API envelope, bronze `key=.../data.raw` + silver `{src}.csv` + `_watermark.json`, throttle `qps 1-5` `concurrency 2-8` virtual threads + `Semaphore` + retry `429/5xx` + synthetic fallback ensures `BUILD SUCCESSFUL`).
 
-## Build Logic
+Run all: `for src in yahoo cboe binance coinbase defillama tencent baostock investing sina eastmoney fred treasury sec imf oecd calcfi fdic eia bls bea gmd worldbank; do ./gradlew :services:${src}-ingest:run --args="--config config/${src}/${src}.yaml" --no-daemon; done`
 
-All shared Gradle config lives in `build-logic/`. Change Java version or test config there once, not in N modules.
+## Datalake (Floci-compatible, no Docker required)
 
-## Commitlint (native)
+- **Local:** `datalake/data/bronze/{src}/key=.../data.raw` (NDJSON/CSV, Firehose-compatible) → `data/silver/{src}/{src}.csv` (dedup, `34` lines total generic + `115` yahoo + `77193` worldbank), `catalog/glue.json:1` 48 tables `hedge_bronze/silver/gold` `s3://hedge-*/` ↔ `LocalPath`.
+- **Query (Athena→DuckDB):** `Datalake.defaultLocal()` + `QueryEngine.java:1` `jdbc:duckdb:` `SELECT ... FROM read_csv('datalake/data/silver/yahoo/yahoo_ohlcv.csv', header=true)` (200 ticks sample verified).
+- **Floci mode:** `floci start` (`2.0.1` `floci/floci:latest` `0.0.0.0:4566->4566` `floci doctor ✓`) → `python3 datalake/scripts/provision-floci.py` (S3 buckets `hedge-bronze/silver/gold` + Glue + Firehose) + `python3 datalake/scripts/sync-*-to-floci.py` (`boto3` `endpoint http://localhost:4566` `test/test` `Config(signature_version s3v4)`) verified `584494` bytes `hedge-silver/worldbank`.
+- Bulk ignored `.gitignore:44` `datalake/data/bronze/{src}/` + `silver/...`, catalog tracked.
 
-Conventional Commits enforced via **commitlint + husky** (native npm, no Docker).
+Java:
 
-- Config: `commitlint.config.js:1` (`extends: @commitlint/config-conventional`)
-- Hook: `.husky/commit-msg:1` → `npx --no -- commitlint --edit $1`
-- Gradle tasks: `./gradlew commitLint` / `./gradlew commitLintRange`
-
-```bash
-npm install                  # install @commitlint/cli, husky
-npm run commitlint           # lint origin/main..HEAD
-./gradlew commitLint         # same via Gradle (verification group)
-
-# test a message
-echo "feat(api): add pricing" | npx commitlint        # passes
-echo "bad message" | npx commitlint                    # fails: type-empty
-```
-
-Allowed types: `feat, fix, docs, style, refactor, perf, test, build, ci, chore, revert` (conventional). Header max 100, body line 150 (`commitlint.config.js:8`).
-
-Bypass only if needed: `git commit --no-verify` (not recommended).
-
-## Datalake (local, Floci-compatible — no Docker)
-
-Floci server (`floci/floci:latest`) is **Docker-only** (no standalone binary in 2.0.1). Per request, this repo runs **local file-based datalake** that mimics Floci's S3+Glue+Athena+Firehose without a container. When Docker is re-enabled (`floci start` on :4566), same tables work via `testcontainers-floci`.
-
-- **Provision (no AWS/Docker):** `python3 datalake/scripts/provision.py` or `./gradlew :libs:datalake:run --args="provision"` → generates `datalake/data/**` + `catalog/glue.json:1`
-- **Query (Athena → DuckDB):** `./gradlew :libs:datalake:test` or `QueryEngine.java:1` → `SELECT count(*) FROM read_csv('datalake/data/bronze/market_ticks/market_ticks.csv', header=true)` = 200 rows (verified)
-- **Catalog:** `datalake/catalog/glue.json:1` mirrors `aws glue create-database/table` (hedge_bronze/silver/gold)
-- **Floci mode (optional):** `floci start && eval $(floci env) && python3 datalake/scripts/provision-floci.py` → creates S3 buckets `hedge-bronze|silver|gold`, Glue DBs, Firehose `floci-firehose-results` (see `datalake/README.md:1`)
-
-Java API:
 ```java
-var lake = Datalake.defaultLocal(); // auto-finds repo/datalake from any subproject
+var lake = Datalake.defaultLocal();
 lake.loadCatalog().databases(); // hedge_bronze, hedge_silver, hedge_gold
 try (var qe = new QueryEngine()) {
   qe.query("SELECT symbol, avg(price) FROM read_csv('datalake/data/bronze/market_ticks/market_ticks.csv', header=true) GROUP BY symbol");
 }
 ```
 
-See `datalake/README.md:1` and `libs/datalake/README` for full Floci mapping.
+See `datalake/README.md:1`, `docs/datalake.md`.
 
-## World Bank Feed (countries=all, full crawl)
+## Build Logic
 
-Java 21, configurable, fast (virtual threads), scalable (parallel pages, rate-limited) → `datalake` bronze/silver. Schema mirrors API: `DataPoint.java:1` (`indicator{id,value}, country{id,value}, countryiso3code, date, value, unit, obs_status, decimal`).
+`build-logic/src/main/kotlin/hedgefund.*.gradle.kts` — change Java version/test once, not in 47 modules.
 
-- **Config:** `config/worldbank/worldbank.yaml:1` (`countries: [all]`, `source: "2"` WDI 1498 indicators, `date: "2015:2024"`, `perPage:1000`, `concurrency:8`, `qps:5`) + `config/worldbank/worldbank-full.yaml:1` (`fullCrawl:true`)
-- **Run (countries=all):** `./gradlew :services:worldbank-ingest:run --args="--config config/worldbank/worldbank.yaml"` → `datalake/data/bronze/worldbank/indicator=batch_*/date=*/data.ndjson` + `silver/worldbank/worldbank_observations/observations.csv` (15 cols, deduped)
-- **Full crawl:** `./gradlew :services:worldbank-ingest:run --args="--config config/worldbank/worldbank-full.yaml"` → lists 1498 via `GET /indicator?source=2` (paginated), 75 batches × 20 indicators, `countries=all` (264 + aggregates) — validated 77193 rows for `date=2022,maxPages=1`
-- **Query:** `SELECT * FROM read_csv('datalake/data/silver/worldbank/worldbank_observations/observations.csv', header=true) WHERE indicator_id='SP.POP.TOTL'`
-- **Floci (now running 2.0.1):** `floci doctor` ✓, `s3://hedge-bronze/worldbank/` + `s3://hedge-silver/worldbank/` on `http://localhost:4566`, sync via `python3 datalake/scripts/sync-worldbank-to-floci.py`
-- **Tests:** `WorldBankClientTest.java:1` (WireMock countries=all + full list pagination) `BUILD SUCCESSFUL`
+## Commitlint (native)
 
-Implementation: `libs/worldbank/src/main/java/com/hedgefund/worldbank/{config/WorldBankConfig.java:1,client/WorldBankClient.java:1,store/BronzeWriter.java:1,store/SilverTransformer.java:1,ingest/WorldBankIngestService.java:1}`
+`commitlint.config.js:1` `extends @commitlint/config-conventional`, `.husky/commit-msg:1` `npx --no -- commitlint --edit $1`, `./gradlew commitLint` / `commitLintRange`, header 100 body 150 (`commitlint.config.js:8`), types `feat, fix, docs, style, refactor, perf, test, build, ci, chore, revert`.
+
+```bash
+npm install
+echo "feat(api): add pricing" | npx commitlint # passes
+./gradlew commitLint
+```
+
+## Adding a New Module
+
+**Library:** `mkdir -p libs/my/src/main/java/com/hedgefund/my` `plugins { id("hedgefund.java-library") }` `include(":libs:my")`
+
+**Service:** `mkdir -p services/my-ingest/src/main/java/com/hedgefund/my/ingest` `plugins { id("hedgefund.java-service") }` `application { mainClass.set("com.hedgefund.my.ingest.Main") }`
+
+Add deps to `gradle/libs.versions.toml` only.
+
+## Docs
+
+- `docs/README.md` overview, `docs/architecture.md` DRY/SIMPLE + modules, `docs/datalake.md` medallion + Floci mapping, `docs/services.md` 22 services table + run, `docs/sources/README.md` + `docs/sources/{src}.md` 22 per-source, `docs/development.md` adding modules + tests, `docs/deployment.md` Floci 2.0.1 + LocalStack.
+
+## World Bank Full Crawl
+
+- `config/worldbank/worldbank.yaml:1` `countries:[all]` `source:2` `date:2015:2024` + `worldbank-full.yaml:1` `fullCrawl:true` → `indicator=batch_XXXX/date=` `data.ndjson` + `observations.csv` `15` cols deduped, `GET /indicator?source=2` lists 1498, `75` batches×20, `qps 5` `concurrency 8` `429/5xx` retry.
+
+See `docs/sources/worldbank.md`.
+

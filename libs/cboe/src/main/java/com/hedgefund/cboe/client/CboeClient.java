@@ -14,7 +14,7 @@ public class CboeClient {
     private long lastRequestAt=0;
     public CboeClient(CboeConfig cfg){
         this.cfg=cfg;
-        this.http=HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(15)).executor(Executors.newVirtualThreadPerTaskExecutor()).build();
+        this.http=HttpClient.newBuilder().version(HttpClient.Version.HTTP_1_1).connectTimeout(Duration.ofSeconds(15)).executor(Executors.newVirtualThreadPerTaskExecutor()).build();
         this.om=new ObjectMapper(); om.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,false);
     }
     private synchronized void throttle() throws InterruptedException {
