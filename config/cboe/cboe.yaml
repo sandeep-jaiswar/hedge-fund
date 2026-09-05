@@ -1,0 +1,7 @@
+cboe:
+  baseUrl: "https://cdn.cboe.com/api/global/delayed_quotes/charts/historical/_VIX"
+  symbols: ["VIX"]
+  concurrency: 2
+  retry: {maxAttempts: 3, backoffMs: 800, maxBackoffMs: 8000}
+  rateLimit: {qps: 2, burst: 4}
+  paths: {bronze: "data/bronze/cboe", silver: "data/silver/cboe", catalog: "catalog/glue.json"}

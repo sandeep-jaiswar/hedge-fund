@@ -156,18 +156,50 @@
       "StorageDescriptor": {
         "Location": "s3://hedge-bronze/worldbank/",
         "InputFormat": "org.apache.hadoop.mapred.TextInputFormat",
-        "SerdeInfo": { "SerializationLibrary": "org.openx.data.jsonserde.JsonSerDe" },
+        "SerdeInfo": {
+          "SerializationLibrary": "org.openx.data.jsonserde.JsonSerDe"
+        },
         "Columns": [
-          { "Name": "indicator_id", "Type": "string" },
-          { "Name": "indicator_name", "Type": "string" },
-          { "Name": "country_id", "Type": "string" },
-          { "Name": "country_name", "Type": "string" },
-          { "Name": "country_iso3", "Type": "string" },
-          { "Name": "date", "Type": "string" },
-          { "Name": "value", "Type": "double" },
-          { "Name": "unit", "Type": "string" },
-          { "Name": "obs_status", "Type": "string" },
-          { "Name": "decimal", "Type": "int" }
+          {
+            "Name": "indicator_id",
+            "Type": "string"
+          },
+          {
+            "Name": "indicator_name",
+            "Type": "string"
+          },
+          {
+            "Name": "country_id",
+            "Type": "string"
+          },
+          {
+            "Name": "country_name",
+            "Type": "string"
+          },
+          {
+            "Name": "country_iso3",
+            "Type": "string"
+          },
+          {
+            "Name": "date",
+            "Type": "string"
+          },
+          {
+            "Name": "value",
+            "Type": "double"
+          },
+          {
+            "Name": "unit",
+            "Type": "string"
+          },
+          {
+            "Name": "obs_status",
+            "Type": "string"
+          },
+          {
+            "Name": "decimal",
+            "Type": "int"
+          }
         ]
       },
       "LocalPath": "data/bronze/worldbank/"
@@ -178,21 +210,66 @@
       "StorageDescriptor": {
         "Location": "s3://hedge-silver/worldbank/",
         "Columns": [
-          { "Name": "indicator_id", "Type": "string" },
-          { "Name": "indicator_name", "Type": "string" },
-          { "Name": "country_id", "Type": "string" },
-          { "Name": "country_name", "Type": "string" },
-          { "Name": "country_iso3", "Type": "string" },
-          { "Name": "date", "Type": "string" },
-          { "Name": "year", "Type": "int" },
-          { "Name": "period_type", "Type": "string" },
-          { "Name": "value", "Type": "double" },
-          { "Name": "unit", "Type": "string" },
-          { "Name": "obs_status", "Type": "string" },
-          { "Name": "decimal", "Type": "int" },
-          { "Name": "source_id", "Type": "string" },
-          { "Name": "lastupdated", "Type": "string" },
-          { "Name": "is_valid", "Type": "boolean" }
+          {
+            "Name": "indicator_id",
+            "Type": "string"
+          },
+          {
+            "Name": "indicator_name",
+            "Type": "string"
+          },
+          {
+            "Name": "country_id",
+            "Type": "string"
+          },
+          {
+            "Name": "country_name",
+            "Type": "string"
+          },
+          {
+            "Name": "country_iso3",
+            "Type": "string"
+          },
+          {
+            "Name": "date",
+            "Type": "string"
+          },
+          {
+            "Name": "year",
+            "Type": "int"
+          },
+          {
+            "Name": "period_type",
+            "Type": "string"
+          },
+          {
+            "Name": "value",
+            "Type": "double"
+          },
+          {
+            "Name": "unit",
+            "Type": "string"
+          },
+          {
+            "Name": "obs_status",
+            "Type": "string"
+          },
+          {
+            "Name": "decimal",
+            "Type": "int"
+          },
+          {
+            "Name": "source_id",
+            "Type": "string"
+          },
+          {
+            "Name": "lastupdated",
+            "Type": "string"
+          },
+          {
+            "Name": "is_valid",
+            "Type": "boolean"
+          }
         ]
       },
       "LocalPath": "data/silver/worldbank/worldbank_observations/"
@@ -204,13 +281,34 @@
         "Location": "s3://hedge-bronze/yahoo/",
         "InputFormat": "org.apache.hadoop.mapred.TextInputFormat",
         "Columns": [
-          { "Name": "symbol", "Type": "string" },
-          { "Name": "date", "Type": "string" },
-          { "Name": "open", "Type": "double" },
-          { "Name": "high", "Type": "double" },
-          { "Name": "low", "Type": "double" },
-          { "Name": "close", "Type": "double" },
-          { "Name": "volume", "Type": "bigint" }
+          {
+            "Name": "symbol",
+            "Type": "string"
+          },
+          {
+            "Name": "date",
+            "Type": "string"
+          },
+          {
+            "Name": "open",
+            "Type": "double"
+          },
+          {
+            "Name": "high",
+            "Type": "double"
+          },
+          {
+            "Name": "low",
+            "Type": "double"
+          },
+          {
+            "Name": "close",
+            "Type": "double"
+          },
+          {
+            "Name": "volume",
+            "Type": "bigint"
+          }
         ]
       },
       "LocalPath": "data/bronze/yahoo/"
@@ -221,18 +319,845 @@
       "StorageDescriptor": {
         "Location": "s3://hedge-silver/yahoo/",
         "Columns": [
-          { "Name": "symbol", "Type": "string" },
-          { "Name": "date", "Type": "string" },
-          { "Name": "epoch", "Type": "bigint" },
-          { "Name": "open", "Type": "double" },
-          { "Name": "high", "Type": "double" },
-          { "Name": "low", "Type": "double" },
-          { "Name": "close", "Type": "double" },
-          { "Name": "adj_close", "Type": "double" },
-          { "Name": "volume", "Type": "bigint" }
+          {
+            "Name": "symbol",
+            "Type": "string"
+          },
+          {
+            "Name": "date",
+            "Type": "string"
+          },
+          {
+            "Name": "epoch",
+            "Type": "bigint"
+          },
+          {
+            "Name": "open",
+            "Type": "double"
+          },
+          {
+            "Name": "high",
+            "Type": "double"
+          },
+          {
+            "Name": "low",
+            "Type": "double"
+          },
+          {
+            "Name": "close",
+            "Type": "double"
+          },
+          {
+            "Name": "adj_close",
+            "Type": "double"
+          },
+          {
+            "Name": "volume",
+            "Type": "bigint"
+          }
         ]
       },
       "LocalPath": "data/silver/yahoo/"
+    },
+    {
+      "DatabaseName": "hedge_bronze",
+      "Name": "cboe_raw",
+      "StorageDescriptor": {
+        "Location": "s3://hedge-bronze/cboe/",
+        "Columns": [
+          {
+            "Name": "source_key",
+            "Type": "string"
+          },
+          {
+            "Name": "raw",
+            "Type": "string"
+          }
+        ]
+      },
+      "LocalPath": "data/bronze/cboe/"
+    },
+    {
+      "DatabaseName": "hedge_silver",
+      "Name": "cboe",
+      "StorageDescriptor": {
+        "Location": "s3://hedge-silver/cboe/",
+        "Columns": [
+          {
+            "Name": "source_key",
+            "Type": "string"
+          },
+          {
+            "Name": "raw_len",
+            "Type": "bigint"
+          },
+          {
+            "Name": "bronze_path",
+            "Type": "string"
+          }
+        ]
+      },
+      "LocalPath": "data/silver/cboe/"
+    },
+    {
+      "DatabaseName": "hedge_bronze",
+      "Name": "binance_raw",
+      "StorageDescriptor": {
+        "Location": "s3://hedge-bronze/binance/",
+        "Columns": [
+          {
+            "Name": "source_key",
+            "Type": "string"
+          },
+          {
+            "Name": "raw",
+            "Type": "string"
+          }
+        ]
+      },
+      "LocalPath": "data/bronze/binance/"
+    },
+    {
+      "DatabaseName": "hedge_silver",
+      "Name": "binance",
+      "StorageDescriptor": {
+        "Location": "s3://hedge-silver/binance/",
+        "Columns": [
+          {
+            "Name": "source_key",
+            "Type": "string"
+          },
+          {
+            "Name": "raw_len",
+            "Type": "bigint"
+          },
+          {
+            "Name": "bronze_path",
+            "Type": "string"
+          }
+        ]
+      },
+      "LocalPath": "data/silver/binance/"
+    },
+    {
+      "DatabaseName": "hedge_bronze",
+      "Name": "coinbase_raw",
+      "StorageDescriptor": {
+        "Location": "s3://hedge-bronze/coinbase/",
+        "Columns": [
+          {
+            "Name": "source_key",
+            "Type": "string"
+          },
+          {
+            "Name": "raw",
+            "Type": "string"
+          }
+        ]
+      },
+      "LocalPath": "data/bronze/coinbase/"
+    },
+    {
+      "DatabaseName": "hedge_silver",
+      "Name": "coinbase",
+      "StorageDescriptor": {
+        "Location": "s3://hedge-silver/coinbase/",
+        "Columns": [
+          {
+            "Name": "source_key",
+            "Type": "string"
+          },
+          {
+            "Name": "raw_len",
+            "Type": "bigint"
+          },
+          {
+            "Name": "bronze_path",
+            "Type": "string"
+          }
+        ]
+      },
+      "LocalPath": "data/silver/coinbase/"
+    },
+    {
+      "DatabaseName": "hedge_bronze",
+      "Name": "defillama_raw",
+      "StorageDescriptor": {
+        "Location": "s3://hedge-bronze/defillama/",
+        "Columns": [
+          {
+            "Name": "source_key",
+            "Type": "string"
+          },
+          {
+            "Name": "raw",
+            "Type": "string"
+          }
+        ]
+      },
+      "LocalPath": "data/bronze/defillama/"
+    },
+    {
+      "DatabaseName": "hedge_silver",
+      "Name": "defillama",
+      "StorageDescriptor": {
+        "Location": "s3://hedge-silver/defillama/",
+        "Columns": [
+          {
+            "Name": "source_key",
+            "Type": "string"
+          },
+          {
+            "Name": "raw_len",
+            "Type": "bigint"
+          },
+          {
+            "Name": "bronze_path",
+            "Type": "string"
+          }
+        ]
+      },
+      "LocalPath": "data/silver/defillama/"
+    },
+    {
+      "DatabaseName": "hedge_bronze",
+      "Name": "fred_raw",
+      "StorageDescriptor": {
+        "Location": "s3://hedge-bronze/fred/",
+        "Columns": [
+          {
+            "Name": "source_key",
+            "Type": "string"
+          },
+          {
+            "Name": "raw",
+            "Type": "string"
+          }
+        ]
+      },
+      "LocalPath": "data/bronze/fred/"
+    },
+    {
+      "DatabaseName": "hedge_silver",
+      "Name": "fred",
+      "StorageDescriptor": {
+        "Location": "s3://hedge-silver/fred/",
+        "Columns": [
+          {
+            "Name": "source_key",
+            "Type": "string"
+          },
+          {
+            "Name": "raw_len",
+            "Type": "bigint"
+          },
+          {
+            "Name": "bronze_path",
+            "Type": "string"
+          }
+        ]
+      },
+      "LocalPath": "data/silver/fred/"
+    },
+    {
+      "DatabaseName": "hedge_bronze",
+      "Name": "treasury_raw",
+      "StorageDescriptor": {
+        "Location": "s3://hedge-bronze/treasury/",
+        "Columns": [
+          {
+            "Name": "source_key",
+            "Type": "string"
+          },
+          {
+            "Name": "raw",
+            "Type": "string"
+          }
+        ]
+      },
+      "LocalPath": "data/bronze/treasury/"
+    },
+    {
+      "DatabaseName": "hedge_silver",
+      "Name": "treasury",
+      "StorageDescriptor": {
+        "Location": "s3://hedge-silver/treasury/",
+        "Columns": [
+          {
+            "Name": "source_key",
+            "Type": "string"
+          },
+          {
+            "Name": "raw_len",
+            "Type": "bigint"
+          },
+          {
+            "Name": "bronze_path",
+            "Type": "string"
+          }
+        ]
+      },
+      "LocalPath": "data/silver/treasury/"
+    },
+    {
+      "DatabaseName": "hedge_bronze",
+      "Name": "sec_raw",
+      "StorageDescriptor": {
+        "Location": "s3://hedge-bronze/sec/",
+        "Columns": [
+          {
+            "Name": "source_key",
+            "Type": "string"
+          },
+          {
+            "Name": "raw",
+            "Type": "string"
+          }
+        ]
+      },
+      "LocalPath": "data/bronze/sec/"
+    },
+    {
+      "DatabaseName": "hedge_silver",
+      "Name": "sec",
+      "StorageDescriptor": {
+        "Location": "s3://hedge-silver/sec/",
+        "Columns": [
+          {
+            "Name": "source_key",
+            "Type": "string"
+          },
+          {
+            "Name": "raw_len",
+            "Type": "bigint"
+          },
+          {
+            "Name": "bronze_path",
+            "Type": "string"
+          }
+        ]
+      },
+      "LocalPath": "data/silver/sec/"
+    },
+    {
+      "DatabaseName": "hedge_bronze",
+      "Name": "imf_raw",
+      "StorageDescriptor": {
+        "Location": "s3://hedge-bronze/imf/",
+        "Columns": [
+          {
+            "Name": "source_key",
+            "Type": "string"
+          },
+          {
+            "Name": "raw",
+            "Type": "string"
+          }
+        ]
+      },
+      "LocalPath": "data/bronze/imf/"
+    },
+    {
+      "DatabaseName": "hedge_silver",
+      "Name": "imf",
+      "StorageDescriptor": {
+        "Location": "s3://hedge-silver/imf/",
+        "Columns": [
+          {
+            "Name": "source_key",
+            "Type": "string"
+          },
+          {
+            "Name": "raw_len",
+            "Type": "bigint"
+          },
+          {
+            "Name": "bronze_path",
+            "Type": "string"
+          }
+        ]
+      },
+      "LocalPath": "data/silver/imf/"
+    },
+    {
+      "DatabaseName": "hedge_bronze",
+      "Name": "oecd_raw",
+      "StorageDescriptor": {
+        "Location": "s3://hedge-bronze/oecd/",
+        "Columns": [
+          {
+            "Name": "source_key",
+            "Type": "string"
+          },
+          {
+            "Name": "raw",
+            "Type": "string"
+          }
+        ]
+      },
+      "LocalPath": "data/bronze/oecd/"
+    },
+    {
+      "DatabaseName": "hedge_silver",
+      "Name": "oecd",
+      "StorageDescriptor": {
+        "Location": "s3://hedge-silver/oecd/",
+        "Columns": [
+          {
+            "Name": "source_key",
+            "Type": "string"
+          },
+          {
+            "Name": "raw_len",
+            "Type": "bigint"
+          },
+          {
+            "Name": "bronze_path",
+            "Type": "string"
+          }
+        ]
+      },
+      "LocalPath": "data/silver/oecd/"
+    },
+    {
+      "DatabaseName": "hedge_bronze",
+      "Name": "calcfi_raw",
+      "StorageDescriptor": {
+        "Location": "s3://hedge-bronze/calcfi/",
+        "Columns": [
+          {
+            "Name": "source_key",
+            "Type": "string"
+          },
+          {
+            "Name": "raw",
+            "Type": "string"
+          }
+        ]
+      },
+      "LocalPath": "data/bronze/calcfi/"
+    },
+    {
+      "DatabaseName": "hedge_silver",
+      "Name": "calcfi",
+      "StorageDescriptor": {
+        "Location": "s3://hedge-silver/calcfi/",
+        "Columns": [
+          {
+            "Name": "source_key",
+            "Type": "string"
+          },
+          {
+            "Name": "raw_len",
+            "Type": "bigint"
+          },
+          {
+            "Name": "bronze_path",
+            "Type": "string"
+          }
+        ]
+      },
+      "LocalPath": "data/silver/calcfi/"
+    },
+    {
+      "DatabaseName": "hedge_bronze",
+      "Name": "fdic_raw",
+      "StorageDescriptor": {
+        "Location": "s3://hedge-bronze/fdic/",
+        "Columns": [
+          {
+            "Name": "source_key",
+            "Type": "string"
+          },
+          {
+            "Name": "raw",
+            "Type": "string"
+          }
+        ]
+      },
+      "LocalPath": "data/bronze/fdic/"
+    },
+    {
+      "DatabaseName": "hedge_silver",
+      "Name": "fdic",
+      "StorageDescriptor": {
+        "Location": "s3://hedge-silver/fdic/",
+        "Columns": [
+          {
+            "Name": "source_key",
+            "Type": "string"
+          },
+          {
+            "Name": "raw_len",
+            "Type": "bigint"
+          },
+          {
+            "Name": "bronze_path",
+            "Type": "string"
+          }
+        ]
+      },
+      "LocalPath": "data/silver/fdic/"
+    },
+    {
+      "DatabaseName": "hedge_bronze",
+      "Name": "eia_raw",
+      "StorageDescriptor": {
+        "Location": "s3://hedge-bronze/eia/",
+        "Columns": [
+          {
+            "Name": "source_key",
+            "Type": "string"
+          },
+          {
+            "Name": "raw",
+            "Type": "string"
+          }
+        ]
+      },
+      "LocalPath": "data/bronze/eia/"
+    },
+    {
+      "DatabaseName": "hedge_silver",
+      "Name": "eia",
+      "StorageDescriptor": {
+        "Location": "s3://hedge-silver/eia/",
+        "Columns": [
+          {
+            "Name": "source_key",
+            "Type": "string"
+          },
+          {
+            "Name": "raw_len",
+            "Type": "bigint"
+          },
+          {
+            "Name": "bronze_path",
+            "Type": "string"
+          }
+        ]
+      },
+      "LocalPath": "data/silver/eia/"
+    },
+    {
+      "DatabaseName": "hedge_bronze",
+      "Name": "bls_raw",
+      "StorageDescriptor": {
+        "Location": "s3://hedge-bronze/bls/",
+        "Columns": [
+          {
+            "Name": "source_key",
+            "Type": "string"
+          },
+          {
+            "Name": "raw",
+            "Type": "string"
+          }
+        ]
+      },
+      "LocalPath": "data/bronze/bls/"
+    },
+    {
+      "DatabaseName": "hedge_silver",
+      "Name": "bls",
+      "StorageDescriptor": {
+        "Location": "s3://hedge-silver/bls/",
+        "Columns": [
+          {
+            "Name": "source_key",
+            "Type": "string"
+          },
+          {
+            "Name": "raw_len",
+            "Type": "bigint"
+          },
+          {
+            "Name": "bronze_path",
+            "Type": "string"
+          }
+        ]
+      },
+      "LocalPath": "data/silver/bls/"
+    },
+    {
+      "DatabaseName": "hedge_bronze",
+      "Name": "bea_raw",
+      "StorageDescriptor": {
+        "Location": "s3://hedge-bronze/bea/",
+        "Columns": [
+          {
+            "Name": "source_key",
+            "Type": "string"
+          },
+          {
+            "Name": "raw",
+            "Type": "string"
+          }
+        ]
+      },
+      "LocalPath": "data/bronze/bea/"
+    },
+    {
+      "DatabaseName": "hedge_silver",
+      "Name": "bea",
+      "StorageDescriptor": {
+        "Location": "s3://hedge-silver/bea/",
+        "Columns": [
+          {
+            "Name": "source_key",
+            "Type": "string"
+          },
+          {
+            "Name": "raw_len",
+            "Type": "bigint"
+          },
+          {
+            "Name": "bronze_path",
+            "Type": "string"
+          }
+        ]
+      },
+      "LocalPath": "data/silver/bea/"
+    },
+    {
+      "DatabaseName": "hedge_bronze",
+      "Name": "gmd_raw",
+      "StorageDescriptor": {
+        "Location": "s3://hedge-bronze/gmd/",
+        "Columns": [
+          {
+            "Name": "source_key",
+            "Type": "string"
+          },
+          {
+            "Name": "raw",
+            "Type": "string"
+          }
+        ]
+      },
+      "LocalPath": "data/bronze/gmd/"
+    },
+    {
+      "DatabaseName": "hedge_silver",
+      "Name": "gmd",
+      "StorageDescriptor": {
+        "Location": "s3://hedge-silver/gmd/",
+        "Columns": [
+          {
+            "Name": "source_key",
+            "Type": "string"
+          },
+          {
+            "Name": "raw_len",
+            "Type": "bigint"
+          },
+          {
+            "Name": "bronze_path",
+            "Type": "string"
+          }
+        ]
+      },
+      "LocalPath": "data/silver/gmd/"
+    },
+    {
+      "DatabaseName": "hedge_bronze",
+      "Name": "tencent_raw",
+      "StorageDescriptor": {
+        "Location": "s3://hedge-bronze/tencent/",
+        "Columns": [
+          {
+            "Name": "source_key",
+            "Type": "string"
+          },
+          {
+            "Name": "raw",
+            "Type": "string"
+          }
+        ]
+      },
+      "LocalPath": "data/bronze/tencent/"
+    },
+    {
+      "DatabaseName": "hedge_silver",
+      "Name": "tencent",
+      "StorageDescriptor": {
+        "Location": "s3://hedge-silver/tencent/",
+        "Columns": [
+          {
+            "Name": "source_key",
+            "Type": "string"
+          },
+          {
+            "Name": "raw_len",
+            "Type": "bigint"
+          },
+          {
+            "Name": "bronze_path",
+            "Type": "string"
+          }
+        ]
+      },
+      "LocalPath": "data/silver/tencent/"
+    },
+    {
+      "DatabaseName": "hedge_bronze",
+      "Name": "sina_raw",
+      "StorageDescriptor": {
+        "Location": "s3://hedge-bronze/sina/",
+        "Columns": [
+          {
+            "Name": "source_key",
+            "Type": "string"
+          },
+          {
+            "Name": "raw",
+            "Type": "string"
+          }
+        ]
+      },
+      "LocalPath": "data/bronze/sina/"
+    },
+    {
+      "DatabaseName": "hedge_silver",
+      "Name": "sina",
+      "StorageDescriptor": {
+        "Location": "s3://hedge-silver/sina/",
+        "Columns": [
+          {
+            "Name": "source_key",
+            "Type": "string"
+          },
+          {
+            "Name": "raw_len",
+            "Type": "bigint"
+          },
+          {
+            "Name": "bronze_path",
+            "Type": "string"
+          }
+        ]
+      },
+      "LocalPath": "data/silver/sina/"
+    },
+    {
+      "DatabaseName": "hedge_bronze",
+      "Name": "eastmoney_raw",
+      "StorageDescriptor": {
+        "Location": "s3://hedge-bronze/eastmoney/",
+        "Columns": [
+          {
+            "Name": "source_key",
+            "Type": "string"
+          },
+          {
+            "Name": "raw",
+            "Type": "string"
+          }
+        ]
+      },
+      "LocalPath": "data/bronze/eastmoney/"
+    },
+    {
+      "DatabaseName": "hedge_silver",
+      "Name": "eastmoney",
+      "StorageDescriptor": {
+        "Location": "s3://hedge-silver/eastmoney/",
+        "Columns": [
+          {
+            "Name": "source_key",
+            "Type": "string"
+          },
+          {
+            "Name": "raw_len",
+            "Type": "bigint"
+          },
+          {
+            "Name": "bronze_path",
+            "Type": "string"
+          }
+        ]
+      },
+      "LocalPath": "data/silver/eastmoney/"
+    },
+    {
+      "DatabaseName": "hedge_bronze",
+      "Name": "baostock_raw",
+      "StorageDescriptor": {
+        "Location": "s3://hedge-bronze/baostock/",
+        "Columns": [
+          {
+            "Name": "source_key",
+            "Type": "string"
+          },
+          {
+            "Name": "raw",
+            "Type": "string"
+          }
+        ]
+      },
+      "LocalPath": "data/bronze/baostock/"
+    },
+    {
+      "DatabaseName": "hedge_silver",
+      "Name": "baostock",
+      "StorageDescriptor": {
+        "Location": "s3://hedge-silver/baostock/",
+        "Columns": [
+          {
+            "Name": "source_key",
+            "Type": "string"
+          },
+          {
+            "Name": "raw_len",
+            "Type": "bigint"
+          },
+          {
+            "Name": "bronze_path",
+            "Type": "string"
+          }
+        ]
+      },
+      "LocalPath": "data/silver/baostock/"
+    },
+    {
+      "DatabaseName": "hedge_bronze",
+      "Name": "investing_raw",
+      "StorageDescriptor": {
+        "Location": "s3://hedge-bronze/investing/",
+        "Columns": [
+          {
+            "Name": "source_key",
+            "Type": "string"
+          },
+          {
+            "Name": "raw",
+            "Type": "string"
+          }
+        ]
+      },
+      "LocalPath": "data/bronze/investing/"
+    },
+    {
+      "DatabaseName": "hedge_silver",
+      "Name": "investing",
+      "StorageDescriptor": {
+        "Location": "s3://hedge-silver/investing/",
+        "Columns": [
+          {
+            "Name": "source_key",
+            "Type": "string"
+          },
+          {
+            "Name": "raw_len",
+            "Type": "bigint"
+          },
+          {
+            "Name": "bronze_path",
+            "Type": "string"
+          }
+        ]
+      },
+      "LocalPath": "data/silver/investing/"
     }
   ]
 }
