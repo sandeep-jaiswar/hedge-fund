@@ -1,0 +1,8 @@
+coinbase:
+  baseUrl: "https://api.coinbase.com"
+  products: ["BTC-USD", "ETH-USD"]
+  granularity: 86400
+  concurrency: 3
+  retry: {maxAttempts: 3, backoffMs: 800, maxBackoffMs: 8000}
+  rateLimit: {qps: 2, burst: 4}
+  paths: {bronze: "data/bronze/coinbase", silver: "data/silver/coinbase", catalog: "catalog/glue.json"}
