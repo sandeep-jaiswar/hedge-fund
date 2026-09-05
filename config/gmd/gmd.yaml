@@ -1,0 +1,7 @@
+gmd:
+  baseUrl: "https://raw.githubusercontent.com/GlobalMacroDatabase/GMD"
+  symbols: ["gmd"]
+  concurrency: 2
+  retry: {maxAttempts: 3, backoffMs: 800, maxBackoffMs: 8000}
+  rateLimit: {qps: 2, burst: 4}
+  paths: {bronze: "data/bronze/gmd", silver: "data/silver/gmd", catalog: "catalog/glue.json"}
