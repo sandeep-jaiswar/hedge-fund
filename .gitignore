@@ -40,7 +40,7 @@ npm-debug.log*
 .env
 .env.local
 
-# Datalake - bulk sources (large, keyless) - ignore bronze/silver bulk, keep catalog
+# Datalake - bulk sources (large, keyless) - ignore bronze/silver bulk, keep catalog + NSE equity master
 datalake/data/bronze/worldbank/
 datalake/data/silver/worldbank/
 datalake/data/bronze/worldbank/_watermark.json
@@ -86,3 +86,15 @@ datalake/data/bronze/gmd/
 datalake/data/silver/gmd/
 datalake/data/bronze/sec/
 datalake/data/silver/sec/
+
+# Bulk Parquet + DuckDB + partitioned datasets (generated, large) - keep catalog, keep NSE master CSV
+*.duckdb
+*.parquet
+datalake/hedge-fund.duckdb
+hedge-fund.duckdb
+datalake/data/silver/macro/
+datalake/data/silver/market/
+datalake/data/silver/master/
+datalake/data/gold/
+!datalake/data/bronze/nse/equity_master/equity_master.csv
+!datalake/catalog/
