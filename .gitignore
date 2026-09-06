@@ -87,7 +87,7 @@ datalake/data/silver/gmd/
 datalake/data/bronze/sec/
 datalake/data/silver/sec/
 
-# Bulk Parquet + DuckDB + partitioned datasets (generated, large) - keep catalog, keep NSE master CSV
+# Bulk Parquet + DuckDB + partitioned datasets (generated, large) - keep catalog, keep NSE master CSV + gold CSV summaries
 *.duckdb
 *.parquet
 datalake/hedge-fund.duckdb
@@ -95,6 +95,6 @@ hedge-fund.duckdb
 datalake/data/silver/macro/
 datalake/data/silver/market/
 datalake/data/silver/master/
-datalake/data/gold/
 !datalake/data/bronze/nse/equity_master/equity_master.csv
 !datalake/catalog/
+!datalake/data/gold/*.csv
