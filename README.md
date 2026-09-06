@@ -163,5 +163,5 @@ cat datalake/data/gold/all_sources_summary.csv
 
 ## Gap Matrix
 
-See `docs/gap-matrix.md` — **14 real** (worldbank,yahoo,cboe,binance,coinbase,defillama,tencent,sina,treasury,sec,eia,bea,eastmoney proxy,baostock) vs **8 synthetic** (fred RST_STREAM, BLS 1323 HTML, IMF DNS, OECD key, calcfi 404, fdic 404, gmd 404, investing 403) with `synthetic fallback` ensures `BUILD SUCCESSFUL`. Coverage gaps: yahoo `5→10` done, worldbank `2022→2015:2024` full ready, binance `3→10` done, gold typed for fred/treasury/sec pending.
+See `docs/gap-matrix.md` — **18 real (13 direct +5 proxy)** (worldbank,yahoo,cboe,binance,coinbase,defillama,tencent,sina,treasury,sec,eia,bea,eastmoney + fred/calcfi/fdic/gmd/investing proxy) vs **4 synthetic** (bls 115 WAF, imf 120 DNS, oecd 133 key, baostock 8086 HTML) with `synthetic fallback` ensures `BUILD SUCCESSFUL` + **ingestion-ui** `http://localhost:8080` (`Cors *`, `jackson 2.17.2`) `+ FlociSyncService` auto `sync-all-to-floci.py`. Coverage gaps: yahoo `5→10` done `2406`, worldbank `2022→2015:2024` full ready, binance `3→10` done, gold typed for fred/treasury/sec pending.
 
