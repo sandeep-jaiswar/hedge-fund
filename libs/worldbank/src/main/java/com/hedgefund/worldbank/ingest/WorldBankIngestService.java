@@ -57,7 +57,7 @@ public class WorldBankIngestService {
             }));
         }
         for(Future<?> f: futures) f.get();
-        exec.shutdown();
+        
         // silver
         silver.transform();
         // watermark

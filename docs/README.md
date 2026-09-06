@@ -53,7 +53,7 @@ Comprehensive documentation for the **hedge-fund Java 21 monorepo** — 24 libra
 ```bash
 ./gradlew build                    # 191 tasks, 48 projects (ingestion-ui wired)
 ./gradlew monorepoStatus           # wiring summary
-./gradlew startFloci               # floci start + doctor (sudo Nhibataunga#7)
+./gradlew startFloci               # floci start + doctor (sudo; FLOCI_SUDO_PASSWORD if needed)
 ./gradlew provisionFloci           # buckets + Glue
 ./gradlew runIngestionUi           # :8080 UI (CORS *) + :8000/dashboard (JobRunr) — wired FlociSyncService
 # UI: http://localhost:8080 (static grid 22) -> POST /api/ingest/start/{src} -> JobRunr + auto sync to s3://hedge-*

@@ -22,8 +22,15 @@ tasks.register<Exec>("provisionFloci") {
 
 tasks.register<Exec>("startFloci") {
     group = "datalake"
-    description = "Start Floci 2.0.1 (requires sudo Nhibataunga#7)"
-    commandLine("bash", "-c", "echo Nhibataunga#7 | sudo -S floci start && floci doctor")
+    description = "Start Floci 2.0.1 (requires sudo; set FLOCI_SUDO_PASSWORD env or gradle property flociSudoPassword)"
+    val sudoPass = providers.environmentVariable("FLOCI_SUDO_PASSWORD")
+        .orElse(providers.gradleProperty("flociSudoPassword")).getOrElse("")
+    if (sudoPass.isNotEmpty()) {
+        commandLine("bash", "-c", "echo \"\$FLOCI_SUDO_PASSWORD\" | sudo -S floci start && floci doctor")
+        environment("FLOCI_SUDO_PASSWORD", sudoPass)
+    } else {
+        commandLine("bash", "-c", "sudo floci start && floci doctor")
+    }
 }
 
 tasks.register("monorepoStatus") {

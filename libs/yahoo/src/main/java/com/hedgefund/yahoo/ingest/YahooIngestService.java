@@ -29,7 +29,7 @@ public class YahooIngestService {
         log.info("Yahoo ingest start symbols={} interval={} range={}", cfg.symbols(), cfg.interval(), cfg.range());
         Files.createDirectories(bronzeRoot);
         Files.createDirectories(silverRoot);
-        ExecutorService exec=Executors.newVirtualThreadPerTaskExecutor();
+        try (var exec = Executors.newVirtualThreadPerTaskExecutor()) {
         Semaphore sem=new Semaphore(cfg.concurrency());
         List<Future<?>> futures=new ArrayList<>();
         ConcurrentHashMap<String, List<Bar>> all=new ConcurrentHashMap<>();
@@ -48,8 +48,8 @@ public class YahooIngestService {
                 finally{ sem.release(); }
             }));
         }
-        for(Future<?> f: futures) f.get();
-        exec.shutdown();
+        for(Future<?> f: futures) f.get(60, TimeUnit.SECONDS);
+        }
         Path out=silver.transform(bronzeRoot, silverRoot);
         long rows=Files.lines(out).count()-1;
         log.info("Silver wrote {} rows to {}", rows, out);

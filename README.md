@@ -2,7 +2,7 @@
 
 Java 21 monorepo — DRY + SIMPLE, **48 Gradle projects**, medallion datalake (Floci-compatible), **22 free no-key financial data ingest services** → `datalake/bronze|silver|gold` + **`apps/ingestion-ui` control plane** (JobRunr).
 
-**Floci 2.0.1 running** `http://localhost:4566` `hedge-bronze/silver/gold` `floci doctor ✓` `docker ps 1e... Up healthy`. Sudo `Nhibataunga#7` pre-approved. **Ingestion UI** `http://localhost:8080` (static) + `http://localhost:8000/dashboard` (JobRunr) wired to Floci `syncFloci`.
+**Floci 2.0.1 running** `http://localhost:4566` `hedge-bronze/silver/gold` `floci doctor ✓` `docker ps 1e... Up healthy`. Sudo via `FLOCI_SUDO_PASSWORD` env or `flociSudoPassword` gradle property (fallback `sudo`). **Ingestion UI** `http://localhost:8080` (static) + `http://localhost:8000/dashboard` (JobRunr) wired to Floci `syncFloci`.
 
 ## Structure (48 projects)
 

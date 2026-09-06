@@ -17,6 +17,8 @@ dependencies {
     implementation(libs.jackson.databind)
     implementation(libs.snakeyaml)
     implementation(libs.slf4j.api)
+    implementation(libs.spring.boot.starter.jdbc)
+    runtimeOnly(libs.h2)
     runtimeOnly(libs.logback.classic)
 
     // depend on all ingest libs for delegation

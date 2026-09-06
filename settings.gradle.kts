@@ -15,6 +15,7 @@ rootProject.name = "hedge-fund"
 // libs - shared code (DRY)
 include(":libs:common")
 include(":libs:datalake")
+include(":libs:ingest-common")
 include(":libs:worldbank")
 include(":libs:yahoo")
 include(":libs:investing")

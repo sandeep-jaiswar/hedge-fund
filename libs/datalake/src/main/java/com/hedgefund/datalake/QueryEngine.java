@@ -45,9 +45,10 @@ public class QueryEngine implements AutoCloseable {
         }
     }
 
-    /** Convenience: query CSV directly */
+    /** Convenience: query CSV directly - escapes single quotes to prevent SQL injection */
     public List<Map<String, Object>> queryCsv(String csvPath, String sqlWhere) throws SQLException {
-        String sql = "SELECT * FROM read_csv('" + csvPath + "', header=true) " + (sqlWhere != null ? sqlWhere : "");
+        String escaped = csvPath.replace("'", "''");
+        String sql = "SELECT * FROM read_csv('" + escaped + "', header=true) " + (sqlWhere != null ? sqlWhere : "");
         return query(sql);
     }
 

@@ -1,6 +1,13 @@
 server:
   port: 8080
 
+spring:
+  datasource:
+    url: jdbc:h2:file:./data/jobrunr;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: sa
+
 org:
   jobrunr:
     background-job-server:
@@ -10,8 +17,9 @@ org:
       enabled: true
       port: 8000
     database:
-      type: memory
-      # for persistence across restarts switch to: type: sql + datasource
+      type: sql
+      datasource: jdbc:h2:file:./data/jobrunr;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+      # fallback to memory if H2 file not writable: set JOBRUNR_DATABASE_TYPE=memory
 
 logging:
   level:

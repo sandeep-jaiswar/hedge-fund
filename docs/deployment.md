@@ -5,7 +5,7 @@ Floci server is Docker-only (`floci/floci:latest`), CLI `~/.local/bin/floci` orc
 ## Start Floci
 
 ```bash
-sudo -S <<< "Nhibataunga#7" floci start   # Docker 29.7.2, exposes 4566
+sudo floci start                        # or FLOCI_SUDO_PASSWORD=xxx sudo -S floci start, Docker 29.7.2 exposes 4566
 floci doctor                            # All checks passed
 docker ps                               # 0.0.0.0:4566->4566
 eval $(floci env)                       # AWS_ENDPOINT_URL=http://localhost:4566 AWS_ACCESS_KEY_ID=test
@@ -60,4 +60,4 @@ floci stop
 docker ps
 ```
 
-No local Gradle install needed; `sudo` password `Nhibataunga#7` pre-approved.
+No local Gradle install needed; `sudo` via `FLOCI_SUDO_PASSWORD` env or `flociSudoPassword` gradle property.

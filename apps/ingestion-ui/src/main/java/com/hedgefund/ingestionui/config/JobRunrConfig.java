@@ -1,17 +1,7 @@
 package com.hedgefund.ingestionui.config;
 
-import org.jobrunr.jobs.mappers.JobMapper;
-import org.jobrunr.storage.InMemoryStorageProvider;
-import org.jobrunr.storage.StorageProvider;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/** JobRunr uses auto-configured SQL StorageProvider via application.yml datasource; no custom bean needed for persistence. */
 @Configuration
-public class JobRunrConfig {
-    @Bean
-    public StorageProvider storageProvider(JobMapper jobMapper) {
-        InMemoryStorageProvider provider = new InMemoryStorageProvider();
-        provider.setJobMapper(jobMapper);
-        return provider;
-    }
-}
+public class JobRunrConfig {}

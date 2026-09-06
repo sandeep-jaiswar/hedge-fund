@@ -2,6 +2,7 @@ package com.hedgefund.ingestionui.controller;
 
 import com.hedgefund.ingestionui.service.FlociSyncService;
 import com.hedgefund.ingestionui.service.IngestionJobService;
+import com.hedgefund.ingestionui.service.SourceRegistry;
 import java.time.Instant;
 import java.util.*;
 import org.jobrunr.storage.JobNotFoundException;
@@ -9,46 +10,25 @@ import org.jobrunr.storage.StorageProvider;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin(origins = "*", allowedHeaders = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.DELETE, RequestMethod.OPTIONS})
+@CrossOrigin(origins = {"http://localhost:8080","http://localhost:3000","http://127.0.0.1:8080"}, allowedHeaders = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.DELETE, RequestMethod.OPTIONS})
 @RestController
 @RequestMapping("/api/ingest")
 public class IngestionController {
     private final IngestionJobService jobService;
     private final StorageProvider storageProvider;
     private final FlociSyncService flociSync;
+    private final SourceRegistry registry;
 
-    public IngestionController(IngestionJobService jobService, StorageProvider storageProvider, FlociSyncService flociSync) {
+    public IngestionController(IngestionJobService jobService, StorageProvider storageProvider, FlociSyncService flociSync, SourceRegistry registry) {
         this.jobService = jobService;
         this.storageProvider = storageProvider;
         this.flociSync = flociSync;
+        this.registry = registry;
     }
 
     @GetMapping("/sources")
     public List<Map<String, Object>> sources() {
-        return List.of(
-            Map.of("id","worldbank","name","World Bank WDI","config","config/worldbank/worldbank.yaml"),
-            Map.of("id","yahoo","name","Yahoo Finance","config","config/yahoo/yahoo.yaml"),
-            Map.of("id","cboe","name","CBOE (VIX)","config","config/cboe/cboe.yaml"),
-            Map.of("id","binance","name","Binance","config","config/binance/binance.yaml"),
-            Map.of("id","coinbase","name","Coinbase","config","config/coinbase/coinbase.yaml"),
-            Map.of("id","defillama","name","DefiLlama","config","config/defillama/defillama.yaml"),
-            Map.of("id","tencent","name","Tencent","config","config/tencent/tencent.yaml"),
-            Map.of("id","sina","name","Sina","config","config/sina/sina.yaml"),
-            Map.of("id","eastmoney","name","EastMoney","config","config/eastmoney/eastmoney.yaml"),
-            Map.of("id","baostock","name","Baostock","config","config/baostock/baostock.yaml"),
-            Map.of("id","investing","name","Investing","config","config/investing/investing.yaml"),
-            Map.of("id","fred","name","FRED","config","config/fred/fred.yaml"),
-            Map.of("id","treasury","name","Treasury","config","config/treasury/treasury.yaml"),
-            Map.of("id","sec","name","SEC EDGAR","config","config/sec/sec.yaml"),
-            Map.of("id","imf","name","IMF","config","config/imf/imf.yaml"),
-            Map.of("id","oecd","name","OECD","config","config/oecd/oecd.yaml"),
-            Map.of("id","calcfi","name","CalcFi","config","config/calcfi/calcfi.yaml"),
-            Map.of("id","fdic","name","FDIC","config","config/fdic/fdic.yaml"),
-            Map.of("id","eia","name","EIA","config","config/eia/eia.yaml"),
-            Map.of("id","bls","name","BLS","config","config/bls/bls.yaml"),
-            Map.of("id","bea","name","BEA","config","config/bea/bea.yaml"),
-            Map.of("id","gmd","name","GMD","config","config/gmd/gmd.yaml")
-        );
+        return registry.asControllerMaps();
     }
 
     @PostMapping("/start/{source}")

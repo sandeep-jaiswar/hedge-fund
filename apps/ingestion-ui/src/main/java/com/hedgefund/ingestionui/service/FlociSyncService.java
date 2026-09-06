@@ -40,19 +40,20 @@ public class FlociSyncService {
         // best-effort: run python sync in background (monorepo script handles per-source s3://hedge-*)
         try {
             String script = "datalake/scripts/sync-all-to-floci.py";
-            Path scriptPath = Path.of(System.getProperty("user.dir")).resolve(script);
-            if (!scriptPath.toFile().exists()) {
-                scriptPath = Path.of("..").resolve(script).toAbsolutePath();
+            Path scriptPath = resolveScript(script);
+            if (scriptPath == null) {
+                log.warn("Floci sync script not found: {}", script);
+                return;
             }
             log.info("Syncing {} to Floci via {}", source, scriptPath);
             var pb = new ProcessBuilder("python3", scriptPath.toString());
-            pb.directory(new File(System.getProperty("user.dir")));
+            pb.directory(scriptPath.getParent().getParent().getParent().toFile());
             pb.redirectErrorStream(true);
             var proc = pb.start();
             // wait at most 30s, don't block JobRunr worker forever
             boolean done = proc.waitFor(30, java.util.concurrent.TimeUnit.SECONDS);
             if (done) {
-                String out = new String(proc.getInputStream().readAllBytes());
+                String out = new String(proc.getInputStream().readNBytes(8192));
                 log.info("Floci sync done for {} exit={} out={}", source, proc.exitValue(), out.substring(0, Math.min(400, out.length())));
             } else {
                 proc.destroyForcibly();
@@ -61,5 +62,14 @@ public class FlociSyncService {
         } catch (Exception e) {
             log.warn("Floci sync failed for {}: {}", source, e.toString());
         }
+    }
+
+    private Path resolveScript(String script) {
+        Path cwd = Path.of(System.getProperty("user.dir")).toAbsolutePath().normalize();
+        for (Path p = cwd; p != null; p = p.getParent()) {
+            Path candidate = p.resolve(script);
+            if (candidate.toFile().exists()) return candidate.normalize();
+        }
+        return null;
     }
 }
