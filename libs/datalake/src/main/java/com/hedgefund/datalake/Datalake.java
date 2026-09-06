@@ -26,35 +26,23 @@ public class Datalake {
         this.catalogPath = this.root.resolve("catalog/glue.json");
     }
 
+    private static volatile Datalake cached;
+
     public static Datalake defaultLocal() {
-        // Walk up parents to find repo's datalake/ (contains data/ or catalog/glue.json)
-        Path cwd = Path.of("").toAbsolutePath();
-        for (int i = 0; i < 6; i++) {
-            Path candidate = cwd.resolve("datalake");
-            boolean hasCatalog = Files.exists(candidate.resolve("catalog/glue.json"));
-            boolean hasData = Files.exists(candidate.resolve("data"));
-            if (hasCatalog || hasData) {
-                // ensure it's not the Java module libs/datalake (which has src/ not data/)
-                // repo datalake must have data/ or catalog/
-                return new Datalake(candidate);
-            }
-            // also try direct parent's datalake when cwd is inside datalake itself
-            cwd = cwd.getParent();
-            if (cwd == null) break;
-        }
-        // fallback: walk from repo root explicitly
-        Path repoRoot = Path.of("").toAbsolutePath();
-        while (repoRoot != null) {
-            Path candidate = repoRoot.resolve("datalake");
+        Datalake c = cached;
+        if (c != null) return c;
+        Path cwd = Path.of(System.getProperty("user.dir", "")).toAbsolutePath().normalize();
+        for (Path cur = cwd; cur != null; cur = cur.getParent()) {
+            Path candidate = cur.resolve("datalake");
             if (Files.exists(candidate.resolve("catalog/glue.json")) || Files.exists(candidate.resolve("data"))) {
-                return new Datalake(candidate);
+                c = new Datalake(candidate);
+                cached = c;
+                return c;
             }
-            repoRoot = repoRoot.getParent();
         }
-        for (Path p : List.of(Path.of("datalake"), Path.of("../datalake"), Path.of("../../datalake"), Path.of("../../../datalake"))) {
-            if (Files.exists(p.resolve("catalog/glue.json")) || Files.exists(p.resolve("data"))) return new Datalake(p);
-        }
-        return new Datalake(Path.of("datalake"));
+        c = new Datalake(Path.of("datalake"));
+        cached = c;
+        return c;
     }
 
     public Path getRoot() { return root; }

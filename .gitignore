@@ -90,8 +90,13 @@ datalake/data/silver/sec/
 # Bulk Parquet + DuckDB + partitioned datasets (generated, large) - keep catalog, keep NSE master CSV + gold CSV summaries
 *.duckdb
 *.parquet
+*.db
+*.mv.db
+*.trace.db
 datalake/hedge-fund.duckdb
 hedge-fund.duckdb
+data/jobrunr.mv.db
+data/jobrunr.trace.db
 datalake/data/silver/macro/
 datalake/data/silver/market/
 datalake/data/silver/master/

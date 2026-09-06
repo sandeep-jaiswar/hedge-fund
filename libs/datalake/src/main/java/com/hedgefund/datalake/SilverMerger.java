@@ -18,6 +18,16 @@ import java.util.*;
  */
 public class SilverMerger {
     private static final Logger log = LoggerFactory.getLogger(SilverMerger.class);
+    private static volatile boolean jsonLoaded;
+
+    private static void ensureJson(Connection c) throws SQLException {
+        if (jsonLoaded) return;
+        synchronized (SilverMerger.class) {
+            if (jsonLoaded) return;
+            c.createStatement().execute("INSTALL json; LOAD json;");
+            jsonLoaded = true;
+        }
+    }
 
     public static void mergeMarketOhlcv(Path datalakeRoot) throws Exception {
         Path bronzeRoot = datalakeRoot.resolve("data/bronze/yahoo");
@@ -28,8 +38,7 @@ public class SilverMerger {
         String csvPath = datalakeRoot.resolve("data/silver/yahoo/yahoo_ohlcv.csv").toString();
 
         try (Connection c = DriverManager.getConnection("jdbc:duckdb:")) {
-            // Load existing csv into temp table for dedup, then write partitioned parquet
-            c.createStatement().execute("INSTALL json; LOAD json;");
+            ensureJson(c);
             String tmpTable;
             if (Files.exists(Path.of(csvPath))) {
                 // dedup via ROW_NUMBER on (symbol,date) keep latest epoch
