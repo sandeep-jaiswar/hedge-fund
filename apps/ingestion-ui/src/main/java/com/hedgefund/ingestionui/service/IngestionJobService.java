@@ -16,10 +16,12 @@ public class IngestionJobService {
     private static final Logger log = LoggerFactory.getLogger(IngestionJobService.class);
     private final JobScheduler scheduler;
     private final StorageProvider storageProvider;
+    private final FlociSyncService flociSync;
 
-    public IngestionJobService(JobScheduler scheduler, StorageProvider storageProvider) {
+    public IngestionJobService(JobScheduler scheduler, StorageProvider storageProvider, FlociSyncService flociSync) {
         this.scheduler = scheduler;
         this.storageProvider = storageProvider;
+        this.flociSync = flociSync;
     }
 
     public UUID enqueue(String source, String config) {
@@ -137,6 +139,8 @@ public class IngestionJobService {
             default -> throw new IllegalArgumentException("Unknown source: " + source);
         }
         log.info("Ingest done source={}", source);
+        // wire into monorepo Floci datalake
+        try { flociSync.syncAfterIngest(source); } catch (Exception e) { log.warn("post-ingest sync failed {}", e.toString()); }
     }
 
     public void delete(UUID jobId) {

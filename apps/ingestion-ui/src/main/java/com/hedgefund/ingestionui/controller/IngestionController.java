@@ -1,5 +1,6 @@
 package com.hedgefund.ingestionui.controller;
 
+import com.hedgefund.ingestionui.service.FlociSyncService;
 import com.hedgefund.ingestionui.service.IngestionJobService;
 import java.time.Instant;
 import java.util.*;
@@ -14,10 +15,12 @@ import org.springframework.web.bind.annotation.*;
 public class IngestionController {
     private final IngestionJobService jobService;
     private final StorageProvider storageProvider;
+    private final FlociSyncService flociSync;
 
-    public IngestionController(IngestionJobService jobService, StorageProvider storageProvider) {
+    public IngestionController(IngestionJobService jobService, StorageProvider storageProvider, FlociSyncService flociSync) {
         this.jobService = jobService;
         this.storageProvider = storageProvider;
+        this.flociSync = flociSync;
     }
 
     @GetMapping("/sources")
@@ -118,6 +121,12 @@ public class IngestionController {
 
     @GetMapping("/health")
     public Map<String,Object> health() {
-        return Map.of("status","UP","dashboard","http://localhost:8000/dashboard","api","/api/ingest/sources");
+        return Map.of("status","UP","dashboard","http://localhost:8000/dashboard","api","/api/ingest/sources","floci", flociSync.isFlociRunning() ? "http://localhost:4566/_floci/health" : "down");
+    }
+
+    @PostMapping("/sync")
+    public Map<String,Object> sync() {
+        flociSync.syncAfterIngest("all");
+        return Map.of("synced","s3://hedge-* via datalake/scripts/sync-all-to-floci.py","floci", flociSync.isFlociRunning());
     }
 }

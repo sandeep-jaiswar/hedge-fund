@@ -1,5 +1,42 @@
 // Root build file - keeps it SIMPLE
 // All shared Java config lives in build-logic convention plugins (DRY)
+// Wiring: ingestion-ui is the monorepo control plane (JobRunr) -> syncs to Floci S3
+
+tasks.register<Exec>("runIngestionUi") {
+    group = "ingestion"
+    description = "Run ingestion-ui control plane (JobRunr :8080 + :8000/dashboard)"
+    commandLine("./gradlew", ":apps:ingestion-ui:bootRun")
+}
+
+tasks.register<Exec>("syncFloci") {
+    group = "datalake"
+    description = "Sync datalake/data/{bronze,silver,gold} -> s3://hedge-* via Floci http://localhost:4566"
+    commandLine("bash", "-c", "python3 datalake/scripts/sync-all-to-floci.py")
+}
+
+tasks.register<Exec>("provisionFloci") {
+    group = "datalake"
+    description = "Provision Floci buckets + Glue DBs + Firehose"
+    commandLine("bash", "-c", "python3 datalake/scripts/provision-floci.py")
+}
+
+tasks.register<Exec>("startFloci") {
+    group = "datalake"
+    description = "Start Floci 2.0.1 (requires sudo Nhibataunga#7)"
+    commandLine("bash", "-c", "echo Nhibataunga#7 | sudo -S floci start && floci doctor")
+}
+
+tasks.register("monorepoStatus") {
+    group = "help"
+    description = "Prints monorepo wiring (apps, services, datalake, Floci)"
+    doLast {
+        println("Monorepo: ${gradle.rootProject.allprojects.size} projects")
+        println(" - Control plane: apps/ingestion-ui :8080 (UI) + :8000/dashboard (JobRunr)")
+        println(" - Datalake: datalake/data/{bronze 24, silver 23, gold 4} -> s3://hedge-* syncFloci")
+        println(" - Floci: http://localhost:4566 _floci/health v2.0.1")
+        gradle.rootProject.allprojects.forEach { println("   - ${it.path}") }
+    }
+}
 
 tasks.register<Exec>("commitLint") {
     group = "verification"

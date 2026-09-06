@@ -1,20 +1,20 @@
 # hedge-fund Monorepo
 
-Java 21 monorepo — DRY + SIMPLE, 47 Gradle projects, medallion datalake (Floci-compatible), **22 free no-key financial data ingest services** → `datalake/bronze|silver|gold`.
+Java 21 monorepo — DRY + SIMPLE, **48 Gradle projects**, medallion datalake (Floci-compatible), **22 free no-key financial data ingest services** → `datalake/bronze|silver|gold` + **`apps/ingestion-ui` control plane** (JobRunr).
 
-**Floci 2.0.1 running** `http://localhost:4566` `hedge-bronze/silver/gold` `floci doctor ✓` `docker ps bf... Up healthy`. Sudo `Nhibataunga#7` pre-approved.
+**Floci 2.0.1 running** `http://localhost:4566` `hedge-bronze/silver/gold` `floci doctor ✓` `docker ps 1e... Up healthy`. Sudo `Nhibataunga#7` pre-approved. **Ingestion UI** `http://localhost:8080` (static) + `http://localhost:8000/dashboard` (JobRunr) wired to Floci `syncFloci`.
 
-## Structure (47 projects)
+## Structure (48 projects)
 
 ```
 .
-├── gradle/libs.versions.toml          # java 21, jackson 2.18.2, duckdb 1.3.2.0, awsSdk 2.25.27, snakeyaml 2.3, wiremock 3.9.1
+├── gradle/libs.versions.toml          # java 21, jackson 2.17.2, duckdb 1.3.2.0, awsSdk 2.25.27, snakeyaml 2.3, wiremock 3.9.1, springBoot 3.3.5, jobrunr 7.4.1
 ├── build-logic/src/main/kotlin/hedgefund.*.gradle.kts # java-common (toolchain 21) / java-library / java-service
 ├── datalake/                          # medallion, Floci-compatible
 │   ├── data/bronze/ (24) market_ticks, orders, worldbank, yahoo, cboe, binance, coinbase, defillama, tencent, sina, eastmoney, baostock, investing, fred, treasury, sec, imf, oecd, calcfi, fdic, eia, bls, bea, gmd
 │   ├── data/silver/ (23) ohlcv, worldbank/worldbank_observations/observations.csv, yahoo/yahoo_ohlcv.csv, binance/binance.csv ...
-│   ├── catalog/glue.json              # 48 tables hedge_bronze/silver/gold (s3://hedge-*/ + LocalPath)
-│   └── scripts/provision.py, provision-floci.py, sync-*-to-floci.py
+│   ├── catalog/glue.json              # 51 tables hedge_bronze/silver/gold (s3://hedge-*/ + LocalPath)
+│   └── scripts/provision.py, provision-floci.py, sync-*-to-floci.py, sync-all-to-floci.py
 ├── libs/ (24)                         # common + datalake + 22 sources
 │   ├── common/                        # Money, utils (DRY)
 │   ├── datalake/                      # Datalake.java:1 + QueryEngine.java:1 (DuckDB)
@@ -25,11 +25,13 @@ Java 21 monorepo — DRY + SIMPLE, 47 Gradle projects, medallion datalake (Floci
 │   ├── defillama/                     # api.llama.fi/protocol
 │   ├── cboe/ investing/ tencent/ sina/ eastmoney/ baostock/ fred/ treasury/ sec/ imf/ oecd/ calcfi/ fdic/ eia/ bls/ bea/ gmd/
 │   └── each: config/{Src}Config.java, client/{Src}Client.java, store/{Src}BronzeWriter.java, store/{Src}SilverTransformer.java, ingest/{Src}IngestService.java
-├── services/ (23)                     # worker + 22 ingest
+├── services/ (24)                     # worker + 22 ingest + gold-aggregator
 │   ├── worldbank-ingest/Main.java:1   # --config + --dry-run, Datalake.defaultLocal()
 │   ├── yahoo-ingest/ ... gmd-ingest/  # services/{src}-ingest
-│   └── worker/
-├── apps/api/                          # deployable jar
+│   └── worker/ + gold-aggregator/
+├── apps/
+│   ├── api/                           # placeholder deployable jar
+│   └── ingestion-ui/                  # control plane (wired) — Spring Boot 3.3.5 + JobRunr 7.4.1 :8080 UI + :8000/dashboard, POST /api/ingest/start/{src}, auto-sync to Floci
 ├── config/{src}/{src}.yaml            # 22 configs (symbols/series, interval/range, concurrency, qps, paths)
 └── docs/                              # comprehensive docs (you are here)
     ├── README.md, architecture.md, datalake.md, services.md, development.md, deployment.md
@@ -48,9 +50,12 @@ Java 21 monorepo — DRY + SIMPLE, 47 Gradle projects, medallion datalake (Floci
 ## Quick Start
 
 ```bash
-./gradlew build          # 58 tasks, 47 projects, BUILD SUCCESSFUL
+./gradlew build          # 191 tasks, 48 projects, BUILD SUCCESSFUL (ingestion-ui wired)
 ./gradlew test           # JUnit5 + WireMock
-./gradlew projects       # list 47
+./gradlew projects       # list 48
+./gradlew monorepoStatus # wiring summary
+./gradlew runIngestionUi # :8080 UI + :8000 JobRunr dashboard (apps/ingestion-ui)
+./gradlew syncFloci      # datalake/data -> s3://hedge-* (Floci :4566)
 ./gradlew :apps:api:run
 ./gradlew :services:yahoo-ingest:run --args="--config config/yahoo/yahoo.yaml"
 ./gradlew :services:worldbank-ingest:run --args="--config config/worldbank/worldbank.yaml" # 5 symbols 1mo
@@ -93,9 +98,10 @@ Run all: `for src in yahoo cboe binance coinbase defillama tencent baostock inve
 
 ## Datalake (Floci-compatible, no Docker required)
 
-- **Local:** `datalake/data/bronze/{src}/key=.../data.raw` (NDJSON/CSV, Firehose-compatible) → `data/silver/{src}/{src}.csv` (dedup, `34` lines total generic + `115` yahoo + `77193` worldbank), `catalog/glue.json:1` 48 tables `hedge_bronze/silver/gold` `s3://hedge-*/` ↔ `LocalPath`.
+- **Local:** `datalake/data/bronze/{src}/key=.../data.raw` (NDJSON/CSV, Firehose-compatible) → `data/silver/{src}/{src}.csv` (dedup, `34` lines total generic + `115→2634` yahoo + `77193` worldbank), `catalog/glue.json:1` 51 tables `hedge_bronze/silver/gold` `s3://hedge-*/` ↔ `LocalPath`.
 - **Query (Athena→DuckDB):** `Datalake.defaultLocal()` + `QueryEngine.java:1` `jdbc:duckdb:` `SELECT ... FROM read_csv('datalake/data/silver/yahoo/yahoo_ohlcv.csv', header=true)` (200 ticks sample verified).
-- **Floci mode:** `floci start` (`2.0.1` `floci/floci:latest` `0.0.0.0:4566->4566` `floci doctor ✓`) → `python3 datalake/scripts/provision-floci.py` (S3 buckets `hedge-bronze/silver/gold` + Glue + Firehose) + `python3 datalake/scripts/sync-*-to-floci.py` (`boto3` `endpoint http://localhost:4566` `test/test` `Config(signature_version s3v4)`) verified `584494` bytes `hedge-silver/worldbank`.
+- **Floci mode:** `floci start` (`2.0.1` `floci/floci:latest` `0.0.0.0:4566->4566` `floci doctor ✓`) → `python3 datalake/scripts/provision-floci.py` (S3 buckets `hedge-bronze/silver/gold` + Glue + Firehose) + `python3 datalake/scripts/sync-all-to-floci.py` (`boto3` `endpoint http://localhost:4566` `test/test` `Config(signature_version s3v4)`) verified `~333` files `hedge-bronze/silver/gold`.
+- **Wired via ingestion-ui:** `POST /api/ingest/start/{src}` → `JobRunr` `:8000/dashboard` → `FlociSyncService` auto `sync-all-to-floci.py` if `http://localhost:4566/_floci/health` up; or `POST /api/ingest/sync` / `./gradlew syncFloci`.
 - Bulk ignored `.gitignore:44` `datalake/data/bronze/{src}/` + `silver/...`, catalog tracked.
 
 Java:
@@ -110,9 +116,13 @@ try (var qe = new QueryEngine()) {
 
 See `datalake/README.md:1`, `docs/datalake.md`.
 
-## Build Logic
+## Build Logic + Monorepo Wiring
 
-`build-logic/src/main/kotlin/hedgefund.*.gradle.kts` — change Java version/test once, not in 47 modules.
+`build-logic/src/main/kotlin/hedgefund.*.gradle.kts` — change Java version/test once, not in 48 modules.
+
+**Wiring tasks (`build.gradle.kts:1`):** `runIngestionUi` (`:apps:ingestion-ui:bootRun` `:8080` + `:8000`), `syncFloci`, `provisionFloci`, `startFloci`, `monorepoStatus`.
+
+**Ingestion UI wiring (`apps/ingestion-ui:8080`):** `Spring Boot 3.3.5 + JobRunr 7.4.1` `InMemoryStorageProvider` `CorsConfig *`, `IngestionJobService` wraps 22 `libs/{src}/ingest/*IngestService` + `FlociSyncService` (best-effort `python3 datalake/scripts/sync-all-to-floci.py` after each job), `IngestionController` `POST /api/ingest/start/{src}?config=` `POST /start-all` `GET /api/ingest/jobs` `DELETE /api/ingest/jobs/{id}` `POST /api/ingest/sync` + static `index.html` grid + `GET /api/ingest/sources` `22` entries.
 
 ## Commitlint (native)
 
