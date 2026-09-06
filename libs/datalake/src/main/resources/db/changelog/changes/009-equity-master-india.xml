@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <changeSet id="009-01-ensure-india-refs" author="hedge-fund">
+        <comment>Ensure India country, INR currency, NSE exchange for equity master</comment>
+        <sql>INSERT OR IGNORE INTO dim.dim_country VALUES ('IND','IN','India','South Asia')</sql>
+        <sql>INSERT OR IGNORE INTO dim.dim_currency VALUES (2,'INR','Indian Rupee')</sql>
+        <sql>INSERT OR IGNORE INTO dim.dim_exchange (exchange_id, exchange_code, exchange_name, country_iso3, currency, timezone, currency_id) VALUES (4,'NSE','National Stock Exchange','IND','INR','Asia/Kolkata',2)</sql>
+        <rollback>
+            <sql>DELETE FROM dim.dim_exchange WHERE exchange_id=4</sql>
+        </rollback>
+    </changeSet>
+    <changeSet id="009-02-seed-equity-master-india" author="hedge-fund" runOnChange="true">
+        <comment>Seed 2557 NSE equities -> dim.instrument asset_class EQUITY(1), exchange NSE(4), currency INR(2), India. No loss, idempotent.</comment>
+        <sql><![CDATA[INSERT INTO dim.dim_instrument (instrument_id, symbol, name, asset_class, asset_class_id, exchange_id, currency, currency_id, sector, sector_id, lot_size, isin, valid_from, _source, _ingest_ts, is_current)
+             SELECT (SELECT COALESCE(MAX(instrument_id),0) FROM dim.dim_instrument) + row_number() OVER (ORDER BY symbol) as instrument_id, symbol, company_name, 'EQUITY', 1, 4, 'INR', 2, 'UNKNOWN', -1, CAST(market_lot AS INTEGER), isin, listing_date, 'nse-equity-master', now(), true
+             FROM read_parquet('/media/sandeep/DataDrive2/hedge-fund/datalake/data/silver/master/equity/equity_master.parquet')
+             WHERE symbol NOT IN (SELECT symbol FROM dim.dim_instrument)]]></sql>
+        <sql>INSERT OR IGNORE INTO dim.dim_equity (instrument_id) SELECT instrument_id FROM dim.dim_instrument WHERE asset_class='EQUITY' AND instrument_id NOT IN (SELECT instrument_id FROM dim.dim_equity)</sql>
+        <rollback>
+            <sql>DELETE FROM dim.dim_equity WHERE instrument_id IN (SELECT instrument_id FROM dim.dim_instrument WHERE exchange_id=4)</sql>
+            <sql>DELETE FROM dim.dim_instrument WHERE exchange_id=4 AND _source='nse-equity-master'</sql>
+        </rollback>
+    </changeSet>
+    <changeSet id="009-03-equity-india-views" author="hedge-fund" runOnChange="true">
+        <sql>CREATE OR REPLACE VIEW master.equity_india AS SELECT i.instrument_id AS id, i.symbol, i.name, i.isin, i.valid_from AS listing_date, c.currency_code, e.exchange_code, ac.asset_class_code FROM dim.dim_instrument i JOIN dim.dim_currency c ON c.currency_id=i.currency_id JOIN dim.dim_exchange e ON e.exchange_id=i.exchange_id JOIN dim.dim_asset_class ac ON ac.asset_class_id=i.asset_class_id WHERE i.asset_class_id=1 AND e.country_iso3='IND' ORDER BY i.symbol</sql>
+        <sql>CREATE OR REPLACE VIEW ref.equity_master AS SELECT * FROM read_parquet('/media/sandeep/DataDrive2/hedge-fund/datalake/data/silver/master/equity/equity_master.parquet')</sql>
+        <sql>CREATE OR REPLACE VIEW hedge_silver.equity_master AS SELECT * FROM ref.equity_master</sql>
+        <rollback>
+            <sql>DROP VIEW IF EXISTS master.equity_india</sql>
+            <sql>DROP VIEW IF EXISTS ref.equity_master</sql>
+        </rollback>
+    </changeSet>
+</databaseChangeLog>

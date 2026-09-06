@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <!-- Better names via VIEWs (DuckDB RENAME via Liquibase not supported) — keep 3NF base dim.dim_* , expose clean names -->
+    <changeSet id="008-01-better-ref-views" author="hedge-fund" runOnChange="true">
+        <comment>Clean singular names: ref.currency, ref.asset_class etc. -> VIEW on dim.dim_*</comment>
+        <sql>CREATE SCHEMA IF NOT EXISTS ref</sql>
+        <sql>CREATE SCHEMA IF NOT EXISTS master</sql>
+        <sql>CREATE SCHEMA IF NOT EXISTS market</sql>
+        <sql>CREATE SCHEMA IF NOT EXISTS macro</sql>
+        <sql>CREATE OR REPLACE VIEW ref.currency AS SELECT currency_id, currency_code AS code, currency_name AS name FROM dim.dim_currency</sql>
+        <sql>CREATE OR REPLACE VIEW ref.asset_class AS SELECT asset_class_id AS id, asset_class_code AS code, asset_class_name AS name FROM dim.dim_asset_class</sql>
+        <sql>CREATE OR REPLACE VIEW ref.industry AS SELECT industry_id AS id, industry_name AS name FROM dim.dim_industry</sql>
+        <sql>CREATE OR REPLACE VIEW ref.sector AS SELECT sector_id AS id, sector_name AS name, industry_id FROM dim.dim_sector</sql>
+        <sql>CREATE OR REPLACE VIEW ref.country AS SELECT country_iso3 AS code, country_name AS name FROM dim.dim_country</sql>
+        <sql>CREATE OR REPLACE VIEW ref.indicator AS SELECT indicator_id AS id, indicator_name AS name, source_id, unit FROM dim.dim_indicator</sql>
+        <sql>CREATE OR REPLACE VIEW ref.exchange AS SELECT exchange_id AS id, exchange_code AS code, exchange_name AS name, currency_id FROM dim.dim_exchange</sql>
+        <rollback>
+            <sql>DROP VIEW IF EXISTS ref.currency</sql>
+            <sql>DROP VIEW IF EXISTS ref.asset_class</sql>
+        </rollback>
+    </changeSet>
+    <changeSet id="008-02-better-master-views" author="hedge-fund" runOnChange="true">
+        <sql>CREATE OR REPLACE VIEW master.instrument AS SELECT instrument_id AS id, symbol, name, asset_class_id, currency_id, sector_id, exchange_id FROM dim.dim_instrument</sql>
+        <sql>CREATE OR REPLACE VIEW master.equity AS SELECT instrument_id AS id, outstanding_shares, market_cap FROM dim.dim_equity</sql>
+        <sql>CREATE OR REPLACE VIEW master.instrument_detail AS SELECT i.instrument_id AS id, i.symbol, ac.asset_class_code, c.currency_code, s.sector_name FROM dim.dim_instrument i JOIN dim.dim_asset_class ac ON ac.asset_class_id=i.asset_class_id JOIN dim.dim_currency c ON c.currency_id=i.currency_id JOIN dim.dim_sector s ON s.sector_id=i.sector_id</sql>
+        <rollback>
+            <sql>DROP VIEW IF EXISTS master.instrument</sql>
+            <sql>DROP VIEW IF EXISTS master.equity</sql>
+        </rollback>
+    </changeSet>
+    <changeSet id="008-03-better-fact-views" author="hedge-fund" runOnChange="true">
+        <sql>CREATE OR REPLACE VIEW market.ohlcv AS SELECT instrument_id, date AS trade_date, open, high, low, close, volume FROM dim.fact_market_ohlcv</sql>
+        <sql>CREATE OR REPLACE VIEW macro.observation AS SELECT indicator_id, country_iso3, date AS observation_date, value FROM dim.fact_macro_observations</sql>
+        <sql>CREATE OR REPLACE VIEW fact.market_ohlcv AS SELECT * FROM market.ohlcv</sql>
+        <sql>CREATE OR REPLACE VIEW fact.macro_observation AS SELECT * FROM macro.observation</sql>
+        <rollback>
+            <sql>DROP VIEW IF EXISTS market.ohlcv</sql>
+            <sql>DROP VIEW IF EXISTS macro.observation</sql>
+        </rollback>
+    </changeSet>
+</databaseChangeLog>

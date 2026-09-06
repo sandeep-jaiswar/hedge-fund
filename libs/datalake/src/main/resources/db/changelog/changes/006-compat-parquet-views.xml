@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <changeSet id="006-compat-parquet-views" author="hedge-fund" runOnChange="true">
+        <comment>Restore all 51 Floci Glue tables as DBeaver-visible views on Parquet/CSV. Hedge_silver now FK-based, hedge_bronze raw NDJSON. No data loss.</comment>
+        <!-- Hedge_silver compat: old CSV views now point to dim/fact or Parquet -->
+        <sql>CREATE OR REPLACE VIEW hedge_silver.yahoo_ohlcv AS SELECT d.symbol, f.date, f.epoch, f.open, f.high, f.low, f.close, f.adj_close, f.volume, f.year FROM dim.fact_market_ohlcv f JOIN dim.dim_instrument d USING(instrument_id)</sql>
+        <sql>CREATE OR REPLACE VIEW hedge_silver.worldbank_observations AS SELECT * FROM dim.fact_macro_observations</sql>
+        <!-- Keep direct Parquet views for pushdown -->
+        <sql>CREATE OR REPLACE VIEW hedge_silver.yahoo_ohlcv_parquet AS SELECT * FROM read_parquet('/media/sandeep/DataDrive2/hedge-fund/datalake/data/silver/market/ohlcv.parquet')</sql>
+        <sql>CREATE OR REPLACE VIEW hedge_silver.worldbank_observations_parquet AS SELECT * FROM read_parquet('/media/sandeep/DataDrive2/hedge-fund/datalake/data/silver/macro/observations.parquet')</sql>
+        <!-- Generic silvers: one view per source parquet (cboe, binance, etc.) -->
+        <sql>CREATE OR REPLACE VIEW hedge_silver.cboe AS SELECT * FROM read_parquet('/media/sandeep/DataDrive2/hedge-fund/datalake/data/silver/cboe.parquet')</sql>
+        <sql>CREATE OR REPLACE VIEW hedge_silver.binance AS SELECT * FROM read_parquet('/media/sandeep/DataDrive2/hedge-fund/datalake/data/silver/binance.parquet')</sql>
+        <sql>CREATE OR REPLACE VIEW hedge_silver.coinbase AS SELECT * FROM read_parquet('/media/sandeep/DataDrive2/hedge-fund/datalake/data/silver/coinbase.parquet')</sql>
+        <sql>CREATE OR REPLACE VIEW hedge_silver.defillama AS SELECT * FROM read_parquet('/media/sandeep/DataDrive2/hedge-fund/datalake/data/silver/defillama.parquet')</sql>
+        <sql>CREATE OR REPLACE VIEW hedge_silver.fred AS SELECT * FROM read_parquet('/media/sandeep/DataDrive2/hedge-fund/datalake/data/silver/fred.parquet')</sql>
+        <sql>CREATE OR REPLACE VIEW hedge_silver.treasury AS SELECT * FROM read_parquet('/media/sandeep/DataDrive2/hedge-fund/datalake/data/silver/treasury.parquet')</sql>
+        <sql>CREATE OR REPLACE VIEW hedge_silver.sec AS SELECT * FROM read_parquet('/media/sandeep/DataDrive2/hedge-fund/datalake/data/silver/sec.parquet')</sql>
+        <sql>CREATE OR REPLACE VIEW hedge_silver.imf AS SELECT * FROM read_parquet('/media/sandeep/DataDrive2/hedge-fund/datalake/data/silver/imf.parquet')</sql>
+        <sql>CREATE OR REPLACE VIEW hedge_silver.oecd AS SELECT * FROM read_parquet('/media/sandeep/DataDrive2/hedge-fund/datalake/data/silver/oecd.parquet')</sql>
+        <sql>CREATE OR REPLACE VIEW hedge_silver.calcfi AS SELECT * FROM read_parquet('/media/sandeep/DataDrive2/hedge-fund/datalake/data/silver/calcfi.parquet')</sql>
+        <sql>CREATE OR REPLACE VIEW hedge_silver.fdic AS SELECT * FROM read_parquet('/media/sandeep/DataDrive2/hedge-fund/datalake/data/silver/fdic.parquet')</sql>
+        <sql>CREATE OR REPLACE VIEW hedge_silver.eia AS SELECT * FROM read_parquet('/media/sandeep/DataDrive2/hedge-fund/datalake/data/silver/eia.parquet')</sql>
+        <sql>CREATE OR REPLACE VIEW hedge_silver.bls AS SELECT * FROM read_parquet('/media/sandeep/DataDrive2/hedge-fund/datalake/data/silver/bls.parquet')</sql>
+        <sql>CREATE OR REPLACE VIEW hedge_silver.bea AS SELECT * FROM read_parquet('/media/sandeep/DataDrive2/hedge-fund/datalake/data/silver/bea.parquet')</sql>
+        <sql>CREATE OR REPLACE VIEW hedge_silver.gmd AS SELECT * FROM read_parquet('/media/sandeep/DataDrive2/hedge-fund/datalake/data/silver/gmd.parquet')</sql>
+        <sql>CREATE OR REPLACE VIEW hedge_silver.tencent AS SELECT * FROM read_parquet('/media/sandeep/DataDrive2/hedge-fund/datalake/data/silver/tencent.parquet')</sql>
+        <sql>CREATE OR REPLACE VIEW hedge_silver.sina AS SELECT * FROM read_parquet('/media/sandeep/DataDrive2/hedge-fund/datalake/data/silver/sina.parquet')</sql>
+        <sql>CREATE OR REPLACE VIEW hedge_silver.eastmoney AS SELECT * FROM read_parquet('/media/sandeep/DataDrive2/hedge-fund/datalake/data/silver/eastmoney.parquet')</sql>
+        <sql>CREATE OR REPLACE VIEW hedge_silver.baostock AS SELECT * FROM read_parquet('/media/sandeep/DataDrive2/hedge-fund/datalake/data/silver/baostock.parquet')</sql>
+        <sql>CREATE OR REPLACE VIEW hedge_silver.investing AS SELECT * FROM read_parquet('/media/sandeep/DataDrive2/hedge-fund/datalake/data/silver/investing.parquet')</sql>
+        <sql>CREATE OR REPLACE VIEW hedge_silver.ohlcv AS SELECT * FROM read_parquet('/media/sandeep/DataDrive2/hedge-fund/datalake/data/silver/ohlcv.parquet')</sql>
+        <!-- Gold -->
+        <sql>CREATE OR REPLACE VIEW hedge_gold.yahoo_summary AS SELECT * FROM read_parquet('/media/sandeep/DataDrive2/hedge-fund/datalake/data/gold/yahoo_summary.parquet')</sql>
+        <sql>CREATE OR REPLACE VIEW hedge_gold.worldbank_yoy AS SELECT * FROM read_parquet('/media/sandeep/DataDrive2/hedge-fund/datalake/data/gold/worldbank_yoy.parquet')</sql>
+        <sql>CREATE OR REPLACE VIEW hedge_gold.all_sources_summary AS SELECT * FROM read_parquet('/media/sandeep/DataDrive2/hedge-fund/datalake/data/gold/all_sources_summary.parquet')</sql>
+        <!-- Bronze raw stubs (point to NDJSON if exists, else empty) -->
+        <sql>CREATE OR REPLACE VIEW hedge_bronze.yahoo_raw AS SELECT * FROM read_csv('/media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/yahoo/**/data.ndjson', header=false)</sql>
+        <sql>CREATE OR REPLACE VIEW hedge_bronze.worldbank_raw AS SELECT * FROM read_csv('/media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/**/data.ndjson', header=false)</sql>
+        <rollback>
+            <sql>DROP VIEW IF EXISTS hedge_silver.yahoo_ohlcv</sql>
+            <sql>DROP VIEW IF EXISTS hedge_silver.worldbank_observations</sql>
+        </rollback>
+    </changeSet>
+</databaseChangeLog>

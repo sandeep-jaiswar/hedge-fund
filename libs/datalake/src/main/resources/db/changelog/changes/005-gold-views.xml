@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <changeSet id="005-gold-views" author="hedge-fund" runOnChange="true">
+        <comment>Gold layer views on dim/fact — configurable, no extra storage</comment>
+        <sql>CREATE OR REPLACE VIEW hedge_gold.vw_equity_ohlcv AS SELECT d.symbol, d.asset_class, f.* FROM fact.fact_market_ohlcv f JOIN dim.dim_instrument d USING(instrument_id)</sql>
+        <sql>CREATE OR REPLACE VIEW hedge_gold.vw_yahoo_summary AS SELECT symbol, count(*) bars, avg(close) avg_close FROM fact.fact_market_ohlcv JOIN dim.dim_instrument USING(instrument_id) GROUP BY symbol</sql>
+        <sql>CREATE OR REPLACE VIEW hedge_gold.vw_macro_yoy AS SELECT indicator_id, country_iso3, date, value, lag(value) OVER (PARTITION BY indicator_id, country_iso3 ORDER BY date) AS prev FROM fact.fact_macro_observations</sql>
+        <rollback>
+            <sql>DROP VIEW IF EXISTS hedge_gold.vw_equity_ohlcv</sql>
+            <sql>DROP VIEW IF EXISTS hedge_gold.vw_macro_yoy</sql>
+        </rollback>
+    </changeSet>
+</databaseChangeLog>

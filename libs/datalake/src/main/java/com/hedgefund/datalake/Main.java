@@ -16,6 +16,11 @@ public class Main {
         }
         var lake = Datalake.defaultLocal();
         switch (args[0]) {
+            case "migrate" -> {
+                String url = args.length > 1 ? args[1] : "jdbc:duckdb:/media/sandeep/DataDrive2/hedge-fund/hedge-fund.duckdb";
+                LiquibaseRunner.main(new String[]{url});
+                return;
+            }
             case "provision" -> {
                 lake.provisionSampleData();
                 System.out.println("Provisioned at " + lake.getRoot());

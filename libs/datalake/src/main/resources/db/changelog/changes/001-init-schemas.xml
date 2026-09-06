@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <changeSet id="001-init-schemas" author="hedge-fund">
+        <comment>Configurable schemas: dim (SCD2), fact, staging. DuckDB supports SCHEMA.</comment>
+        <sql>CREATE SCHEMA IF NOT EXISTS dim</sql>
+        <sql>CREATE SCHEMA IF NOT EXISTS fact</sql>
+        <sql>CREATE SCHEMA IF NOT EXISTS hedge_bronze</sql>
+        <sql>CREATE SCHEMA IF NOT EXISTS hedge_silver</sql>
+        <sql>CREATE SCHEMA IF NOT EXISTS hedge_gold</sql>
+        <rollback>
+            <sql>DROP SCHEMA IF EXISTS dim CASCADE</sql>
+            <sql>DROP SCHEMA IF EXISTS fact CASCADE</sql>
+        </rollback>
+    </changeSet>
+</databaseChangeLog>

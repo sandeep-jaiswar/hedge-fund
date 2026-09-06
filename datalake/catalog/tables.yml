@@ -1,0 +1,233 @@
+# Single source of truth — drives Datalake.java, Floci Glue, DBeaver :memory: views, SilverMerger
+# Design: 5 bronze domains + 6 silver + 4 gold = 15 tables, Parquet ZSTD, partitioned, dedup via ROW_NUMBER
+version: 1
+storage:
+  bronze: s3://hedge-bronze
+  silver: s3://hedge-silver
+  gold: s3://hedge-gold
+  local_root: datalake/data
+  format: parquet
+  compression: zstd
+  bronze_format: ndjson.gz
+defaults:
+  watermark: _watermark.json
+  batch_id: uuid
+  checksum: sha256
+  ingest_ts: _ingest_ts
+
+databases:
+  - name: hedge_bronze
+    description: raw immutable append-only (Floci Glue)
+    location: s3://hedge-bronze/
+  - name: hedge_silver
+    description: cleaned typed deduped
+    location: s3://hedge-silver/
+  - name: hedge_gold
+    description: gold portfolio/risk aggregations
+    location: s3://hedge-gold/
+
+tables:
+  # ── BRONZE (append-only, never dedup) ──
+  - id: bronze_market_raw
+    database: hedge_bronze
+    domain: market
+    sources: [yahoo, cboe, tencent, sina, eastmoney, investing, market_ticks, orders]
+    s3: s3://hedge-bronze/market/raw/
+    local: data/bronze/market/raw/
+    pattern: "dt={dt}/batch={batch_id}/data.ndjson.gz"
+    partition_by: [dt]
+    format: ndjson.gz
+    columns:
+      - { name: _ingest_ts, type: timestamptz }
+      - { name: _source, type: varchar }
+      - { name: _batch_id, type: uuid }
+      - { name: _checksum, type: varchar }
+      - { name: _payload, type: json }
+      - { name: dt, type: date }
+    retention: 365d
+
+  - id: bronze_crypto_raw
+    database: hedge_bronze
+    domain: crypto
+    sources: [binance, coinbase, defillama]
+    s3: s3://hedge-bronze/crypto/raw/
+    local: data/bronze/crypto/raw/
+    pattern: "dt={dt}/batch={batch_id}/data.ndjson.gz"
+    partition_by: [dt]
+    format: ndjson.gz
+    retention: 365d
+
+  - id: bronze_macro_raw
+    database: hedge_bronze
+    domain: macro
+    sources: [worldbank, fred, treasury, bea, eia, bls, imf, oecd]
+    s3: s3://hedge-bronze/macro/raw/
+    local: data/bronze/macro/raw/
+    pattern: "dt={dt}/batch={batch_id}/data.ndjson.gz"
+    partition_by: [dt]
+    format: ndjson.gz
+    retention: 365d
+
+  - id: bronze_reg_raw
+    database: hedge_bronze
+    domain: regulatory
+    sources: [sec, fdic, calcfi, gmd]
+    s3: s3://hedge-bronze/regulatory/raw/
+    local: data/bronze/regulatory/raw/
+    pattern: "dt={dt}/batch={batch_id}/data.ndjson.gz"
+    partition_by: [dt]
+    format: ndjson.gz
+    retention: 365d
+
+  - id: bronze_rates_raw
+    database: hedge_bronze
+    domain: rates
+    sources: [baostock]
+    s3: s3://hedge-bronze/rates/raw/
+    local: data/bronze/rates/raw/
+    pattern: "dt={dt}/batch={batch_id}/data.ndjson.gz"
+    partition_by: [dt]
+    format: ndjson.gz
+    retention: 365d
+
+  # Legacy per-source bronze tables kept for compatibility (point to same files via views)
+  # These 18 entries map old s3://hedge-bronze/<source>/ to new domain layout — no extra storage
+  - id: yahoo_raw
+    database: hedge_bronze
+    s3: s3://hedge-bronze/yahoo/
+    local: data/bronze/yahoo/
+    compat: true
+  - id: worldbank_raw
+    database: hedge_bronze
+    s3: s3://hedge-bronze/worldbank/
+    local: data/bronze/worldbank/
+    compat: true
+
+  # ── SILVER (typed, deduped, parquet partitioned) ──
+  - id: silver_market_ohlcv
+    database: hedge_silver
+    domain: market
+    s3: s3://hedge-silver/market/ohlcv/
+    local: data/silver/market/ohlcv/
+    pattern: "year={year}/symbol={symbol}/data.parquet"
+    partition_by: [year, symbol]
+    order_by: [symbol, date]
+    pk: [symbol, date]
+    dedup: "ROW_NUMBER() OVER (PARTITION BY symbol, date ORDER BY _ingest_ts DESC, _batch_id DESC) = 1"
+    depends_on: [bronze_market_raw]
+    format: parquet
+    columns:
+      - { name: symbol, type: varchar }
+      - { name: date, type: date }
+      - { name: epoch, type: bigint }
+      - { name: open, type: double }
+      - { name: high, type: double }
+      - { name: low, type: double }
+      - { name: close, type: double }
+      - { name: adj_close, type: double }
+      - { name: volume, type: bigint }
+      - { name: _source, type: varchar }
+      - { name: _ingest_ts, type: timestamptz }
+      - { name: _batch_id, type: uuid }
+      - { name: _is_valid, type: boolean }
+      - { name: year, type: int, generated: "year(date)" }
+
+  - id: silver_macro_observations
+    database: hedge_silver
+    domain: macro
+    s3: s3://hedge-silver/macro/observations/
+    local: data/silver/macro/observations/
+    pattern: "indicator={indicator_id}/year={year}/data.parquet"
+    partition_by: [indicator_id, year]
+    order_by: [indicator_id, country_iso3, date]
+    pk: [indicator_id, country_iso3, date]
+    dedup: "ROW_NUMBER() OVER (PARTITION BY indicator_id, country_iso3, date ORDER BY lastupdated DESC, _ingest_ts DESC) = 1"
+    depends_on: [bronze_macro_raw]
+    format: parquet
+    columns:
+      - { name: indicator_id, type: varchar }
+      - { name: indicator_name, type: varchar }
+      - { name: country_id, type: varchar }
+      - { name: country_name, type: varchar }
+      - { name: country_iso3, type: varchar }
+      - { name: date, type: varchar }
+      - { name: year, type: int }
+      - { name: period_type, type: varchar }
+      - { name: value, type: double }
+      - { name: unit, type: varchar }
+      - { name: obs_status, type: varchar }
+      - { name: decimal, type: int }
+      - { name: source_id, type: varchar }
+      - { name: lastupdated, type: timestamptz }
+      - { name: is_valid, type: boolean }
+
+  - id: silver_crypto_ohlcv
+    database: hedge_silver
+    domain: crypto
+    s3: s3://hedge-silver/crypto/ohlcv/
+    local: data/silver/crypto/ohlcv/
+    pattern: "symbol={symbol}/year={year}/data.parquet"
+    partition_by: [symbol, year]
+    pk: [symbol, date]
+    format: parquet
+
+  - id: silver_market_ticks
+    database: hedge_silver
+    domain: market
+    s3: s3://hedge-silver/market/ticks/
+    local: data/silver/market/ticks/
+    pattern: "symbol={symbol}/dt={dt}/data.parquet"
+    partition_by: [symbol, dt]
+    pk: [symbol, ts]
+    format: parquet
+
+  - id: silver_rates_daily
+    database: hedge_silver
+    domain: rates
+    s3: s3://hedge-silver/rates/daily/
+    local: data/silver/rates/daily/
+    pattern: "year={year}/data.parquet"
+    partition_by: [year]
+    format: parquet
+
+  - id: silver_filings
+    database: hedge_silver
+    domain: regulatory
+    s3: s3://hedge-silver/regulatory/filings/
+    local: data/silver/regulatory/filings/
+    pattern: "year={year}/data.parquet"
+    partition_by: [year]
+    format: parquet
+
+  # ── GOLD (aggregations on silver) ──
+  - id: gold_market_daily
+    database: hedge_gold
+    domain: market
+    s3: s3://hedge-gold/market/daily/
+    local: data/gold/market/daily/
+    pattern: "year={year}/data.parquet"
+    partition_by: [year]
+    format: parquet
+    sql: "SELECT symbol, date, close, (close/lag(close) OVER (PARTITION BY symbol ORDER BY date)-1) AS ret_1d FROM silver_market_ohlcv"
+
+  - id: gold_macro_yoy
+    database: hedge_gold
+    domain: macro
+    s3: s3://hedge-gold/macro/yoy/
+    local: data/gold/macro/yoy/
+    pattern: "indicator={indicator_id}/data.parquet"
+    partition_by: [indicator_id]
+    format: parquet
+    sql: "SELECT indicator_id, country_iso3, date, value, lag(value) OVER (PARTITION BY indicator_id, country_iso3 ORDER BY date) AS prev, (value/lag(value)OVER w -1) AS yoy FROM silver_macro_observations WINDOW w AS (PARTITION BY indicator_id, country_iso3 ORDER BY date)"
+
+  - id: gold_all_sources_summary
+    database: hedge_gold
+    s3: s3://hedge-gold/all_sources_summary/
+    local: data/gold/all_sources_summary/
+    format: parquet
+
+  - id: gold_yahoo_summary
+    database: hedge_gold
+    s3: s3://hedge-gold/yahoo_summary/
+    local: data/gold/yahoo_summary/
+    format: parquet

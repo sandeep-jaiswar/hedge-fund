@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <!-- 3NF/BCNF: remove transitive deps sector VARCHAR, asset_class VARCHAR, currency VARCHAR -> FK -->
+    <changeSet id="007-01-ref-currency-asset" author="hedge-fund">
+        <createTable tableName="dim_currency" schemaName="dim">
+            <column name="currency_id" type="INTEGER"><constraints primaryKey="true" nullable="false"/></column>
+            <column name="currency_code" type="VARCHAR(3)"><constraints unique="true" nullable="false"/></column>
+            <column name="currency_name" type="VARCHAR(64)"/>
+        </createTable>
+        <createTable tableName="dim_asset_class" schemaName="dim">
+            <column name="asset_class_id" type="INTEGER"><constraints primaryKey="true" nullable="false"/></column>
+            <column name="asset_class_code" type="VARCHAR(16)"><constraints unique="true" nullable="false"/></column>
+            <column name="asset_class_name" type="VARCHAR(64)"/>
+        </createTable>
+        <sql>INSERT INTO dim.dim_currency VALUES (-1,'UNK','Unknown'), (1,'USD','US Dollar'), (2,'INR','Indian Rupee') ON CONFLICT DO NOTHING</sql>
+        <sql>INSERT INTO dim.dim_asset_class VALUES (-1,'UNKNOWN','Unknown'), (1,'EQUITY','Equity'), (2,'INDEX','Index'), (3,'CRYPTO','Crypto') ON CONFLICT DO NOTHING</sql>
+        <rollback><dropTable tableName="dim_currency" schemaName="dim"/><dropTable tableName="dim_asset_class" schemaName="dim"/></rollback>
+    </changeSet>
+
+    <changeSet id="007-02-ref-sector-industry" author="hedge-fund">
+        <createTable tableName="dim_industry" schemaName="dim">
+            <column name="industry_id" type="INTEGER"><constraints primaryKey="true" nullable="false"/></column>
+            <column name="industry_name" type="VARCHAR(64)"><constraints unique="true" nullable="false"/></column>
+        </createTable>
+        <createTable tableName="dim_sector" schemaName="dim">
+            <column name="sector_id" type="INTEGER"><constraints primaryKey="true" nullable="false"/></column>
+            <column name="sector_name" type="VARCHAR(64)"><constraints unique="true" nullable="false"/></column>
+            <column name="industry_id" type="INTEGER"><constraints nullable="false" foreignKeyName="fk_sector_ind" references="dim.dim_industry(industry_id)"/></column>
+        </createTable>
+        <sql>INSERT INTO dim.dim_industry VALUES (-1,'UNKNOWN'), (1,'Technology'), (2,'Financials') ON CONFLICT DO NOTHING</sql>
+        <sql>INSERT INTO dim.dim_sector VALUES (-1,'UNKNOWN',-1), (1,'TECHNOLOGY',1), (2,'UNKNOWN_SECTOR',-1) ON CONFLICT DO NOTHING</sql>
+        <rollback><dropTable tableName="dim_sector" schemaName="dim"/><dropTable tableName="dim_industry" schemaName="dim"/></rollback>
+    </changeSet>
+
+    <changeSet id="007-03-add-fk-cols-instrument" author="hedge-fund">
+        <comment>Add normalized FK cols, keep old VARCHAR for backward compat then migrate</comment>
+        <addColumn tableName="dim_instrument" schemaName="dim">
+            <column name="asset_class_id" type="INTEGER" defaultValueNumeric="-1"/>
+            <column name="currency_id" type="INTEGER" defaultValueNumeric="1"/>
+            <column name="sector_id" type="INTEGER" defaultValueNumeric="-1"/>
+        </addColumn>
+        <rollback>
+            <dropColumn tableName="dim_instrument" schemaName="dim" columnName="asset_class_id"/>
+            <dropColumn tableName="dim_instrument" schemaName="dim" columnName="currency_id"/>
+            <dropColumn tableName="dim_instrument" schemaName="dim" columnName="sector_id"/>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="007-04-migrate-instrument-fk" author="hedge-fund">
+        <comment>Populate FKs from old VARCHARs: EQUITY->1, INDEX->2, USD->1. No index/FK here (DuckDB needs commit first).</comment>
+        <sql><![CDATA[UPDATE dim.dim_instrument SET asset_class_id = CASE asset_class WHEN 'EQUITY' THEN 1 WHEN 'INDEX' THEN 2 WHEN 'CRYPTO' THEN 3 ELSE -1 END WHERE asset_class_id = -1]]></sql>
+        <sql><![CDATA[UPDATE dim.dim_instrument SET currency_id = CASE currency WHEN 'USD' THEN 1 WHEN 'INR' THEN 2 ELSE -1 END WHERE currency_id = 1 AND currency IS NOT NULL]]></sql>
+        <sql>UPDATE dim.dim_instrument SET sector_id = -1 WHERE sector_id = -1</sql>
+        <rollback>
+            <sql>UPDATE dim.dim_instrument SET asset_class_id=-1, currency_id=1, sector_id=-1 WHERE instrument_id> -2</sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="007-04b-add-fk-indexes" author="hedge-fund" runInTransaction="false">
+        <comment>DuckDB ALTER FK not yet supported — keep logical FK (enforced via JOIN + 3NF views), indexes for performance</comment>
+        <sql>CREATE INDEX IF NOT EXISTS ix_dim_inst_asset ON dim.dim_instrument(asset_class_id)</sql>
+        <sql>CREATE INDEX IF NOT EXISTS ix_dim_inst_curr ON dim.dim_instrument(currency_id)</sql>
+        <sql>CREATE INDEX IF NOT EXISTS ix_dim_inst_sector ON dim.dim_instrument(sector_id)</sql>
+        <rollback>
+            <sql>DROP INDEX IF EXISTS dim.ix_dim_inst_asset</sql>
+            <sql>DROP INDEX IF EXISTS dim.ix_dim_inst_curr</sql>
+            <sql>DROP INDEX IF EXISTS dim.ix_dim_inst_sector</sql>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="007-05-normalize-exchange-fk" author="hedge-fund">
+        <comment>Exchange currency VARCHAR -> FK currency_id (3NF) logical FK</comment>
+        <addColumn tableName="dim_exchange" schemaName="dim">
+            <column name="currency_id" type="INTEGER" defaultValueNumeric="1"/>
+        </addColumn>
+        <sql>UPDATE dim.dim_exchange SET currency_id = CASE currency WHEN 'USD' THEN 1 WHEN 'INR' THEN 2 ELSE -1 END WHERE currency_id = 1</sql>
+        <rollback>
+            <dropColumn tableName="dim_exchange" schemaName="dim" columnName="currency_id"/>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="007-06-3nf-gold-views" author="hedge-fund" runOnChange="true">
+        <comment>Gold denormalized views reconstruct 3NF via JOINs for analytics (no redundancy in base tables)</comment>
+        <sql>CREATE OR REPLACE VIEW hedge_gold.vw_instrument_3nf AS SELECT i.instrument_id, i.symbol, i.name, ac.asset_class_code, c.currency_code, s.sector_name, ind.industry_name, e.exchange_code FROM dim.dim_instrument i JOIN dim.dim_asset_class ac ON ac.asset_class_id=i.asset_class_id JOIN dim.dim_currency c ON c.currency_id=i.currency_id JOIN dim.dim_sector s ON s.sector_id=i.sector_id JOIN dim.dim_industry ind ON ind.industry_id=s.industry_id JOIN dim.dim_exchange e ON e.exchange_id=i.exchange_id</sql>
+        <sql>CREATE OR REPLACE VIEW hedge_gold.vw_ohlcv_3nf AS SELECT i.symbol, ac.asset_class_code, c.currency_code, s.sector_name, f.date, f.close, f.volume FROM dim.fact_market_ohlcv f JOIN dim.dim_instrument i USING(instrument_id) JOIN dim.dim_asset_class ac ON ac.asset_class_id=i.asset_class_id JOIN dim.dim_currency c ON c.currency_id=i.currency_id JOIN dim.dim_sector s ON s.sector_id=i.sector_id</sql>
+        <rollback>
+            <sql>DROP VIEW IF EXISTS hedge_gold.vw_instrument_3nf</sql>
+            <sql>DROP VIEW IF EXISTS hedge_gold.vw_ohlcv_3nf</sql>
+        </rollback>
+    </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <!-- Configurable medallion: bronze immutable -> silver dim -> silver fact -> gold -->
+    <include file="db/changelog/changes/001-init-schemas.xml"/>
+    <include file="db/changelog/changes/002-dim-instrument-exchange.xml"/>
+    <include file="db/changelog/changes/003-dim-macro-country-indicator.xml"/>
+    <include file="db/changelog/changes/004-fact-ohlcv-macro.xml"/>
+    <include file="db/changelog/changes/005-gold-views.xml"/>
+    <include file="db/changelog/changes/006-compat-parquet-views.xml"/>
+    <include file="db/changelog/changes/007-normalized-redesign.xml"/>
+    <include file="db/changelog/changes/008-better-names.xml"/>
+    <include file="db/changelog/changes/009-equity-master-india.xml"/>
+</databaseChangeLog>

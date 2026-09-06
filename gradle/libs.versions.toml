@@ -13,6 +13,7 @@ snakeyaml = "2.3"
 wiremock = "3.9.1"
 springBoot = "3.3.5"
 jobrunr = "7.4.1"
+liquibase = "4.25.1"
 
 [libraries]
 junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit" }
@@ -32,6 +33,7 @@ wiremock = { module = "org.wiremock:wiremock", version.ref = "wiremock" }
 spring-boot-starter-web = { module = "org.springframework.boot:spring-boot-starter-web", version.ref = "springBoot" }
 spring-boot-starter-actuator = { module = "org.springframework.boot:spring-boot-starter-actuator", version.ref = "springBoot" }
 jobrunr = { module = "org.jobrunr:jobrunr-spring-boot-3-starter", version.ref = "jobrunr" }
+liquibase-core = { module = "org.liquibase:liquibase-core", version.ref = "liquibase" }
 
 [plugins]
 # keep versions here for DRY - single source of truth

@@ -13,6 +13,7 @@ dependencies {
     api(libs.slf4j.api)
     // DuckDB = local Athena (no Docker)
     api(libs.duckdb.jdbc)
+    api(libs.liquibase.core)
     // Optional AWS SDK + Floci Testcontainers for when Docker is re-enabled
     compileOnly(libs.aws.s3)
     compileOnly(libs.aws.glue)

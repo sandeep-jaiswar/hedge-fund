@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <!-- Master instrument + exchange + equity mast (referenced by all facts) -->
+    <changeSet id="002-01-dim-exchange" author="hedge-fund">
+        <createTable tableName="dim_exchange" schemaName="dim">
+            <column name="exchange_id" type="INTEGER"><constraints primaryKey="true" nullable="false"/></column>
+            <column name="exchange_code" type="VARCHAR(16)"><constraints unique="true" nullable="false"/></column>
+            <column name="exchange_name" type="VARCHAR(64)"><constraints nullable="false"/></column>
+            <column name="country_iso3" type="VARCHAR(3)"/>
+            <column name="currency" type="VARCHAR(3)"/>
+            <column name="timezone" type="VARCHAR(32)"/>
+        </createTable>
+        <sql>INSERT INTO dim.dim_exchange VALUES (-1,'UNKNOWN','Unknown',NULL,NULL,NULL), (1,'NASDAQ','NASDAQ','USA','USD','America/New_York'), (2,'NYSE','NYSE','USA','USD','America/New_York'), (3,'BSE','Bombay SE','IND','INR','Asia/Kolkata') ON CONFLICT DO NOTHING</sql>
+        <rollback><dropTable tableName="dim_exchange" schemaName="dim"/></rollback>
+    </changeSet>
+
+    <changeSet id="002-02-dim-instrument" author="hedge-fund">
+        <comment>SCD2 surrogate SK: PK instrument_id, natural key symbol. All fact FK -> here. No data loss: UNKNOWN -1 row.</comment>
+        <createTable tableName="dim_instrument" schemaName="dim">
+            <column name="instrument_id" type="INTEGER"><constraints primaryKey="true" nullable="false"/></column>
+            <column name="symbol" type="VARCHAR(32)"><constraints unique="true" nullable="false"/></column>
+            <column name="isin" type="VARCHAR(12)"/>
+            <column name="name" type="VARCHAR(128)"/>
+            <column name="asset_class" type="VARCHAR(16)"><constraints nullable="false"/></column>
+            <column name="exchange_id" type="INTEGER"><constraints nullable="false" foreignKeyName="fk_inst_exch" references="dim.dim_exchange(exchange_id)"/></column>
+            <column name="currency" type="VARCHAR(3)"/>
+            <column name="sector" type="VARCHAR(64)"/>
+            <column name="lot_size" type="INTEGER" defaultValueNumeric="1"/>
+            <column name="valid_from" type="DATE" defaultValueDate="1900-01-01"/>
+            <column name="valid_to" type="DATE" defaultValueDate="9999-12-31"/>
+            <column name="is_current" type="BOOLEAN" defaultValueBoolean="true"/>
+            <column name="_source" type="VARCHAR(32)"/>
+            <column name="_ingest_ts" type="TIMESTAMPTZ"/>
+        </createTable>
+        <sql>CREATE INDEX IF NOT EXISTS ix_dim_inst_symbol ON dim.dim_instrument(symbol)</sql>
+        <sql>CREATE INDEX IF NOT EXISTS ix_dim_inst_class ON dim.dim_instrument(asset_class)</sql>
+        <sql>INSERT INTO dim.dim_instrument VALUES (-1,'UNKNOWN',NULL,'Unknown','EQUITY',-1,'USD','UNKNOWN',1,'1900-01-01','9999-12-31',true,'system',now()) ON CONFLICT DO NOTHING</sql>
+        <rollback><dropTable tableName="dim_instrument" schemaName="dim"/></rollback>
+    </changeSet>
+
+    <changeSet id="002-03-dim-equity" author="hedge-fund">
+        <comment>Mast equity table 1:1 FK -> dim_instrument where asset_class=EQUITY</comment>
+        <createTable tableName="dim_equity" schemaName="dim">
+            <column name="instrument_id" type="INTEGER"><constraints primaryKey="true" nullable="false" foreignKeyName="fk_equity_inst" references="dim.dim_instrument(instrument_id)"/></column>
+            <column name="outstanding_shares" type="BIGINT"/>
+            <column name="market_cap" type="DOUBLE"/>
+            <column name="listing_date" type="DATE"/>
+            <column name="isin_verified" type="BOOLEAN" defaultValueBoolean="false"/>
+        </createTable>
+        <rollback><dropTable tableName="dim_equity" schemaName="dim"/></rollback>
+    </changeSet>
+
+    <changeSet id="002-04-seed-instruments-from-parquet" author="hedge-fund" runOnChange="true">
+        <comment>Idempotent seed from existing silver Parquet (2405 rows) -> dim. No OR REPLACE (two UNIQUE keys need conflict target).</comment>
+        <sql><![CDATA[INSERT INTO dim.dim_instrument (instrument_id, symbol, asset_class, exchange_id, currency, sector, lot_size, _source, _ingest_ts, is_current)
+             SELECT (SELECT COALESCE(MAX(instrument_id),0) FROM dim.dim_instrument) + row_number() OVER (ORDER BY symbol) AS instrument_id, symbol,
+                    CASE WHEN symbol LIKE '^%' THEN 'INDEX' ELSE 'EQUITY' END, 1, 'USD', 'UNKNOWN', 1, 'yahoo', now(), true
+             FROM (SELECT DISTINCT symbol FROM read_parquet('/media/sandeep/DataDrive2/hedge-fund/datalake/data/silver/market/ohlcv.parquet'))
+             WHERE symbol NOT IN (SELECT symbol FROM dim.dim_instrument) ]]></sql>
+        <sql>INSERT OR IGNORE INTO dim.dim_equity (instrument_id) SELECT instrument_id FROM dim.dim_instrument WHERE asset_class='EQUITY' AND instrument_id NOT IN (SELECT instrument_id FROM dim.dim_equity)</sql>
+        <rollback><sql>DELETE FROM dim.dim_equity WHERE instrument_id > 0; DELETE FROM dim.dim_instrument WHERE instrument_id > 0</sql></rollback>
+    </changeSet>
+</databaseChangeLog>

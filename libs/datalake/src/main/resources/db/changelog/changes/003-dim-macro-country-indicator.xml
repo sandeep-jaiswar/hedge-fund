@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <changeSet id="003-01-dim-country" author="hedge-fund">
+        <createTable tableName="dim_country" schemaName="dim">
+            <column name="country_iso3" type="VARCHAR(3)"><constraints primaryKey="true" nullable="false"/></column>
+            <column name="country_id" type="VARCHAR(8)"/>
+            <column name="country_name" type="VARCHAR(128)"/>
+            <column name="region" type="VARCHAR(64)"/>
+        </createTable>
+        <sql>INSERT INTO dim.dim_country VALUES ('UNK','UNK','Unknown',NULL), ('USA','US','United States','North America'), ('IND','IN','India','South Asia') ON CONFLICT DO NOTHING</sql>
+        <rollback><dropTable tableName="dim_country" schemaName="dim"/></rollback>
+    </changeSet>
+    <changeSet id="003-02-dim-indicator" author="hedge-fund">
+        <createTable tableName="dim_indicator" schemaName="dim">
+            <column name="indicator_id" type="VARCHAR(32)"><constraints primaryKey="true" nullable="false"/></column>
+            <column name="indicator_name" type="VARCHAR(256)"/>
+            <column name="source_id" type="VARCHAR(16)"/>
+            <column name="unit" type="VARCHAR(32)"/>
+        </createTable>
+        <sql>CREATE INDEX IF NOT EXISTS ix_dim_ind_source ON dim.dim_indicator(source_id)</sql>
+        <rollback><dropTable tableName="dim_indicator" schemaName="dim"/></rollback>
+    </changeSet>
+    <changeSet id="003-03-seed-macro-dims" author="hedge-fund" runOnChange="true">
+        <sql><![CDATA[INSERT OR IGNORE INTO dim.dim_country (country_iso3, country_id, country_name) SELECT DISTINCT country_iso3, country_id, country_name FROM read_parquet('/media/sandeep/DataDrive2/hedge-fund/datalake/data/silver/macro/observations.parquet') WHERE country_iso3 IS NOT NULL AND country_iso3 <> '' ]]></sql>
+        <sql><![CDATA[INSERT OR IGNORE INTO dim.dim_indicator (indicator_id, indicator_name, source_id, unit) SELECT DISTINCT indicator_id, indicator_name, source_id, unit FROM read_parquet('/media/sandeep/DataDrive2/hedge-fund/datalake/data/silver/macro/observations.parquet') WHERE indicator_id IS NOT NULL ]]></sql>
+        <rollback><sql>DELETE FROM dim.dim_indicator WHERE indicator_id NOT IN ('UNK'); DELETE FROM dim.dim_country WHERE country_iso3 NOT IN ('UNK','USA','IND')</sql></rollback>
+    </changeSet>
+</databaseChangeLog>
