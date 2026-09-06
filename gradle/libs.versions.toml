@@ -4,13 +4,15 @@ junit = "5.11.3"
 mockito = "5.14.2"
 slf4j = "2.0.16"
 logback = "1.5.8"
-jackson = "2.18.2"
+jackson = "2.17.2"
 duckdb = "1.3.2.0"
 awsSdk = "2.25.27"
 testcontainers = "1.19.8"
 floci = "1.4.0"
 snakeyaml = "2.3"
 wiremock = "3.9.1"
+springBoot = "3.3.5"
+jobrunr = "7.4.1"
 
 [libraries]
 junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit" }
@@ -27,6 +29,9 @@ testcontainers-floci = { module = "io.floci:testcontainers-floci", version.ref =
 testcontainers-junit = { module = "org.testcontainers:junit-jupiter", version.ref = "testcontainers" }
 snakeyaml = { module = "org.yaml:snakeyaml", version.ref = "snakeyaml" }
 wiremock = { module = "org.wiremock:wiremock", version.ref = "wiremock" }
+spring-boot-starter-web = { module = "org.springframework.boot:spring-boot-starter-web", version.ref = "springBoot" }
+spring-boot-starter-actuator = { module = "org.springframework.boot:spring-boot-starter-actuator", version.ref = "springBoot" }
+jobrunr = { module = "org.jobrunr:jobrunr-spring-boot-3-starter", version.ref = "jobrunr" }
 
 [plugins]
 # keep versions here for DRY - single source of truth

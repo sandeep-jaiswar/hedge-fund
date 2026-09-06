@@ -1,0 +1,25 @@
+server:
+  port: 8080
+
+org:
+  jobrunr:
+    background-job-server:
+      enabled: true
+      worker-count: 4
+    dashboard:
+      enabled: true
+      port: 8000
+    database:
+      type: memory
+      # for persistence across restarts switch to: type: sql + datasource
+
+logging:
+  level:
+    org.jobrunr: INFO
+    com.hedgefund: INFO
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics

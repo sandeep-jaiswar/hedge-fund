@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Hedge Fund Ingestion UI</title>
+<style>
+body{font-family:system-ui,Arial;margin:0;background:#0f172a;color:#e2e8f0}
+header{padding:16px 24px;background:#1e293b;display:flex;justify-content:space-between;align-items:center}
+a{color:#38bdf8}
+.card{background:#1e293b;margin:12px;padding:16px;border-radius:8px}
+button{background:#38bdf8;color:#0f172a;border:0;padding:8px 14px;border-radius:6px;cursor:pointer;margin:2px}
+button:disabled{opacity:.5}
+table{width:100%;border-collapse:collapse}
+th,td{padding:8px;border-bottom:1px solid #334155;text-align:left;font-size:14px}
+.badge{padding:2px 8px;border-radius:999px;font-size:12px}
+.ok{background:#16a34a;color:#fff}.warn{background:#f59e0b}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
+</style>
+</head>
+<body>
+<header>
+  <h1 style="margin:0;font-size:20px">Hedge Fund — Ingestion Control Plane</h1>
+  <div><a href="/dashboard" target="_blank">JobRunr Dashboard :8000</a> · <a href="/actuator/health" target="_blank">Health</a></div>
+</header>
+<div style="padding:12px 24px">
+  <div class="card">
+    <h3 style="margin:0 0 8px">Cluster</h3>
+    <div id="stats">loading stats…</div>
+    <div style="margin-top:8px"><button onclick="loadStats()">Refresh</button> <button onclick="startAll()">Start All 22</button></div>
+  </div>
+  <div class="card">
+    <h3 style="margin:0 0 8px">Sources (22)</h3>
+    <div id="sources" class="grid"></div>
+  </div>
+  <div class="card">
+    <h3>Jobs</h3>
+    <table><thead><tr><th>Source</th><th>JobId</th><th>State</th><th>Action</th></tr></thead><tbody id="jobs"></tbody></table>
+  </div>
+  <div class="card" style="font-size:13px;color:#94a3b8">
+    API: <code>POST /api/ingest/start/{source}?config=...</code> · <code>POST /api/ingest/start-all</code> · <code>GET /api/ingest/jobs/{id}</code> · <code>DELETE /api/ingest/jobs/{id}</code> (cancel). Datalake: <code>datalake/data/bronze|silver|gold</code> · S3 <code>s3://hedge-*</code> via <code>python3 datalake/scripts/sync-all-to-floci.py</code>
+  </div>
+</div>
+<script>
+let jobIds=[];
+async function loadStats(){
+  const s=await fetch('/api/ingest/jobs').then(r=>r.json());
+  document.getElementById('stats').innerHTML = Object.entries(s).map(([k,v])=>`<span class="badge ok">${k}: ${v}</span>`).join(' ');
+}
+async function loadSources(){
+  const list=await fetch('/api/ingest/sources').then(r=>r.json());
+  const el=document.getElementById('sources');
+  el.innerHTML='';
+  list.forEach(src=>{
+    const d=document.createElement('div');
+    d.className='card';
+    d.style.margin='0';
+    d.innerHTML=`<b>${src.name}</b><div style="font-size:12px;color:#94a3b8">${src.id} · ${src.config}</div>
+      <div style="margin-top:8px"><button onclick="start('${src.id}')">Start</button>
+      <button onclick="startCustom('${src.id}')">Start custom yaml</button></div>`;
+    el.appendChild(d);
+  });
+}
+async function start(source){
+  const r=await fetch('/api/ingest/start/'+source,{method:'POST'}).then(r=>r.json());
+  jobIds.push({source, id:r.jobId});
+  renderJobs();
+  loadStats();
+}
+async function startCustom(source){
+  const cfg=prompt('Config path','config/'+source+'/'+source+'.yaml');
+  if(!cfg) return;
+  const r=await fetch('/api/ingest/start/'+source+'?config='+encodeURIComponent(cfg),{method:'POST'}).then(r=>r.json());
+  jobIds.push({source, id:r.jobId});
+  renderJobs(); loadStats();
+}
+async function startAll(){
+  if(!confirm('Start all 22 sources?')) return;
+  const r=await fetch('/api/ingest/start-all',{method:'POST'}).then(r=>r.json());
+  r.forEach(x=>jobIds.push({source:x.source, id:x.jobId}));
+  renderJobs(); loadStats();
+}
+function renderJobs(){
+  const tbody=document.getElementById('jobs');
+  tbody.innerHTML='';
+  jobIds.slice().reverse().forEach(j=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td>${j.source}</td><td style="font-family:monospace;font-size:12px">${j.id}</td><td><span id="st-${j.id}">queued</span></td><td><button onclick="check('${j.id}')">Check</button> <button onclick="cancelJob('${j.id}')">Cancel</button></td>`;
+    tbody.appendChild(tr);
+    check(j.id);
+  });
+}
+async function check(id){
+  const r=await fetch('/api/ingest/jobs/'+id).then(r=>r.ok?r.json():{state:'not-found'});
+  const el=document.getElementById('st-'+id);
+  if(el) el.textContent=r.state||r.error||'unknown';
+  loadStats();
+}
+async function cancelJob(id){
+  await fetch('/api/ingest/jobs/'+id,{method:'DELETE'});
+  check(id);
+}
+loadStats(); loadSources();
+setInterval(loadStats, 5000);
+</script>
+</body>
+</html>

@@ -40,6 +40,7 @@ include(":libs:cboe")
 
 // apps - deployable applications
 include(":apps:api")
+include(":apps:ingestion-ui")
 
 // services - background services / microservices
 include(":services:worker")
