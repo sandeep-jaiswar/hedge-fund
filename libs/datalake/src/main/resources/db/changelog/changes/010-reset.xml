@@ -336,21 +336,26 @@
         <sql>DELETE FROM dim.fact_crypto_ohlcv</sql>
         <sql><![CDATA[INSERT INTO dim.fact_crypto_ohlcv
              SELECT d.instrument_id,
-                    to_timestamp(CAST(json_extract_string(k.data, 0) AS BIGINT)/1000)::DATE AS date,
-                    CAST(json_extract_string(k.data, 0) AS BIGINT)/1000 AS epoch,
-                    CAST(json_extract_string(k.data, 1) AS DOUBLE) AS open,
-                    CAST(json_extract_string(k.data, 2) AS DOUBLE) AS high,
-                    CAST(json_extract_string(k.data, 3) AS DOUBLE) AS low,
-                    CAST(json_extract_string(k.data, 4) AS DOUBLE) AS close,
-                    CAST(json_extract_string(k.data, 5) AS DOUBLE) AS volume,
-                    CAST(json_extract_string(k.data, 7) AS DOUBLE) AS quote_volume,
-                    CAST(json_extract_string(k.data, 8) AS BIGINT) AS trades,
+                    to_timestamp(CAST(kline[1] AS BIGINT) / 1000)::DATE AS date,
+                    CAST(kline[1] AS BIGINT) / 1000 AS epoch,
+                    CAST(replace(kline[2], '"', '') AS DOUBLE) AS open,
+                    CAST(replace(kline[3], '"', '') AS DOUBLE) AS high,
+                    CAST(replace(kline[4], '"', '') AS DOUBLE) AS low,
+                    CAST(replace(kline[5], '"', '') AS DOUBLE) AS close,
+                    CAST(replace(kline[6], '"', '') AS DOUBLE) AS volume,
+                    CAST(replace(kline[8], '"', '') AS DOUBLE) AS quote_volume,
+                    CAST(kline[9] AS BIGINT) AS trades,
                     now(),
-                    year(to_timestamp(CAST(json_extract_string(k.data, 0) AS BIGINT)/1000)::DATE)
-             FROM (SELECT replace(replace(filename, 'datalake/data/bronze/binance/key=', ''), '/data.raw', '') AS pair,
-                          unnest(from_json(replace(cast(content as VARCHAR), chr(92)||'x22', '\"'), '["JSON[]"]')) AS data
-                   FROM read_blob('datalake/data/bronze/binance/key=*/data.raw')) k
-             JOIN dim.dim_instrument d ON d.symbol = k.pair]]></sql>
+                    year(to_timestamp(CAST(kline[1] AS BIGINT) / 1000)::DATE)
+             FROM (
+                 SELECT pair, unnest(from_json(content, '["JSON[]"]')) as kline
+                 FROM (
+                     SELECT replace(replace(filename, 'datalake/data/bronze/binance/key=', ''), '/data.raw', '') AS pair,
+                            content::varchar AS content
+                     FROM read_text('datalake/data/bronze/binance/key=*/data.raw')
+                 )
+             ) klines
+             JOIN dim.dim_instrument d ON d.symbol = klines.pair]]></sql>
         <rollback><sql>DELETE FROM dim.fact_crypto_ohlcv</sql></rollback>
     </changeSet>
 
@@ -484,10 +489,10 @@
                     'https://www.sec.gov/Archives/edgar/data/' || sec_raw.cik || '/' || replace(replace(cast(sub.acc as VARCHAR), '"', ''), '-', '') || '/' || replace(cast(sub.pd as VARCHAR), '"', ''),
                     now()
              FROM (SELECT replace(replace(filename, 'datalake/data/bronze/sec/key=', ''), '/data.raw', '') as ticker,
-                          json_extract_string(replace(cast(content as VARCHAR), chr(92)||'x22', '"'), '$.name') as entity_name,
-                          json_extract_string(replace(cast(content as VARCHAR), chr(92)||'x22', '"'), '$.cik') as cik,
-                          replace(cast(content as VARCHAR), chr(92)||'x22', '"') AS fc
-                   FROM read_blob('datalake/data/bronze/sec/key=*/data.raw')) sec_raw,
+                          json_extract_string(content::json, '$.name') as entity_name,
+                          json_extract_string(content::json, '$.cik') as cik,
+                          content::varchar AS fc
+                   FROM read_text('datalake/data/bronze/sec/key=*/data.raw')) sec_raw,
              LATERAL (
                  SELECT
                      unnest(from_json(json_extract_string(sec_raw.fc, '$.filings.recent.accessionNumber'), '["JSON"]')) AS acc,
