@@ -1,0 +1,543 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <!-- 010-reset: Complete 3NF database redesign. All paths RELATIVE. -->
+
+    <!-- 010-01: Drop old schemas -->
+    <changeSet id="010-01-drop-schemas" author="hedge-fund">
+        <sql>DROP SCHEMA IF EXISTS macro CASCADE</sql>
+        <sql>DROP SCHEMA IF EXISTS market CASCADE</sql>
+        <sql>DROP SCHEMA IF EXISTS master CASCADE</sql>
+        <sql>DROP SCHEMA IF EXISTS ref CASCADE</sql>
+        <sql>DROP SCHEMA IF EXISTS fact CASCADE</sql>
+        <sql>DROP SCHEMA IF EXISTS dim CASCADE</sql>
+        <sql>DROP SCHEMA IF EXISTS hedge_gold CASCADE</sql>
+        <sql>DROP SCHEMA IF EXISTS hedge_silver CASCADE</sql>
+        <sql>DROP SCHEMA IF EXISTS hedge_bronze CASCADE</sql>
+        <sql>DROP SCHEMA IF EXISTS staging CASCADE</sql>
+        <rollback><comment>No rollback for drop</comment></rollback>
+    </changeSet>
+
+    <!-- 010-02: Recreate schemas -->
+    <changeSet id="010-02-create-schemas" author="hedge-fund">
+        <sql>CREATE SCHEMA IF NOT EXISTS dim</sql>
+        <sql>CREATE SCHEMA IF NOT EXISTS fact</sql>
+        <sql>CREATE SCHEMA IF NOT EXISTS ref</sql>
+        <sql>CREATE SCHEMA IF NOT EXISTS master</sql>
+        <sql>CREATE SCHEMA IF NOT EXISTS market</sql>
+        <sql>CREATE SCHEMA IF NOT EXISTS macro</sql>
+        <sql>CREATE SCHEMA IF NOT EXISTS hedge_bronze</sql>
+        <sql>CREATE SCHEMA IF NOT EXISTS hedge_silver</sql>
+        <sql>CREATE SCHEMA IF NOT EXISTS hedge_gold</sql>
+        <sql>CREATE SCHEMA IF NOT EXISTS staging</sql>
+        <rollback>
+            <sql>DROP SCHEMA IF EXISTS staging CASCADE</sql>
+            <sql>DROP SCHEMA IF EXISTS hedge_gold CASCADE</sql>
+            <sql>DROP SCHEMA IF EXISTS hedge_silver CASCADE</sql>
+            <sql>DROP SCHEMA IF EXISTS hedge_bronze CASCADE</sql>
+            <sql>DROP SCHEMA IF EXISTS macro CASCADE</sql>
+            <sql>DROP SCHEMA IF EXISTS market CASCADE</sql>
+            <sql>DROP SCHEMA IF EXISTS master CASCADE</sql>
+            <sql>DROP SCHEMA IF EXISTS ref CASCADE</sql>
+            <sql>DROP SCHEMA IF EXISTS fact CASCADE</sql>
+            <sql>DROP SCHEMA IF EXISTS dim CASCADE</sql>
+        </rollback>
+    </changeSet>
+
+    <!-- 010-03: dim_currency -->
+    <changeSet id="010-03-dim-currency" author="hedge-fund">
+        <createTable tableName="dim_currency" schemaName="dim">
+            <column name="currency_id" type="INTEGER">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="currency_code" type="VARCHAR(3)">
+                <constraints unique="true" nullable="false" />
+            </column>
+            <column name="currency_name" type="VARCHAR(64)" />
+        </createTable>
+        <sql>INSERT INTO dim.dim_currency VALUES (-1,'UNK','Unknown'), (1,'USD','US Dollar'), (2,'INR','Indian Rupee'), (3,'EUR','Euro'), (4,'GBP','British Pound'), (5,'JPY','Japanese Yen'), (6,'CNY','Chinese Yuan'), (7,'BTC','Bitcoin') ON CONFLICT DO NOTHING</sql>
+        <rollback><dropTable tableName="dim_currency" schemaName="dim" /></rollback>
+    </changeSet>
+
+    <!-- 010-04: dim_asset_class -->
+    <changeSet id="010-04-dim-asset-class" author="hedge-fund">
+        <createTable tableName="dim_asset_class" schemaName="dim">
+            <column name="asset_class_id" type="INTEGER">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="asset_class_code" type="VARCHAR(16)">
+                <constraints unique="true" nullable="false" />
+            </column>
+            <column name="asset_class_name" type="VARCHAR(64)" />
+        </createTable>
+        <sql>INSERT INTO dim.dim_asset_class VALUES (-1,'UNKNOWN','Unknown'), (1,'EQUITY','Equity'), (2,'INDEX','Index'), (3,'CRYPTO','Crypto'), (4,'BOND','Bond'), (5,'COMMODITY','Commodity'), (6,'ETF','ETF'), (7,'FUND','Mutual Fund') ON CONFLICT DO NOTHING</sql>
+        <rollback><dropTable tableName="dim_asset_class" schemaName="dim" /></rollback>
+    </changeSet>
+
+    <!-- 010-05: dim_industry + dim_sector (GICS) -->
+    <changeSet id="010-05-dim-industry-sector" author="hedge-fund">
+        <createTable tableName="dim_industry" schemaName="dim">
+            <column name="industry_id" type="INTEGER">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="industry_name" type="VARCHAR(64)">
+                <constraints unique="true" nullable="false" />
+            </column>
+        </createTable>
+        <createTable tableName="dim_sector" schemaName="dim">
+            <column name="sector_id" type="INTEGER">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="sector_name" type="VARCHAR(64)">
+                <constraints unique="true" nullable="false" />
+            </column>
+            <column name="industry_id" type="INTEGER">
+                <constraints nullable="false" foreignKeyName="fk_sector_ind" references="dim.dim_industry(industry_id)" />
+            </column>
+        </createTable>
+        <sql>INSERT INTO dim.dim_industry VALUES (-1,'Unknown'), (1,'Energy'), (2,'Materials'), (3,'Industrials'), (4,'Consumer Discretionary'), (5,'Consumer Staples'), (6,'Health Care'), (7,'Financials'), (8,'Information Technology'), (9,'Communication Services'), (10,'Utilities'), (11,'Real Estate') ON CONFLICT DO NOTHING</sql>
+        <sql>INSERT INTO dim.dim_sector VALUES (-1,'Unknown',-1), (1,'Energy',1), (2,'Materials',2), (3,'Capital Goods',3), (4,'Commercial and Professional Services',3), (5,'Transportation',3), (6,'Automobiles and Components',4), (7,'Consumer Durables',4), (8,'Consumer Services',4), (9,'Retailing',4), (10,'Food and Staples Retailing',5), (11,'Food Beverage and Tobacco',5), (12,'Household and Personal Products',5), (13,'Health Care Equipment and Services',6), (14,'Pharmaceuticals Biotechnology and Life Sciences',6), (15,'Banks',7), (16,'Diversified Financials',7), (17,'Insurance',7), (18,'Software and Services',8), (19,'Technology Hardware and Equipment',8), (20,'Semiconductors and Semiconductor Equipment',8), (21,'Media',9), (22,'Telecommunication Services',9), (23,'Utilities',10), (24,'Equity Real Estate Investment Trusts',11) ON CONFLICT DO NOTHING</sql>
+        <rollback>
+            <dropTable tableName="dim_sector" schemaName="dim" />
+            <dropTable tableName="dim_industry" schemaName="dim" />
+        </rollback>
+    </changeSet>
+
+    <!-- 010-06: dim_exchange -->
+    <changeSet id="010-06-dim-exchange" author="hedge-fund">
+        <createTable tableName="dim_exchange" schemaName="dim">
+            <column name="exchange_id" type="INTEGER">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="exchange_code" type="VARCHAR(16)">
+                <constraints unique="true" nullable="false" />
+            </column>
+            <column name="exchange_name" type="VARCHAR(64)">
+                <constraints nullable="false" />
+            </column>
+            <column name="country_iso3" type="VARCHAR(3)" />
+            <column name="currency_id" type="INTEGER" defaultValueNumeric="-1" />
+            <column name="timezone" type="VARCHAR(32)" />
+        </createTable>
+        <sql>INSERT INTO dim.dim_exchange VALUES (-1,'UNKNOWN','Unknown',NULL,-1,NULL), (1,'NASDAQ','NASDAQ','USA',1,'America/New_York'), (2,'NYSE','NYSE','USA',1,'America/New_York'), (3,'BSE','Bombay Stock Exchange','IND',2,'Asia/Kolkata'), (4,'NSE','National Stock Exchange','IND',2,'Asia/Kolkata'), (5,'LSE','London Stock Exchange','GBR',4,'Europe/London'), (6,'TSE','Tokyo Stock Exchange','JPN',5,'Asia/Tokyo'), (7,'SSE','Shanghai Stock Exchange','CHN',6,'Asia/Shanghai'), (8,'HKEX','Hong Kong Exchange','HKG',6,'Asia/Hong_Kong'), (9,'BINANCE','Binance',NULL,7,NULL), (10,'COINBASE','Coinbase',NULL,7,NULL), (11,'CBOE','CBOE',NULL,1,'America/Chicago'), (12,'TSX','Toronto Stock Exchange','CAN',1,'America/Toronto'), (13,'FWB','Frankfurt Stock Exchange','DEU',3,'Europe/Berlin'), (14,'ASX','Australian Securities Exchange','AUS',1,'Australia/Sydney') ON CONFLICT DO NOTHING</sql>
+        <rollback><dropTable tableName="dim_exchange" schemaName="dim" /></rollback>
+    </changeSet>
+
+    <!-- 010-07: dim_instrument (SCD2) -->
+    <changeSet id="010-07-dim-instrument" author="hedge-fund">
+        <createTable tableName="dim_instrument" schemaName="dim">
+            <column name="instrument_id" type="INTEGER">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="symbol" type="VARCHAR(32)">
+                <constraints unique="true" nullable="false" />
+            </column>
+            <column name="isin" type="VARCHAR(12)" />
+            <column name="name" type="VARCHAR(128)" />
+            <column name="asset_class_id" type="INTEGER" defaultValueNumeric="-1">
+                <constraints foreignKeyName="fk_inst_ac" references="dim.dim_asset_class(asset_class_id)" />
+            </column>
+            <column name="exchange_id" type="INTEGER" defaultValueNumeric="-1">
+                <constraints foreignKeyName="fk_inst_exch" references="dim.dim_exchange(exchange_id)" />
+            </column>
+            <column name="currency_id" type="INTEGER" defaultValueNumeric="1">
+                <constraints foreignKeyName="fk_inst_ccy" references="dim.dim_currency(currency_id)" />
+            </column>
+            <column name="sector_id" type="INTEGER" defaultValueNumeric="-1">
+                <constraints foreignKeyName="fk_inst_sec" references="dim.dim_sector(sector_id)" />
+            </column>
+            <column name="lot_size" type="INTEGER" defaultValueNumeric="1" />
+            <column name="valid_from" type="DATE" defaultValueDate="1900-01-01" />
+            <column name="valid_to" type="DATE" defaultValueDate="9999-12-31" />
+            <column name="is_current" type="BOOLEAN" defaultValueBoolean="true" />
+            <column name="_source" type="VARCHAR(32)" />
+            <column name="_ingest_ts" type="TIMESTAMPTZ" />
+        </createTable>
+        <sql>CREATE INDEX IF NOT EXISTS ix_dim_inst_symbol ON dim.dim_instrument(symbol)</sql>
+        <sql>CREATE INDEX IF NOT EXISTS ix_dim_inst_ac ON dim.dim_instrument(asset_class_id)</sql>
+        <sql>CREATE INDEX IF NOT EXISTS ix_dim_inst_exch ON dim.dim_instrument(exchange_id)</sql>
+        <sql>CREATE INDEX IF NOT EXISTS ix_dim_inst_ccy ON dim.dim_instrument(currency_id)</sql>
+        <sql>CREATE INDEX IF NOT EXISTS ix_dim_inst_sec ON dim.dim_instrument(sector_id)</sql>
+        <sql>INSERT INTO dim.dim_instrument (instrument_id, symbol, name, asset_class_id, exchange_id, currency_id, sector_id, lot_size, is_current, _source, _ingest_ts) VALUES (-1,'UNKNOWN','Unknown',-1,-1,1,-1,1,true,'system',now()) ON CONFLICT DO NOTHING</sql>
+        <rollback><dropTable tableName="dim_instrument" schemaName="dim" /></rollback>
+    </changeSet>
+
+    <!-- 010-08: dim_equity -->
+    <changeSet id="010-08-dim-equity" author="hedge-fund">
+        <createTable tableName="dim_equity" schemaName="dim">
+            <column name="instrument_id" type="INTEGER">
+                <constraints primaryKey="true" nullable="false" foreignKeyName="fk_equity_inst" references="dim.dim_instrument(instrument_id)" />
+            </column>
+            <column name="outstanding_shares" type="BIGINT" />
+            <column name="market_cap" type="DOUBLE" />
+            <column name="listing_date" type="DATE" />
+            <column name="isin_verified" type="BOOLEAN" defaultValueBoolean="false" />
+        </createTable>
+        <rollback><dropTable tableName="dim_equity" schemaName="dim" /></rollback>
+    </changeSet>
+
+    <!-- 010-09: dim_country + dim_indicator -->
+    <changeSet id="010-09-dim-country-indicator" author="hedge-fund">
+        <createTable tableName="dim_country" schemaName="dim">
+            <column name="country_iso3" type="VARCHAR(3)">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="country_id" type="VARCHAR(8)" />
+            <column name="country_name" type="VARCHAR(128)" />
+            <column name="region" type="VARCHAR(64)" />
+        </createTable>
+        <sql>INSERT INTO dim.dim_country VALUES ('UNK','UNK','Unknown',NULL), ('USA','US','United States','North America'), ('IND','IN','India','South Asia'), ('GBR','GB','United Kingdom','Europe'), ('DEU','DE','Germany','Europe'), ('JPN','JP','Japan','East Asia'), ('CHN','CN','China','East Asia'), ('CAN','CA','Canada','North America'), ('AUS','AU','Australia','Oceania'), ('BRA','BR','Brazil','South America') ON CONFLICT DO NOTHING</sql>
+        <createTable tableName="dim_indicator" schemaName="dim">
+            <column name="indicator_id" type="VARCHAR(32)">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="indicator_name" type="VARCHAR(256)" />
+            <column name="source_id" type="VARCHAR(16)" />
+            <column name="unit" type="VARCHAR(32)" />
+            <column name="frequency" type="VARCHAR(8)" />
+        </createTable>
+        <sql>CREATE INDEX IF NOT EXISTS ix_dim_ind_source ON dim.dim_indicator(source_id)</sql>
+        <rollback>
+            <dropTable tableName="dim_indicator" schemaName="dim" />
+            <dropTable tableName="dim_country" schemaName="dim" />
+        </rollback>
+    </changeSet>
+
+    <!-- 010-10: Seed instruments from equity_master (NSE) -->
+    <changeSet id="010-10-seed-equity-master" author="hedge-fund" runOnChange="true">
+        <sql><![CDATA[INSERT INTO dim.dim_instrument (instrument_id, symbol, name, asset_class_id, exchange_id, currency_id, sector_id, lot_size, isin, valid_from, is_current, _source, _ingest_ts)
+             SELECT (SELECT COALESCE(MAX(instrument_id),0) FROM dim.dim_instrument) + row_number() OVER (ORDER BY symbol) AS instrument_id,
+                    symbol, company_name, 1, 4, 2, -1, CAST(market_lot AS INTEGER), isin, listing_date, true, 'nse-equity-master', now()
+             FROM read_parquet('datalake/data/silver/master/equity/equity_master.parquet')
+             WHERE symbol NOT IN (SELECT symbol FROM dim.dim_instrument)]]></sql>
+        <sql>INSERT OR IGNORE INTO dim.dim_equity (instrument_id) SELECT instrument_id FROM dim.dim_instrument WHERE asset_class_id=1 AND instrument_id NOT IN (SELECT instrument_id FROM dim.dim_equity)</sql>
+        <rollback>
+            <sql>DELETE FROM dim.dim_equity WHERE instrument_id IN (SELECT instrument_id FROM dim.dim_instrument WHERE _source='nse-equity-master')</sql>
+            <sql>DELETE FROM dim.dim_instrument WHERE _source='nse-equity-master'</sql>
+        </rollback>
+    </changeSet>
+
+    <!-- 010-11: Seed instruments from Yahoo OHLCV -->
+    <changeSet id="010-11-seed-yahoo-instruments" author="hedge-fund" runOnChange="true">
+        <sql><![CDATA[INSERT INTO dim.dim_instrument (instrument_id, symbol, name, asset_class_id, exchange_id, currency_id, sector_id, is_current, _source, _ingest_ts)
+             SELECT (SELECT COALESCE(MAX(instrument_id),0) FROM dim.dim_instrument) + row_number() OVER (ORDER BY symbol) AS instrument_id,
+                    symbol, symbol,
+                    CASE WHEN symbol LIKE '^%' THEN 2 WHEN symbol LIKE '%-USD' THEN 3 ELSE 1 END,
+                    CASE WHEN symbol LIKE '^%' THEN 1 WHEN symbol LIKE '%-USD' THEN 9 ELSE 1 END,
+                    CASE WHEN symbol LIKE '%-USD' THEN 7 ELSE 1 END,
+                    -1, true, 'yahoo', now()
+             FROM (SELECT DISTINCT symbol FROM read_csv('datalake/data/silver/yahoo/yahoo_ohlcv.csv', header=true))
+             WHERE symbol NOT IN (SELECT symbol FROM dim.dim_instrument)]]></sql>
+        <sql>INSERT OR IGNORE INTO dim.dim_equity (instrument_id) SELECT instrument_id FROM dim.dim_instrument WHERE asset_class_id IN (1,2) AND instrument_id NOT IN (SELECT instrument_id FROM dim.dim_equity)</sql>
+        <rollback><sql>DELETE FROM dim.dim_instrument WHERE _source='yahoo'</sql></rollback>
+    </changeSet>
+
+    <!-- 010-12: Seed dim_country + dim_indicator from WorldBank -->
+    <changeSet id="010-12-seed-macro-dims" author="hedge-fund" runOnChange="true">
+        <sql><![CDATA[INSERT OR IGNORE INTO dim.dim_country (country_iso3, country_id, country_name)
+             SELECT DISTINCT country_iso3, country_id, country_name
+             FROM read_parquet('datalake/data/silver/macro/observations.parquet')
+             WHERE country_iso3 IS NOT NULL AND country_iso3 <> '' AND country_iso3 <> 'UNK']]></sql>
+        <sql><![CDATA[INSERT OR IGNORE INTO dim.dim_indicator (indicator_id, indicator_name, source_id, unit)
+             SELECT DISTINCT indicator_id, indicator_name, source_id, unit
+             FROM read_parquet('datalake/data/silver/macro/observations.parquet')
+             WHERE indicator_id IS NOT NULL]]></sql>
+        <rollback>
+            <sql>DELETE FROM dim.dim_indicator WHERE source_id IN ('worldbank')</sql>
+        </rollback>
+    </changeSet>
+
+    <!-- 010-13: fact_market_ohlcv -->
+    <changeSet id="010-13-fact-market-ohlcv" author="hedge-fund">
+        <createTable tableName="fact_market_ohlcv" schemaName="dim">
+            <column name="instrument_id" type="INTEGER">
+                <constraints nullable="false" foreignKeyName="fk_ohlcv_instr" references="dim.dim_instrument(instrument_id)" />
+            </column>
+            <column name="date" type="DATE">
+                <constraints nullable="false" />
+            </column>
+            <column name="epoch" type="BIGINT" />
+            <column name="open" type="DOUBLE" />
+            <column name="high" type="DOUBLE" />
+            <column name="low" type="DOUBLE" />
+            <column name="close" type="DOUBLE" />
+            <column name="adj_close" type="DOUBLE" />
+            <column name="volume" type="BIGINT" />
+            <column name="_ingest_ts" type="TIMESTAMPTZ" />
+            <column name="year" type="INTEGER" />
+        </createTable>
+        <sql>CREATE UNIQUE INDEX IF NOT EXISTS ux_fact_ohlcv ON dim.fact_market_ohlcv(instrument_id, date)</sql>
+        <sql>CREATE INDEX IF NOT EXISTS ix_fact_ohlcv_date ON dim.fact_market_ohlcv(date)</sql>
+        <sql>CREATE INDEX IF NOT EXISTS ix_fact_ohlcv_year ON dim.fact_market_ohlcv(year)</sql>
+        <sql>CREATE OR REPLACE VIEW fact.fact_market_ohlcv AS SELECT * FROM dim.fact_market_ohlcv</sql>
+        <rollback><dropTable tableName="fact_market_ohlcv" schemaName="dim" /></rollback>
+    </changeSet>
+
+    <changeSet id="010-13b-seed-fact-ohlcv" author="hedge-fund" runOnChange="true">
+        <sql>DELETE FROM dim.fact_market_ohlcv</sql>
+        <sql><![CDATA[INSERT INTO dim.fact_market_ohlcv
+             SELECT d.instrument_id, CAST(y.date AS DATE), y.epoch, y.open, y.high, y.low, y.close, y.adj_close, y.volume, now(), year(CAST(y.date AS DATE))
+             FROM (SELECT * EXCLUDE rn FROM (SELECT *, ROW_NUMBER() OVER (PARTITION BY symbol, date ORDER BY epoch DESC) AS rn FROM read_csv('datalake/data/silver/yahoo/yahoo_ohlcv.csv', header=true)) WHERE rn=1) y
+             JOIN dim.dim_instrument d ON d.symbol = y.symbol]]></sql>
+        <rollback><sql>DELETE FROM dim.fact_market_ohlcv</sql></rollback>
+    </changeSet>
+
+    <!-- 010-14: fact_crypto_ohlcv -->
+    <changeSet id="010-14-fact-crypto-ohlcv" author="hedge-fund">
+        <createTable tableName="fact_crypto_ohlcv" schemaName="dim">
+            <column name="instrument_id" type="INTEGER">
+                <constraints nullable="false" foreignKeyName="fk_crypto_instr" references="dim.dim_instrument(instrument_id)" />
+            </column>
+            <column name="date" type="DATE">
+                <constraints nullable="false" />
+            </column>
+            <column name="epoch" type="BIGINT" />
+            <column name="open" type="DOUBLE" />
+            <column name="high" type="DOUBLE" />
+            <column name="low" type="DOUBLE" />
+            <column name="close" type="DOUBLE" />
+            <column name="volume" type="DOUBLE" />
+            <column name="quote_volume" type="DOUBLE" />
+            <column name="trades" type="BIGINT" />
+            <column name="_ingest_ts" type="TIMESTAMPTZ" />
+            <column name="year" type="INTEGER" />
+        </createTable>
+        <sql>CREATE UNIQUE INDEX IF NOT EXISTS ux_fact_crypto ON dim.fact_crypto_ohlcv(instrument_id, date)</sql>
+        <sql>CREATE INDEX IF NOT EXISTS ix_fact_crypto_date ON dim.fact_crypto_ohlcv(date)</sql>
+        <sql>CREATE OR REPLACE VIEW fact.fact_crypto_ohlcv AS SELECT * FROM dim.fact_crypto_ohlcv</sql>
+        <rollback><dropTable tableName="fact_crypto_ohlcv" schemaName="dim" /></rollback>
+    </changeSet>
+
+    <!-- 010-15: fact_macro_obs -->
+    <changeSet id="010-15-fact-macro-obs" author="hedge-fund">
+        <createTable tableName="fact_macro_obs" schemaName="dim">
+            <column name="indicator_id" type="VARCHAR(32)">
+                <constraints nullable="false" foreignKeyName="fk_macro_ind" references="dim.dim_indicator(indicator_id)" />
+            </column>
+            <column name="country_iso3" type="VARCHAR(3)">
+                <constraints nullable="false" foreignKeyName="fk_macro_country" references="dim.dim_country(country_iso3)" />
+            </column>
+            <column name="date" type="DATE">
+                <constraints nullable="false" />
+            </column>
+            <column name="year" type="INTEGER" />
+            <column name="value" type="DOUBLE" />
+            <column name="period_type" type="VARCHAR(8)" />
+            <column name="source_id" type="VARCHAR(16)" />
+            <column name="lastupdated" type="TIMESTAMPTZ" />
+        </createTable>
+        <sql>CREATE UNIQUE INDEX IF NOT EXISTS ux_fact_macro ON dim.fact_macro_obs(indicator_id, country_iso3, date)</sql>
+        <sql>CREATE INDEX IF NOT EXISTS ix_fact_macro_ind ON dim.fact_macro_obs(indicator_id)</sql>
+        <sql>CREATE INDEX IF NOT EXISTS ix_fact_macro_date ON dim.fact_macro_obs(date)</sql>
+        <sql>CREATE OR REPLACE VIEW fact.fact_macro_obs AS SELECT * FROM dim.fact_macro_obs</sql>
+        <rollback><dropTable tableName="fact_macro_obs" schemaName="dim" /></rollback>
+    </changeSet>
+
+    <changeSet id="010-15b-seed-fact-macro" author="hedge-fund" runOnChange="true">
+        <sql>DELETE FROM dim.fact_macro_obs</sql>
+        <sql><![CDATA[INSERT INTO dim.fact_macro_obs (indicator_id, country_iso3, date, year, value, period_type, source_id, lastupdated)
+             SELECT indicator_id, COALESCE(NULLIF(country_iso3,''), 'UNK'),
+                    COALESCE(TRY_CAST(date AS DATE), make_date(COALESCE(year, 2000), 1, 1)),
+                    year, value, period_type, source_id, TRY_CAST(lastupdated AS TIMESTAMPTZ)
+             FROM (SELECT * EXCLUDE rn FROM (SELECT *, COALESCE(NULLIF(country_iso3,''), 'UNK') AS country_iso3_fixed, ROW_NUMBER() OVER (PARTITION BY indicator_id, COALESCE(NULLIF(country_iso3,''), 'UNK'), date ORDER BY lastupdated DESC) AS rn FROM read_parquet('datalake/data/silver/macro/observations.parquet')) WHERE rn=1)
+             WHERE TRY_CAST(date AS DATE) IS NOT NULL OR year IS NOT NULL]]></sql>
+        <rollback><sql>DELETE FROM dim.fact_macro_obs</sql></rollback>
+    </changeSet>
+
+    <!-- 010-16: fact_rates_daily -->
+    <changeSet id="010-16-fact-rates-daily" author="hedge-fund">
+        <createTable tableName="fact_rates_daily" schemaName="dim">
+            <column name="indicator_id" type="VARCHAR(32)">
+                <constraints nullable="false" />
+            </column>
+            <column name="date" type="DATE">
+                <constraints nullable="false" />
+            </column>
+            <column name="value" type="DOUBLE" />
+            <column name="source_id" type="VARCHAR(16)" />
+            <column name="_ingest_ts" type="TIMESTAMPTZ" />
+            <column name="year" type="INTEGER" />
+        </createTable>
+        <sql>CREATE UNIQUE INDEX IF NOT EXISTS ux_fact_rates ON dim.fact_rates_daily(indicator_id, date)</sql>
+        <sql>CREATE INDEX IF NOT EXISTS ix_fact_rates_date ON dim.fact_rates_daily(date)</sql>
+        <sql>CREATE OR REPLACE VIEW fact.fact_rates_daily AS SELECT * FROM dim.fact_rates_daily</sql>
+        <rollback><dropTable tableName="fact_rates_daily" schemaName="dim" /></rollback>
+    </changeSet>
+
+    <!-- 010-17: fact_filings -->
+    <changeSet id="010-17-fact-filings" author="hedge-fund">
+        <createTable tableName="fact_filings" schemaName="dim">
+            <column name="instrument_id" type="INTEGER">
+                <constraints nullable="false" foreignKeyName="fk_filing_instr" references="dim.dim_instrument(instrument_id)" />
+            </column>
+            <column name="accession_number" type="VARCHAR(32)">
+                <constraints nullable="false" />
+            </column>
+            <column name="filing_date" type="DATE" />
+            <column name="form_type" type="VARCHAR(16)" />
+            <column name="period_of_report" type="DATE" />
+            <column name="entity_name" type="VARCHAR(128)" />
+            <column name="cik" type="VARCHAR(16)" />
+            <column name="url" type="VARCHAR(256)" />
+            <column name="_ingest_ts" type="TIMESTAMPTZ" />
+        </createTable>
+        <sql>CREATE UNIQUE INDEX IF NOT EXISTS ux_fact_filing ON dim.fact_filings(instrument_id, accession_number)</sql>
+        <sql>CREATE INDEX IF NOT EXISTS ix_fact_filing_date ON dim.fact_filings(filing_date)</sql>
+        <sql>CREATE OR REPLACE VIEW fact.fact_filings AS SELECT * FROM dim.fact_filings</sql>
+        <rollback><dropTable tableName="fact_filings" schemaName="dim" /></rollback>
+    </changeSet>
+
+    <!-- 010-18: Gold analytics views -->
+    <changeSet id="010-18-gold-views" author="hedge-fund" runOnChange="true">
+        <sql>CREATE OR REPLACE VIEW hedge_gold.vw_returns_daily AS SELECT i.symbol, i.asset_class_id, f.date, f.close, f.volume, (f.close / lag(f.close) OVER (PARTITION BY f.instrument_id ORDER BY f.date) - 1) AS ret_1d FROM dim.fact_market_ohlcv f JOIN dim.dim_instrument i USING(instrument_id)</sql>
+        <sql>CREATE OR REPLACE VIEW hedge_gold.vw_returns_cumulative AS SELECT symbol, date, close, ret_1d, exp(sum(ln(1 + ret_1d)) OVER (PARTITION BY symbol ORDER BY date)) AS cum_return FROM hedge_gold.vw_returns_daily WHERE ret_1d IS NOT NULL</sql>
+        <sql>CREATE OR REPLACE VIEW hedge_gold.vw_volatility_30d AS SELECT symbol, date, ret_1d, stddev(ret_1d) OVER (PARTITION BY symbol ORDER BY date ROWS 30 PRECEDING) * sqrt(252) AS vol_30d_annualized FROM hedge_gold.vw_returns_daily WHERE ret_1d IS NOT NULL</sql>
+        <sql>CREATE OR REPLACE VIEW hedge_gold.vw_macro_yoy AS SELECT m.indicator_id, m.country_iso3, m.date, m.value, m.source_id, lag(m.value) OVER (PARTITION BY m.indicator_id, m.country_iso3 ORDER BY m.date) AS prev_value, (m.value / nullif(lag(m.value) OVER (PARTITION BY m.indicator_id, m.country_iso3 ORDER BY m.date), 0) - 1) AS yoy_pct FROM dim.fact_macro_obs m</sql>
+        <sql>CREATE OR REPLACE VIEW hedge_gold.vw_instrument_detail AS SELECT i.instrument_id, i.symbol, i.name, i.isin, ac.asset_class_code, ac.asset_class_name, c.currency_code, c.currency_name, s.sector_name, ind.industry_name, e.exchange_code, e.exchange_name, e.country_iso3, i.lot_size, i.valid_from, i.valid_to, i.is_current FROM dim.dim_instrument i JOIN dim.dim_asset_class ac ON ac.asset_class_id = i.asset_class_id JOIN dim.dim_currency c ON c.currency_id = i.currency_id JOIN dim.dim_sector s ON s.sector_id = i.sector_id JOIN dim.dim_industry ind ON ind.industry_id = s.industry_id JOIN dim.dim_exchange e ON e.exchange_id = i.exchange_id</sql>
+        <sql>CREATE OR REPLACE VIEW hedge_gold.vw_source_coverage AS SELECT 'dim_instrument' AS table_name, count(*) AS row_count, count(DISTINCT _source) AS sources FROM dim.dim_instrument WHERE instrument_id > 0 UNION ALL SELECT 'fact_market_ohlcv', count(*), count(DISTINCT i._source) FROM dim.fact_market_ohlcv f JOIN dim.dim_instrument i USING(instrument_id) UNION ALL SELECT 'fact_macro_obs', count(*), count(DISTINCT source_id) FROM dim.fact_macro_obs UNION ALL SELECT 'fact_crypto_ohlcv', count(*), 0 FROM dim.fact_crypto_ohlcv UNION ALL SELECT 'fact_rates_daily', count(*), count(DISTINCT source_id) FROM dim.fact_rates_daily UNION ALL SELECT 'fact_filings', count(*), 0 FROM dim.fact_filings</sql>
+        <rollback>
+            <sql>DROP VIEW IF EXISTS hedge_gold.vw_source_coverage</sql>
+            <sql>DROP VIEW IF EXISTS hedge_gold.vw_instrument_detail</sql>
+            <sql>DROP VIEW IF EXISTS hedge_gold.vw_macro_yoy</sql>
+            <sql>DROP VIEW IF EXISTS hedge_gold.vw_volatility_30d</sql>
+            <sql>DROP VIEW IF EXISTS hedge_gold.vw_returns_cumulative</sql>
+            <sql>DROP VIEW IF EXISTS hedge_gold.vw_returns_daily</sql>
+        </rollback>
+    </changeSet>
+
+    <!-- 010-19: Ref views -->
+    <changeSet id="010-19-ref-views" author="hedge-fund" runOnChange="true">
+        <sql>CREATE OR REPLACE VIEW ref.currency AS SELECT currency_id AS id, currency_code AS code, currency_name AS name FROM dim.dim_currency</sql>
+        <sql>CREATE OR REPLACE VIEW ref.asset_class AS SELECT asset_class_id AS id, asset_class_code AS code, asset_class_name AS name FROM dim.dim_asset_class</sql>
+        <sql>CREATE OR REPLACE VIEW ref.industry AS SELECT industry_id AS id, industry_name AS name FROM dim.dim_industry</sql>
+        <sql>CREATE OR REPLACE VIEW ref.sector AS SELECT sector_id AS id, sector_name AS name, industry_id FROM dim.dim_sector</sql>
+        <sql>CREATE OR REPLACE VIEW ref.country AS SELECT country_iso3 AS code, country_name AS name, region FROM dim.dim_country</sql>
+        <sql>CREATE OR REPLACE VIEW ref.indicator AS SELECT indicator_id AS id, indicator_name AS name, source_id, unit, frequency FROM dim.dim_indicator</sql>
+        <sql>CREATE OR REPLACE VIEW ref.exchange AS SELECT exchange_id AS id, exchange_code AS code, exchange_name AS name, country_iso3, currency_id FROM dim.dim_exchange</sql>
+        <rollback>
+            <sql>DROP VIEW IF EXISTS ref.exchange</sql>
+            <sql>DROP VIEW IF EXISTS ref.indicator</sql>
+            <sql>DROP VIEW IF EXISTS ref.country</sql>
+            <sql>DROP VIEW IF EXISTS ref.sector</sql>
+            <sql>DROP VIEW IF EXISTS ref.industry</sql>
+            <sql>DROP VIEW IF EXISTS ref.asset_class</sql>
+            <sql>DROP VIEW IF EXISTS ref.currency</sql>
+        </rollback>
+    </changeSet>
+
+    <!-- 010-20: Master views -->
+    <changeSet id="010-20-master-views" author="hedge-fund" runOnChange="true">
+        <sql>CREATE OR REPLACE VIEW master.instrument AS SELECT instrument_id AS id, symbol, name, asset_class_id, exchange_id, currency_id, sector_id, lot_size, isin, is_current FROM dim.dim_instrument</sql>
+        <sql>CREATE OR REPLACE VIEW master.equity AS SELECT instrument_id AS id, outstanding_shares, market_cap, listing_date FROM dim.dim_equity</sql>
+        <sql>CREATE OR REPLACE VIEW master.instrument_detail AS SELECT * FROM hedge_gold.vw_instrument_detail</sql>
+        <sql>CREATE OR REPLACE VIEW master.equity_india AS SELECT i.symbol, i.name, i.isin, c.currency_code, e.exchange_code FROM dim.dim_instrument i JOIN dim.dim_currency c ON c.currency_id = i.currency_id JOIN dim.dim_exchange e ON e.exchange_id = i.exchange_id WHERE i.asset_class_id = 1 AND e.country_iso3 = 'IND' ORDER BY i.symbol</sql>
+        <rollback>
+            <sql>DROP VIEW IF EXISTS master.equity_india</sql>
+            <sql>DROP VIEW IF EXISTS master.instrument_detail</sql>
+            <sql>DROP VIEW IF EXISTS master.equity</sql>
+            <sql>DROP VIEW IF EXISTS master.instrument</sql>
+        </rollback>
+    </changeSet>
+
+    <!-- 010-21: Domain views -->
+    <changeSet id="010-21-domain-views" author="hedge-fund" runOnChange="true">
+        <sql>CREATE OR REPLACE VIEW market.ohlcv AS SELECT i.symbol, f.date, f.open, f.high, f.low, f.close, f.adj_close, f.volume, f.year FROM dim.fact_market_ohlcv f JOIN dim.dim_instrument i USING(instrument_id)</sql>
+        <sql>CREATE OR REPLACE VIEW market.crypto AS SELECT i.symbol, f.date, f.open, f.high, f.low, f.close, f.volume, f.trades, f.year FROM dim.fact_crypto_ohlcv f JOIN dim.dim_instrument i USING(instrument_id)</sql>
+        <sql>CREATE OR REPLACE VIEW macro.observation AS SELECT m.indicator_id, i.indicator_name, m.country_iso3, c.country_name, m.date, m.value, m.period_type, m.source_id FROM dim.fact_macro_obs m JOIN dim.dim_indicator i USING(indicator_id) JOIN dim.dim_country c USING(country_iso3)</sql>
+        <sql>CREATE OR REPLACE VIEW macro.rates AS SELECT r.indicator_id, r.date, r.value, r.source_id FROM dim.fact_rates_daily r</sql>
+        <sql>CREATE OR REPLACE VIEW market.filings AS SELECT i.symbol, f.accession_number, f.filing_date, f.form_type, f.entity_name, f.url FROM dim.fact_filings f JOIN dim.dim_instrument i USING(instrument_id)</sql>
+        <rollback>
+            <sql>DROP VIEW IF EXISTS market.filings</sql>
+            <sql>DROP VIEW IF EXISTS macro.rates</sql>
+            <sql>DROP VIEW IF EXISTS macro.observation</sql>
+            <sql>DROP VIEW IF EXISTS market.crypto</sql>
+            <sql>DROP VIEW IF EXISTS market.ohlcv</sql>
+        </rollback>
+    </changeSet>
+
+    <!-- 010-22: Staging views -->
+    <changeSet id="010-22-staging-views" author="hedge-fund" runOnChange="true">
+        <sql>CREATE OR REPLACE VIEW staging.yahoo_ohlcv AS SELECT symbol, CAST(date AS DATE) AS trade_date, epoch, open, high, low, close, adj_close, volume FROM read_csv('datalake/data/silver/yahoo/yahoo_ohlcv.csv', header=true)</sql>
+        <sql>CREATE OR REPLACE VIEW staging.fred_series AS SELECT source_key AS series_id, raw_len, bronze_path FROM read_csv('datalake/data/silver/fred/fred.csv', header=true)</sql>
+        <sql>CREATE OR REPLACE VIEW staging.sec_filings AS SELECT source_key AS symbol, raw_len, bronze_path FROM read_csv('datalake/data/silver/sec/sec.csv', header=true)</sql>
+        <sql>CREATE OR REPLACE VIEW staging.treasury AS SELECT source_key, raw_len, bronze_path FROM read_csv('datalake/data/silver/treasury/treasury.csv', header=true)</sql>
+        <sql>CREATE OR REPLACE VIEW staging.binance_meta AS SELECT source_key AS pair, raw_len, bronze_path FROM read_csv('datalake/data/silver/binance/binance.csv', header=true)</sql>
+        <sql>CREATE OR REPLACE VIEW staging.coinbase_meta AS SELECT source_key AS pair, raw_len, bronze_path FROM read_csv('datalake/data/silver/coinbase/coinbase.csv', header=true)</sql>
+        <sql>CREATE OR REPLACE VIEW staging.defillama_meta AS SELECT source_key AS protocol, raw_len, bronze_path FROM read_csv('datalake/data/silver/defillama/defillama.csv', header=true)</sql>
+        <sql>CREATE OR REPLACE VIEW staging.cboe_meta AS SELECT source_key, raw_len, bronze_path FROM read_csv('datalake/data/silver/cboe/cboe.csv', header=true)</sql>
+        <rollback>
+            <sql>DROP VIEW IF EXISTS staging.cboe_meta</sql>
+            <sql>DROP VIEW IF EXISTS staging.defillama_meta</sql>
+            <sql>DROP VIEW IF EXISTS staging.coinbase_meta</sql>
+            <sql>DROP VIEW IF EXISTS staging.binance_meta</sql>
+            <sql>DROP VIEW IF EXISTS staging.treasury</sql>
+            <sql>DROP VIEW IF EXISTS staging.sec_filings</sql>
+            <sql>DROP VIEW IF EXISTS staging.fred_series</sql>
+            <sql>DROP VIEW IF EXISTS staging.yahoo_ohlcv</sql>
+        </rollback>
+    </changeSet>
+
+    <!-- 010-23: Compat views -->
+    <changeSet id="010-23-compat-views" author="hedge-fund" runOnChange="true">
+        <sql>CREATE OR REPLACE VIEW hedge_silver.yahoo_ohlcv AS SELECT * FROM staging.yahoo_ohlcv</sql>
+        <sql>CREATE OR REPLACE VIEW hedge_silver.worldbank_observations AS SELECT * FROM dim.fact_macro_obs</sql>
+        <sql>CREATE OR REPLACE VIEW hedge_silver.fred AS SELECT * FROM staging.fred_series</sql>
+        <sql>CREATE OR REPLACE VIEW hedge_silver.sec AS SELECT * FROM staging.sec_filings</sql>
+        <sql>CREATE OR REPLACE VIEW hedge_silver.treasury AS SELECT * FROM staging.treasury</sql>
+        <sql>CREATE OR REPLACE VIEW hedge_silver.binance AS SELECT * FROM staging.binance_meta</sql>
+        <sql>CREATE OR REPLACE VIEW hedge_silver.coinbase AS SELECT * FROM staging.coinbase_meta</sql>
+        <sql>CREATE OR REPLACE VIEW hedge_silver.defillama AS SELECT * FROM staging.defillama_meta</sql>
+        <sql>CREATE OR REPLACE VIEW hedge_silver.cboe AS SELECT * FROM staging.cboe_meta</sql>
+        <sql>CREATE OR REPLACE VIEW hedge_silver.tencent AS SELECT * FROM read_parquet('datalake/data/silver/tencent.parquet')</sql>
+        <sql>CREATE OR REPLACE VIEW hedge_silver.sina AS SELECT * FROM read_parquet('datalake/data/silver/sina.parquet')</sql>
+        <sql>CREATE OR REPLACE VIEW hedge_silver.eastmoney AS SELECT * FROM read_parquet('datalake/data/silver/eastmoney.parquet')</sql>
+        <sql>CREATE OR REPLACE VIEW hedge_silver.baostock AS SELECT * FROM read_parquet('datalake/data/silver/baostock.parquet')</sql>
+        <sql>CREATE OR REPLACE VIEW hedge_silver.investing AS SELECT * FROM read_parquet('datalake/data/silver/investing.parquet')</sql>
+        <sql>CREATE OR REPLACE VIEW hedge_silver.calcfi AS SELECT * FROM read_parquet('datalake/data/silver/calcfi.parquet')</sql>
+        <sql>CREATE OR REPLACE VIEW hedge_silver.fdic AS SELECT * FROM read_parquet('datalake/data/silver/fdic.parquet')</sql>
+        <sql>CREATE OR REPLACE VIEW hedge_silver.eia AS SELECT * FROM read_parquet('datalake/data/silver/eia.parquet')</sql>
+        <sql>CREATE OR REPLACE VIEW hedge_silver.bea AS SELECT * FROM read_parquet('datalake/data/silver/bea.parquet')</sql>
+        <sql>CREATE OR REPLACE VIEW hedge_silver.gmd AS SELECT * FROM read_parquet('datalake/data/silver/gmd.parquet')</sql>
+        <sql>CREATE OR REPLACE VIEW hedge_silver.imf AS SELECT * FROM read_parquet('datalake/data/silver/imf.parquet')</sql>
+        <sql>CREATE OR REPLACE VIEW hedge_silver.oecd AS SELECT * FROM read_parquet('datalake/data/silver/oecd.parquet')</sql>
+        <sql>CREATE OR REPLACE VIEW hedge_silver.bls AS SELECT * FROM read_parquet('datalake/data/silver/bls.parquet')</sql>
+        <sql>CREATE OR REPLACE VIEW hedge_silver.ohlcv AS SELECT * FROM read_parquet('datalake/data/silver/ohlcv.parquet')</sql>
+        <sql>CREATE OR REPLACE VIEW hedge_silver.equity_master AS SELECT * FROM read_parquet('datalake/data/silver/master/equity/equity_master.parquet')</sql>
+        <sql>CREATE OR REPLACE VIEW hedge_gold.yahoo_summary AS SELECT symbol, count(*) AS bars, avg(close) AS avg_close, max(high) AS max_high, min(low) AS min_low, sum(volume) AS total_vol FROM market.ohlcv GROUP BY symbol</sql>
+        <sql>CREATE OR REPLACE VIEW hedge_gold.worldbank_yoy AS SELECT * FROM hedge_gold.vw_macro_yoy WHERE source_id='worldbank'</sql>
+        <sql>CREATE OR REPLACE VIEW hedge_gold.all_sources_summary AS SELECT * FROM hedge_gold.vw_source_coverage</sql>
+        <rollback>
+            <sql>DROP VIEW IF EXISTS hedge_gold.all_sources_summary</sql>
+            <sql>DROP VIEW IF EXISTS hedge_gold.worldbank_yoy</sql>
+            <sql>DROP VIEW IF EXISTS hedge_gold.yahoo_summary</sql>
+            <sql>DROP VIEW IF EXISTS hedge_silver.equity_master</sql>
+            <sql>DROP VIEW IF EXISTS hedge_silver.ohlcv</sql>
+            <sql>DROP VIEW IF EXISTS hedge_silver.bls</sql>
+            <sql>DROP VIEW IF EXISTS hedge_silver.oecd</sql>
+            <sql>DROP VIEW IF EXISTS hedge_silver.imf</sql>
+            <sql>DROP VIEW IF EXISTS hedge_silver.gmd</sql>
+            <sql>DROP VIEW IF EXISTS hedge_silver.bea</sql>
+            <sql>DROP VIEW IF EXISTS hedge_silver.eia</sql>
+            <sql>DROP VIEW IF EXISTS hedge_silver.fdic</sql>
+            <sql>DROP VIEW IF EXISTS hedge_silver.calcfi</sql>
+            <sql>DROP VIEW IF EXISTS hedge_silver.investing</sql>
+            <sql>DROP VIEW IF EXISTS hedge_silver.baostock</sql>
+            <sql>DROP VIEW IF EXISTS hedge_silver.eastmoney</sql>
+            <sql>DROP VIEW IF EXISTS hedge_silver.sina</sql>
+            <sql>DROP VIEW IF EXISTS hedge_silver.tencent</sql>
+            <sql>DROP VIEW IF EXISTS hedge_silver.cboe</sql>
+            <sql>DROP VIEW IF EXISTS hedge_silver.defillama</sql>
+            <sql>DROP VIEW IF EXISTS hedge_silver.coinbase</sql>
+            <sql>DROP VIEW IF EXISTS hedge_silver.binance</sql>
+            <sql>DROP VIEW IF EXISTS hedge_silver.treasury</sql>
+            <sql>DROP VIEW IF EXISTS hedge_silver.sec</sql>
+            <sql>DROP VIEW IF EXISTS hedge_silver.fred</sql>
+            <sql>DROP VIEW IF EXISTS hedge_silver.worldbank_observations</sql>
+            <sql>DROP VIEW IF EXISTS hedge_silver.yahoo_ohlcv</sql>
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>

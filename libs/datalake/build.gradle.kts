@@ -7,6 +7,10 @@ application {
     mainClass.set("com.hedgefund.datalake.Main")
 }
 
+tasks.named<JavaExec>("run") {
+    workingDir = rootProject.projectDir
+}
+
 dependencies {
     api(project(":libs:common"))
     api(libs.jackson.databind)

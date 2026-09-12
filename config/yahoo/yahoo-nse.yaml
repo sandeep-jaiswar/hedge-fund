@@ -6,7 +6,7 @@ yahoo:
     bronze: data/bronze/yahoo
     catalog: catalog/glue.json
     silver: data/silver/yahoo
-  range: 1mo
+  range: 1y
   rateLimit:
     burst: 8
     qps: 4

@@ -2,7 +2,7 @@ binance:
   baseUrl: "https://api.binance.com"
   symbols: ["BTCUSDT", "ETHUSDT", "BNBUSDT"]
   interval: "1d"
-  limit: 30
+  limit: 365
   concurrency: 3
   retry: {maxAttempts: 3, backoffMs: 800, maxBackoffMs: 8000}
   rateLimit: {qps: 2, burst: 4}
