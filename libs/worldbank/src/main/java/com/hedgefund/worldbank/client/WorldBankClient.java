@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hedgefund.ingest.client.AbstractHttpClient;
 import com.hedgefund.worldbank.config.WorldBankConfig;
 import com.hedgefund.worldbank.model.DataPoint;
 import com.hedgefund.worldbank.model.IndicatorMeta;
@@ -12,42 +13,20 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
 
-public class WorldBankClient {
+public class WorldBankClient extends AbstractHttpClient {
     private static final Logger log = LoggerFactory.getLogger(WorldBankClient.class);
     private final WorldBankConfig cfg;
-    private final HttpClient http;
     private final ObjectMapper om;
-    private final Semaphore rateSem;
-    private long lastRequestAt = 0;
 
     public WorldBankClient(WorldBankConfig cfg) {
+        super(cfg.ingestConfig());
         this.cfg = cfg;
-        this.http = HttpClient.newBuilder()
-                .connectTimeout(Duration.ofSeconds(10))
-                .executor(Executors.newVirtualThreadPerTaskExecutor())
-                .build();
         this.om = new ObjectMapper();
         om.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        this.rateSem = new Semaphore(cfg.rateLimit().burst());
-        // simple token refill via scheduled refill not needed; we do naive sleep for qps
-    }
-
-    private synchronized void throttle() throws InterruptedException {
-        double qps = cfg.rateLimit().qps();
-        long minGapMs = (long)(1000 / qps);
-        long now = System.currentTimeMillis();
-        long gap = now - lastRequestAt;
-        if (gap < minGapMs) Thread.sleep(minGapMs - gap);
-        lastRequestAt = System.currentTimeMillis();
     }
 
     /** List all indicator codes (for full crawl). Paginate /indicator?per_page=1000, filtered by source */
@@ -138,28 +117,5 @@ public class WorldBankClient {
             exec.shutdown();
         }
         return all;
-    }
-
-    private String fetchWithRetry(String url) throws Exception {
-        int attempts=0;
-        long backoff=cfg.retry().backoffMs();
-        while(true){
-            attempts++;
-            try{
-                throttle();
-                HttpRequest req = HttpRequest.newBuilder(URI.create(url)).timeout(Duration.ofSeconds(30)).GET().header("Accept","application/json").build();
-                HttpResponse<String> resp = http.send(req, HttpResponse.BodyHandlers.ofString());
-                if(resp.statusCode()==429 || resp.statusCode()>=500){
-                    throw new IOException("HTTP "+resp.statusCode()+" "+resp.body().substring(0, Math.min(200, resp.body().length())));
-                }
-                if(resp.statusCode()!=200) throw new IOException("HTTP "+resp.statusCode()+" "+resp.body());
-                return resp.body();
-            } catch(Exception e){
-                if(attempts>=cfg.retry().maxAttempts()) throw e;
-                log.warn("Fetch failed attempt {}/{} {} -> retry in {}ms: {}", attempts, cfg.retry().maxAttempts(), url, backoff, e.toString());
-                Thread.sleep(backoff + ThreadLocalRandom.current().nextInt(200));
-                backoff = Math.min(backoff*2, cfg.retry().maxBackoffMs());
-            }
-        }
     }
 }

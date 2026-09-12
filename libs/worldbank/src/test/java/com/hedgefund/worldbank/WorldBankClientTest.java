@@ -2,6 +2,7 @@ package com.hedgefund.worldbank;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
+import com.hedgefund.ingest.config.IngestConfig;
 import com.hedgefund.worldbank.client.WorldBankClient;
 import com.hedgefund.worldbank.config.WorldBankConfig;
 import org.junit.jupiter.api.AfterEach;
@@ -37,7 +38,8 @@ class WorldBankClientTest {
 
         WorldBankConfig cfg = new WorldBankConfig(wm.baseUrl()+"/v2", List.of("NY.GDP.MKTP.CD"), List.of("all"), "2022", null, null, 3, 2, 20,20,
                 new WorldBankConfig.Retry(2,10,100), new WorldBankConfig.RateLimit(100,10),
-                new WorldBankConfig.Paths("data/bronze/worldbank","data/silver/worldbank","catalog/glue.json"), false, 0, "2");
+                new WorldBankConfig.Paths("data/bronze/worldbank","data/silver/worldbank","catalog/glue.json"), false, 0, "2",
+                IngestConfig.defaults("worldbank"));
         var client = new WorldBankClient(cfg);
         var res = client.fetchPage(List.of("NY.GDP.MKTP.CD"), List.of("all"), "2022",1);
         assertEquals(1, res.envelope().page());
@@ -61,7 +63,8 @@ class WorldBankClientTest {
 
         WorldBankConfig cfg = new WorldBankConfig(wm.baseUrl()+"/v2", List.of(), List.of("all"), "2020:2022", null,null,1000,2,20,20,
                 new WorldBankConfig.Retry(2,10,100), new WorldBankConfig.RateLimit(100,10),
-                new WorldBankConfig.Paths("data/bronze/worldbank","data/silver/worldbank","catalog/glue.json"), true,0, "2");
+                new WorldBankConfig.Paths("data/bronze/worldbank","data/silver/worldbank","catalog/glue.json"), true,0, "2",
+                IngestConfig.defaults("worldbank"));
         var client = new WorldBankClient(cfg);
         var codes = client.listAllIndicatorCodes();
         assertEquals(3, codes.size());

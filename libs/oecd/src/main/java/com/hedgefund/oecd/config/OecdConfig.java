@@ -1,41 +1,82 @@
 package com.hedgefund.oecd.config;
+
+import com.hedgefund.ingest.config.IngestConfig;
+import com.hedgefund.ingest.config.IngestConfigLoader;
 import org.yaml.snakeyaml.Yaml;
-import java.io.*;
-import java.nio.file.*;
-import java.util.*;
-public record OecdConfig(String baseUrl, List<String> symbols, List<String> series, List<String> tickers, List<String> protocols, String interval, int limit, int concurrency, Retry retry, RateLimit rateLimit, Paths paths) {
-    public record Retry(int maxAttempts, long backoffMs, long maxBackoffMs){}
-    public record RateLimit(double qps, int burst){}
-    public record Paths(String bronze, String silver, String catalog){}
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.List;
+import java.util.Map;
+
+public record OecdConfig(
+    String baseUrl,
+    List<String> series,
+    List<String> tickers,
+    List<String> protocols,
+    String interval,
+    int limit,
+    IngestConfig ingestConfig
+) {
+
     @SuppressWarnings("unchecked")
-    public static OecdConfig fromYaml(Path p) throws IOException {
-        Yaml yaml=new Yaml();
-        Map<String,Object> root=yaml.load(Files.newInputStream(p));
-        Map<String,Object> m=(Map<String,Object>)root.get("oecd");
-        if(m==null) m=new HashMap<>();
-        String baseUrl=(String)m.getOrDefault("baseUrl","https://sdmx.oecd.org");
-        List<String> symbols=(List<String>)m.getOrDefault("symbols", m.getOrDefault("series", m.getOrDefault("tickers", m.getOrDefault("protocols", List.of("oecd")))));
-        // normalize
-        List<String> series = (List<String>)m.getOrDefault("series", symbols);
-        List<String> tickers = (List<String>)m.getOrDefault("tickers", symbols);
-        List<String> protocols = (List<String>)m.getOrDefault("protocols", symbols);
-        String interval=(String)m.getOrDefault("interval","1d");
-        int limit=((Number)m.getOrDefault("limit",30)).intValue();
-        Map<String,Object> rc=(Map<String,Object>)m.getOrDefault("retry", Map.of());
-        Retry retry=new Retry((int)rc.getOrDefault("maxAttempts",3), ((Number)rc.getOrDefault("backoffMs",800)).longValue(), ((Number)rc.getOrDefault("maxBackoffMs",8000)).longValue());
-        Map<String,Object> rl=(Map<String,Object>)m.getOrDefault("rateLimit", Map.of());
-        RateLimit rateLimit=new RateLimit(((Number)rl.getOrDefault("qps",2)).doubleValue(), (int)rl.getOrDefault("burst",4));
-        int concurrency=((Number)m.getOrDefault("concurrency",2)).intValue();
-        Map<String,Object> pa=(Map<String,Object>)m.getOrDefault("paths", Map.of());
-        Paths paths=new Paths((String)pa.getOrDefault("bronze","data/bronze/oecd"), (String)pa.getOrDefault("silver","data/silver/oecd"), (String)pa.getOrDefault("catalog","catalog/glue.json"));
-        return new OecdConfig(baseUrl, symbols, series, tickers, protocols, interval, limit, concurrency, retry, rateLimit, paths);
+    public static OecdConfig fromYaml(Path path) throws IOException {
+        Yaml yaml = new Yaml();
+        Map<String, Object> root = yaml.load(Files.newInputStream(path));
+        Map<String, Object> m = (Map<String, Object>) root.get("oecd");
+        if (m == null) m = Map.of();
+
+        String baseUrl = (String) m.getOrDefault("baseUrl", "https://sdmx.oecd.org");
+        List<String> symbols = (List<String>) m.getOrDefault("symbols",
+            m.getOrDefault("series",
+                m.getOrDefault("tickers",
+                    m.getOrDefault("protocols", List.of("oecd")))));
+        List<String> series = (List<String>) m.getOrDefault("series", symbols);
+        List<String> tickers = (List<String>) m.getOrDefault("tickers", symbols);
+        List<String> protocols = (List<String>) m.getOrDefault("protocols", symbols);
+        String interval = (String) m.getOrDefault("interval", "1d");
+        int limit = ((Number) m.getOrDefault("limit", 30)).intValue();
+
+        IngestConfig ingest = IngestConfigLoader.loadFromYaml(path, "oecd");
+        IngestConfig resolved = new IngestConfig(
+            ingest.sourceId(),
+            baseUrl,
+            symbols,
+            ingest.concurrency(),
+            ingest.retry(),
+            ingest.rateLimit(),
+            ingest.paths()
+        );
+
+        return new OecdConfig(baseUrl, series, tickers, protocols, interval, limit, resolved);
     }
-    public static OecdConfig defaults(){ return new OecdConfig("https://sdmx.oecd.org", List.of("oecd"), List.of("oecd"), List.of("oecd"), List.of("oecd"), "1d",30,2,new Retry(3,800,8000), new RateLimit(2,4), new Paths("data/bronze/oecd","data/silver/oecd","catalog/glue.json")); }
-    // convenience
-    public List<String> effectiveKeys(){
-        if(!series.isEmpty() && !series.get(0).equals("oecd")) return series;
-        if(!tickers.isEmpty() && !tickers.get(0).equals("oecd")) return tickers;
-        if(!protocols.isEmpty() && !protocols.get(0).equals("oecd")) return protocols;
-        return symbols;
+
+    public static OecdConfig defaults() {
+        return new OecdConfig(
+            "https://sdmx.oecd.org",
+            List.of("oecd"),
+            List.of("oecd"),
+            List.of("oecd"),
+            "1d",
+            30,
+            IngestConfig.defaults("oecd")
+        );
     }
+
+    public List<String> effectiveKeys() {
+        if (series != null && !series.isEmpty() && !series.get(0).equals("oecd")) return series;
+        if (tickers != null && !tickers.isEmpty() && !tickers.get(0).equals("oecd")) return tickers;
+        if (protocols != null && !protocols.isEmpty() && !protocols.get(0).equals("oecd")) return protocols;
+        return ingestConfig().symbols();
+    }
+
+    public Retry retry() { return new Retry(ingestConfig().retry().maxAttempts(), ingestConfig().retry().backoffMs(), ingestConfig().retry().maxBackoffMs()); }
+    public RateLimit rateLimit() { return new RateLimit(ingestConfig().rateLimit().qps(), ingestConfig().rateLimit().burst()); }
+    public Paths paths() { return new Paths(ingestConfig().paths().bronze(), ingestConfig().paths().silver(), ingestConfig().paths().catalog()); }
+    public int concurrency() { return ingestConfig().concurrency(); }
+
+    public record Retry(int maxAttempts, long backoffMs, long maxBackoffMs) {}
+    public record RateLimit(double qps, int burst) {}
+    public record Paths(String bronze, String silver, String catalog) {}
 }

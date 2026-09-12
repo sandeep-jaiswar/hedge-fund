@@ -5,6 +5,8 @@ plugins {
 dependencies {
     implementation(project(":libs:worldbank"))
     implementation(project(":libs:datalake"))
+    implementation(project(":libs:config-core"))
+    implementation(project(":libs:observability"))
     implementation(libs.jackson.databind)
     implementation(libs.slf4j.api)
     runtimeOnly(libs.logback.classic)

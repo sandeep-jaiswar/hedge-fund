@@ -4,6 +4,7 @@ import com.hedgefund.worldbank.client.WorldBankClient;
 import com.hedgefund.worldbank.config.WorldBankConfig;
 import com.hedgefund.worldbank.store.BronzeWriter;
 import com.hedgefund.worldbank.store.SilverTransformer;
+import com.hedgefund.observability.logging.CorrelationId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,41 +30,47 @@ public class WorldBankIngestService {
     }
 
     public void run() throws Exception {
-        List<String> indicators = cfg.indicators();
-        if(cfg.fullCrawl() || indicators.isEmpty()){
-            log.info("Full crawl enabled - listing all indicators");
-            indicators = client.listAllIndicatorCodes();
-            log.info("Full crawl {} indicators discovered", indicators.size());
-        }
-        List<List<String>> batches = chunk(indicators, cfg.maxIndicatorsPerRequest());
-        List<String> countriesRaw = cfg.countries();
-        final List<String> countries = countriesRaw.isEmpty() ? List.of("all") : countriesRaw;
+        CorrelationId.withContext("worldbank");
+        try {
+            List<String> indicators = cfg.indicators();
+            if(cfg.fullCrawl() || indicators.isEmpty()){
+                log.info("Full crawl enabled - listing all indicators");
+                indicators = client.listAllIndicatorCodes();
+                log.info("Full crawl {} indicators discovered", indicators.size());
+            }
+            List<List<String>> batches = chunk(indicators, cfg.maxIndicatorsPerRequest());
+            List<String> countriesRaw = cfg.countries();
+            final List<String> countries = countriesRaw.isEmpty() ? List.of("all") : countriesRaw;
 
-        ExecutorService exec = Executors.newVirtualThreadPerTaskExecutor();
-        Semaphore conc = new Semaphore(cfg.concurrency());
-        List<Future<?>> futures=new ArrayList<>();
-        for(int idx=0; idx<batches.size(); idx++){
-            final int batchIdx = idx;
-            final List<String> b = batches.get(idx);
-            conc.acquire();
-            futures.add(exec.submit(()->{
-                try{
-                    log.info("Fetching batch {}/{} {} date {} countries {}", batchIdx+1, batches.size(), b, cfg.date(), countries);
-                    var results = client.fetchAllPages(b, countries, cfg.date());
-                    bronze.writeBatch(batchIdx, b, cfg.date(), results);
-                    log.info("Batch {} done {} pages {} points", b, results.size(), results.stream().mapToInt(r->r.points().size()).sum());
-                } catch(Exception e){ log.error("Batch {} failed", b, e); throw new RuntimeException(e); }
-                finally { conc.release(); }
-            }));
+            ExecutorService exec = Executors.newVirtualThreadPerTaskExecutor();
+            Semaphore conc = new Semaphore(cfg.concurrency());
+            List<Future<?>> futures=new ArrayList<>();
+            for(int idx=0; idx<batches.size(); idx++){
+                final int batchIdx = idx;
+                final List<String> b = batches.get(idx);
+                conc.acquire();
+                futures.add(exec.submit(()->{
+                    try{
+                        CorrelationId.withContext("worldbank");
+                        log.info("Fetching batch {}/{} {} date {} countries {}", batchIdx+1, batches.size(), b, cfg.date(), countries);
+                        var results = client.fetchAllPages(b, countries, cfg.date());
+                        bronze.writeBatch(batchIdx, b, cfg.date(), results);
+                        log.info("Batch {} done {} pages {} points", b, results.size(), results.stream().mapToInt(r->r.points().size()).sum());
+                    } catch(Exception e){ log.error("Batch {} failed", b, e); throw new RuntimeException(e); }
+                    finally { CorrelationId.clear(); conc.release(); }
+                }));
+            }
+            for(Future<?> f: futures) f.get();
+            
+            // silver
+            silver.transform();
+            // watermark
+            Path wm = datalakeRoot.resolve(cfg.paths().bronze()).resolve("_watermark.json");
+            java.nio.file.Files.writeString(wm, String.format("{\"lastRun\":\"%s\",\"indicators\":%d,\"countries\":\"%s\",\"date\":\"%s\"}", java.time.Instant.now().toString(), indicators.size(), String.join(";",countries), cfg.date()));
+            log.info("Ingest complete, watermark {}", wm);
+        } finally {
+            CorrelationId.clear();
         }
-        for(Future<?> f: futures) f.get();
-        
-        // silver
-        silver.transform();
-        // watermark
-        Path wm = datalakeRoot.resolve(cfg.paths().bronze()).resolve("_watermark.json");
-        java.nio.file.Files.writeString(wm, String.format("{\"lastRun\":\"%s\",\"indicators\":%d,\"countries\":\"%s\",\"date\":\"%s\"}", java.time.Instant.now().toString(), indicators.size(), String.join(";",countries), cfg.date()));
-        log.info("Ingest complete, watermark {}", wm);
     }
 
     private <T> List<List<T>> chunk(List<T> list, int size){

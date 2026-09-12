@@ -1,7 +1,17 @@
-plugins { id("hedgefund.java-service") }
+plugins {
+    id("hedgefund.java-service")
+}
+
 dependencies {
     implementation(project(":libs:eia"))
+    implementation(project(":libs:datalake"))
+    implementation(project(":libs:config-core"))
+    implementation(project(":libs:observability"))
+    implementation(libs.jackson.databind)
     implementation(libs.slf4j.api)
-    implementation(libs.logback.classic)
+    runtimeOnly(libs.logback.classic)
 }
-application { mainClass.set("com.hedgefund.eia.ingest.Main") }
+
+application {
+    mainClass.set("com.hedgefund.eia.ingest.Main")
+}

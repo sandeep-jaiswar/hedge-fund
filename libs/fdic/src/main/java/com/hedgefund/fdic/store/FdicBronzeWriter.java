@@ -1,26 +1,24 @@
 package com.hedgefund.fdic.store;
-import java.nio.file.*;
+
+import com.hedgefund.ingest.store.BronzeWriter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.nio.file.Path;
+
 public class FdicBronzeWriter {
-    private final Path bronzeRoot;
-    public FdicBronzeWriter(Path bronzeRoot){ this.bronzeRoot=bronzeRoot; }
-    public Path write(String key, String raw) throws Exception {
-        String safe=key.replaceAll("[^a-zA-Z0-9._-]","_");
-        Path dir=bronzeRoot.resolve("key="+safe);
-        Files.createDirectories(dir);
-        Path p=dir.resolve("data.raw");
-        Path tmp=p.resolveSibling(p.getFileName()+".tmp");
-        Files.writeString(tmp, raw);
-        Files.move(tmp,p, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
-        return p;
+    private static final Logger log = LoggerFactory.getLogger(FdicBronzeWriter.class);
+    private final BronzeWriter delegate;
+
+    public FdicBronzeWriter(Path bronzeRoot) {
+        this.delegate = new BronzeWriter(bronzeRoot);
     }
+
+    public Path write(String key, String raw) throws Exception {
+        return delegate.writeNdjson(key, raw);
+    }
+
     public Path writeCsv(String key, String csv) throws Exception {
-        String safe=key.replaceAll("[^a-zA-Z0-9._-]","_");
-        Path dir=bronzeRoot.resolve("key="+safe);
-        Files.createDirectories(dir);
-        Path p=dir.resolve("data.csv");
-        Path tmp=p.resolveSibling(p.getFileName()+".tmp");
-        Files.writeString(tmp, csv);
-        Files.move(tmp,p, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
-        return p;
+        return delegate.writeCsv(key, csv);
     }
 }

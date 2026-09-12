@@ -1,5 +1,7 @@
 package com.hedgefund.worldbank.config;
 
+import com.hedgefund.ingest.config.IngestConfig;
+import com.hedgefund.ingest.config.IngestConfigLoader;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.IOException;
@@ -29,7 +31,8 @@ public record WorldBankConfig(
         Paths paths,
         boolean fullCrawl,
         int maxPages,
-        String source
+        String source,
+        IngestConfig ingestConfig
 ) {
     public record Retry(int maxAttempts, long backoffMs, long maxBackoffMs) {}
     public record RateLimit(double qps, int burst) {}
@@ -69,11 +72,13 @@ public record WorldBankConfig(
         String envBase = System.getenv("WORLDBANK_BASE_URL");
         if (envBase != null) baseUrl = envBase;
 
-        return new WorldBankConfig(baseUrl, indicators, countries, date, mrv, frequency, perPage, concurrency, maxInd, maxCtry, retry, rl, paths, fullCrawl, maxPages, source);
+        IngestConfig ingest = IngestConfigLoader.loadFromYaml(p, "worldbank");
+
+        return new WorldBankConfig(baseUrl, indicators, countries, date, mrv, frequency, perPage, concurrency, maxInd, maxCtry, retry, rl, paths, fullCrawl, maxPages, source, ingest);
     }
 
     public static WorldBankConfig defaults() {
-        return new WorldBankConfig("https://api.worldbank.org/v2", List.of(), List.of("all"), "2010:2024", null, null, 1000, 8, 20, 20, new Retry(3,500,8000), new RateLimit(5,10), new Paths("data/bronze/worldbank","data/silver/worldbank","catalog/glue.json"), false, 0, "2");
+        return new WorldBankConfig("https://api.worldbank.org/v2", List.of(), List.of("all"), "2010:2024", null, null, 1000, 8, 20, 20, new Retry(3,500,8000), new RateLimit(5,10), new Paths("data/bronze/worldbank","data/silver/worldbank","catalog/glue.json"), false, 0, "2", IngestConfig.defaults("worldbank"));
     }
 
     private static String str(Map<String,Object> m, String k, String def){ Object v=m.get(k); return v==null?def:v.toString();}
