@@ -18,8 +18,6 @@ org:
       port: 8000
     database:
       type: sql
-      datasource: jdbc:h2:file:./data/jobrunr;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
-      # fallback to memory if H2 file not writable: set JOBRUNR_DATABASE_TYPE=memory
 
 logging:
   level:

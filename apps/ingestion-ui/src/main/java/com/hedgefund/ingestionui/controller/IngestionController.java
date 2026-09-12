@@ -10,7 +10,6 @@ import org.jobrunr.storage.StorageProvider;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin(origins = {"http://localhost:8080","http://localhost:3000","http://127.0.0.1:8080"}, allowedHeaders = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.DELETE, RequestMethod.OPTIONS})
 @RestController
 @RequestMapping("/api/ingest")
 public class IngestionController {

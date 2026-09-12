@@ -1,0 +1,468 @@
+2026-09-12 12:47:59,293 [main] INFO  c.h.i.IngestionUiApplication - Starting IngestionUiApplication using Java 21.0.12.1 with PID 94824 (/media/sandeep/DataDrive2/hedge-fund/apps/ingestion-ui/build/classes/java/main started by sandeep in /media/sandeep/DataDrive2/hedge-fund/apps/ingestion-ui)
+2026-09-12 12:47:59,295 [main] INFO  c.h.i.IngestionUiApplication - No active profile set, falling back to 1 default profile: "default"
+2026-09-12 12:48:00,252 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2026-09-12 12:48:00,255 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-09-12 12:48:00,256 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.31]
+2026-09-12 12:48:00,288 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2026-09-12 12:48:00,441 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2026-09-12 12:48:00,588 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection conn0: url=jdbc:h2:file:./data/jobrunr user=SA
+2026-09-12 12:48:00,589 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2026-09-12 12:48:00,643 [main] INFO  liquibase.database - Set default schema name to PUBLIC
+2026-09-12 12:48:00,813 [main] INFO  liquibase.command - Logging exception.
+2026-09-12 12:48:00,813 [main] INFO  liquibase.ui - ERROR: Exception Details
+2026-09-12 12:48:00,813 [main] INFO  liquibase.ui - ERROR: Exception Primary Class:  ChangeLogParseException
+2026-09-12 12:48:00,813 [main] INFO  liquibase.ui - ERROR: Exception Primary Reason:  classpath:/db/changelog/db.changelog-master.yaml does not exist
+2026-09-12 12:48:00,813 [main] INFO  liquibase.ui - ERROR: Exception Primary Source:  4.27.0
+2026-09-12 12:48:00,814 [main] INFO  liquibase.command - Command execution complete
+2026-09-12 12:48:00,817 [main] WARN  o.s.b.w.s.c.AnnotationConfigServletWebServerApplicationContext - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'ingestionController' defined in file [/media/sandeep/DataDrive2/hedge-fund/apps/ingestion-ui/build/classes/java/main/com/hedgefund/ingestionui/controller/IngestionController.class]: Unsatisfied dependency expressed through constructor parameter 0: Error creating bean with name 'ingestionJobService' defined in file [/media/sandeep/DataDrive2/hedge-fund/apps/ingestion-ui/build/classes/java/main/com/hedgefund/ingestionui/service/IngestionJobService.class]: Unsatisfied dependency expressed through constructor parameter 0: Error creating bean with name 'jobScheduler' defined in class path resource [org/jobrunr/spring/autoconfigure/JobRunrAutoConfiguration.class]: Unsatisfied dependency expressed through method 'jobScheduler' parameter 0: Error creating bean with name 'liquibase' defined in class path resource [org/springframework/boot/autoconfigure/liquibase/LiquibaseAutoConfiguration$LiquibaseConfiguration.class]: liquibase.exception.CommandExecutionException: liquibase.exception.ChangeLogParseException: classpath:/db/changelog/db.changelog-master.yaml does not exist
+2026-09-12 12:48:00,817 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2026-09-12 12:48:00,846 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2026-09-12 12:48:00,850 [main] INFO  o.a.catalina.core.StandardService - Stopping service [Tomcat]
+2026-09-12 12:48:00,872 [main] ERROR o.s.b.d.LoggingFailureAnalysisReporter - 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Liquibase failed to start because no changelog could be found at 'classpath:/db/changelog/db.changelog-master.yaml'.
+
+Action:
+
+Make sure a Liquibase changelog is present at the configured path.
+
+2026-09-12 12:48:45,775 [main] INFO  c.h.i.IngestionUiApplication - Starting IngestionUiApplication using Java 21.0.12.1 with PID 95833 (/media/sandeep/DataDrive2/hedge-fund/apps/ingestion-ui/build/classes/java/main started by sandeep in /media/sandeep/DataDrive2/hedge-fund/apps/ingestion-ui)
+2026-09-12 12:48:45,776 [main] INFO  c.h.i.IngestionUiApplication - No active profile set, falling back to 1 default profile: "default"
+2026-09-12 12:48:46,815 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2026-09-12 12:48:46,817 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-09-12 12:48:46,818 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.31]
+2026-09-12 12:48:46,873 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2026-09-12 12:48:47,088 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2026-09-12 12:48:47,289 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection conn0: url=jdbc:h2:file:./data/jobrunr user=SA
+2026-09-12 12:48:47,291 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2026-09-12 12:48:47,349 [main] INFO  liquibase.database - Set default schema name to PUBLIC
+2026-09-12 12:48:47,573 [main] INFO  liquibase.changelog - Creating database history table with name: PUBLIC.DATABASECHANGELOG
+2026-09-12 12:48:47,761 [main] INFO  liquibase.changelog - Reading from PUBLIC.DATABASECHANGELOG
+2026-09-12 12:48:47,798 [main] INFO  liquibase.ui - Database is up to date, no changesets to execute
+2026-09-12 12:48:47,799 [main] INFO  liquibase.changelog - Reading from PUBLIC.DATABASECHANGELOG
+2026-09-12 12:48:47,805 [main] INFO  liquibase.util - UPDATE SUMMARY
+2026-09-12 12:48:47,806 [main] INFO  liquibase.util - Run:                          0
+2026-09-12 12:48:47,806 [main] INFO  liquibase.util - Previously run:               0
+2026-09-12 12:48:47,806 [main] INFO  liquibase.util - Filtered out:                 0
+2026-09-12 12:48:47,806 [main] INFO  liquibase.util - -------------------------------
+2026-09-12 12:48:47,806 [main] INFO  liquibase.util - Total change sets:            0
+2026-09-12 12:48:47,807 [main] INFO  liquibase.util - Update summary generated
+2026-09-12 12:48:47,812 [main] INFO  liquibase.lockservice - Successfully released change log lock
+2026-09-12 12:48:47,813 [main] INFO  liquibase.command - Command execution complete
+2026-09-12 12:48:47,856 [main] WARN  o.s.b.w.s.c.AnnotationConfigServletWebServerApplicationContext - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'ingestionController' defined in file [/media/sandeep/DataDrive2/hedge-fund/apps/ingestion-ui/build/classes/java/main/com/hedgefund/ingestionui/controller/IngestionController.class]: Unsatisfied dependency expressed through constructor parameter 0: Error creating bean with name 'ingestionJobService' defined in file [/media/sandeep/DataDrive2/hedge-fund/apps/ingestion-ui/build/classes/java/main/com/hedgefund/ingestionui/service/IngestionJobService.class]: Unsatisfied dependency expressed through constructor parameter 0: Error creating bean with name 'jobScheduler' defined in class path resource [org/jobrunr/spring/autoconfigure/JobRunrAutoConfiguration.class]: Unsatisfied dependency expressed through method 'jobScheduler' parameter 0: Error creating bean with name 'storageProvider' defined in class path resource [org/jobrunr/spring/autoconfigure/storage/JobRunrSqlStorageAutoConfiguration.class]: Failed to instantiate [org.jobrunr.storage.StorageProvider]: Factory method 'sqlStorageProvider' threw exception with message: No bean named 'jdbc:h2:file:./data/jobrunr;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE' available
+2026-09-12 12:48:47,857 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2026-09-12 12:48:47,859 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2026-09-12 12:48:47,862 [main] INFO  o.a.catalina.core.StandardService - Stopping service [Tomcat]
+2026-09-12 12:48:47,898 [main] ERROR o.s.b.d.LoggingFailureAnalysisReporter - 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Parameter 0 of method jobScheduler in org.jobrunr.spring.autoconfigure.JobRunrAutoConfiguration required a bean named 'jdbc:h2:file:./data/jobrunr;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE' that could not be found.
+
+
+Action:
+
+Consider defining a bean named 'jdbc:h2:file:./data/jobrunr;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE' in your configuration.
+
+2026-09-12 12:49:27,620 [main] INFO  c.h.i.IngestionUiApplication - Starting IngestionUiApplication using Java 21.0.12.1 with PID 96682 (/media/sandeep/DataDrive2/hedge-fund/apps/ingestion-ui/build/classes/java/main started by sandeep in /media/sandeep/DataDrive2/hedge-fund/apps/ingestion-ui)
+2026-09-12 12:49:27,622 [main] INFO  c.h.i.IngestionUiApplication - No active profile set, falling back to 1 default profile: "default"
+2026-09-12 12:49:28,724 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2026-09-12 12:49:28,727 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-09-12 12:49:28,728 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.31]
+2026-09-12 12:49:28,781 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2026-09-12 12:49:28,958 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2026-09-12 12:49:29,156 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection conn0: url=jdbc:h2:file:./data/jobrunr user=SA
+2026-09-12 12:49:29,157 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2026-09-12 12:49:29,216 [main] INFO  liquibase.database - Set default schema name to PUBLIC
+2026-09-12 12:49:29,780 [main] INFO  liquibase.changelog - Reading from PUBLIC.DATABASECHANGELOG
+2026-09-12 12:49:29,822 [main] INFO  liquibase.ui - Database is up to date, no changesets to execute
+2026-09-12 12:49:29,825 [main] INFO  liquibase.changelog - Reading from PUBLIC.DATABASECHANGELOG
+2026-09-12 12:49:29,836 [main] INFO  liquibase.util - UPDATE SUMMARY
+2026-09-12 12:49:29,836 [main] INFO  liquibase.util - Run:                          0
+2026-09-12 12:49:29,836 [main] INFO  liquibase.util - Previously run:               0
+2026-09-12 12:49:29,836 [main] INFO  liquibase.util - Filtered out:                 0
+2026-09-12 12:49:29,836 [main] INFO  liquibase.util - -------------------------------
+2026-09-12 12:49:29,836 [main] INFO  liquibase.util - Total change sets:            0
+2026-09-12 12:49:29,837 [main] INFO  liquibase.util - Update summary generated
+2026-09-12 12:49:29,857 [main] INFO  liquibase.lockservice - Successfully released change log lock
+2026-09-12 12:49:29,858 [main] INFO  liquibase.command - Command execution complete
+2026-09-12 12:49:29,934 [main] INFO  o.j.s.sql.common.DatabaseCreator - Running migration MigrationByPath{path=/org/jobrunr/storage/sql/common/migrations/v000__create_migrations_table.sql}
+2026-09-12 12:49:29,941 [main] INFO  o.j.s.sql.common.DatabaseCreator - Running migration MigrationByPath{path=/org/jobrunr/storage/sql/common/migrations/v001__create_job_table.sql}
+2026-09-12 12:49:29,944 [main] INFO  o.j.s.sql.common.DatabaseCreator - Running migration MigrationByPath{path=/org/jobrunr/storage/sql/common/migrations/v002__create_recurring_job_table.sql}
+2026-09-12 12:49:29,945 [main] INFO  o.j.s.sql.common.DatabaseCreator - Running migration MigrationByPath{path=/org/jobrunr/storage/sql/common/migrations/v003__create_background_job_server_table.sql}
+2026-09-12 12:49:29,947 [main] INFO  o.j.s.sql.common.DatabaseCreator - Running migration MigrationByPath{path=/org/jobrunr/storage/sql/common/migrations/v004__create_job_stats_view.sql}
+2026-09-12 12:49:29,953 [main] INFO  o.j.s.sql.common.DatabaseCreator - Running migration MigrationByPath{path=/org/jobrunr/storage/sql/common/migrations/v005__update_job_stats_view.sql}
+2026-09-12 12:49:29,956 [main] INFO  o.j.s.sql.common.DatabaseCreator - Running migration MigrationByPath{path=/org/jobrunr/storage/sql/common/migrations/v006__alter_table_jobs_add_recurringjob.sql}
+2026-09-12 12:49:29,970 [main] INFO  o.j.s.sql.common.DatabaseCreator - Running migration MigrationByPath{path=/org/jobrunr/storage/sql/common/migrations/v007__alter_table_backgroundjobserver_add_delete_config.sql}
+2026-09-12 12:49:29,981 [main] INFO  o.j.s.sql.common.DatabaseCreator - Running migration MigrationByPath{path=/org/jobrunr/storage/sql/common/migrations/v008__alter_table_jobs_increase_jobAsJson_size.sql}
+2026-09-12 12:49:29,982 [main] INFO  o.j.s.sql.common.DatabaseCreator - Running migration MigrationByPath{path=/org/jobrunr/storage/sql/h2/migrations/v009__change_jobrunr_job_counters_to_jobrunr_metadata.sql}
+2026-09-12 12:49:29,991 [main] INFO  o.j.s.sql.common.DatabaseCreator - Running migration MigrationByPath{path=/org/jobrunr/storage/sql/h2/migrations/v010__change_job_stats.sql}
+2026-09-12 12:49:29,993 [main] INFO  o.j.s.sql.common.DatabaseCreator - Running migration MigrationByPath{path=/org/jobrunr/storage/sql/common/migrations/v011__change_sqlserver_text_to_varchar.sql}
+2026-09-12 12:49:29,994 [main] INFO  o.j.s.sql.common.DatabaseCreator - Running migration MigrationByPath{path=/org/jobrunr/storage/sql/common/migrations/v012__change_oracle_alter_jobrunr_metadata_column_size.sql}
+2026-09-12 12:49:29,994 [main] INFO  o.j.s.sql.common.DatabaseCreator - Running migration MigrationByPath{path=/org/jobrunr/storage/sql/common/migrations/v013__alter_table_recurring_job_add_createdAt.sql}
+2026-09-12 12:49:29,999 [main] INFO  o.j.s.sql.common.DatabaseCreator - Running migration MigrationByPath{path=/org/jobrunr/storage/sql/common/migrations/v014__improve_job_stats.sql}
+2026-09-12 12:49:30,001 [main] INFO  o.j.s.sql.common.DatabaseCreator - Running migration MigrationByPath{path=/org/jobrunr/storage/sql/common/migrations/v015__alter_table_backgroundjobserver_add_name.sql}
+2026-09-12 12:49:30,750 [main] INFO  o.j.s.t.VirtualThreadJobRunrExecutor - ThreadManager of type 'VirtualThreadPerTask' started
+2026-09-12 12:49:30,761 [main] INFO  o.j.d.JobRunrDashboardWebServer - JobRunr Dashboard using H2StorageProvider started at http://localhost:8000/dashboard
+2026-09-12 12:49:30,762 [backgroundjob-zookeeper-pool-2-thread-1] INFO  o.jobrunr.server.BackgroundJobServer - JobRunr BackgroundJobServer (a8c48d73-0e0c-47e4-996b-9d4547f19887) using H2StorageProvider and 4 BackgroundJobPerformers started successfully
+2026-09-12 12:49:30,769 [backgroundjob-zookeeper-pool-2-thread-1] INFO  org.jobrunr.server.ServerZooKeeper - Server a8c48d73-0e0c-47e4-996b-9d4547f19887 is master (this BackgroundJobServer)
+2026-09-12 12:49:30,777 [pool-4-thread-1] INFO  o.j.s.t.s.MigrateFromV5toV6Task - Start migration of scheduled jobs from v5 to v6
+2026-09-12 12:49:30,782 [pool-4-thread-1] INFO  o.j.s.t.s.MigrateFromV5toV6Task - Found 0 scheduled jobs to migrate.
+2026-09-12 12:49:30,782 [pool-4-thread-1] INFO  o.j.s.t.s.MigrateFromV5toV6Task - Finished migration of scheduled jobs from v5 to v6
+2026-09-12 12:49:30,792 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2026-09-12 12:49:30,813 [main] INFO  c.h.i.IngestionUiApplication - Started IngestionUiApplication in 3.493 seconds (process running for 3.978)
+2026-09-12 12:49:44,945 [http-nio-8080-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-09-12 12:50:00,264 [SpringApplicationShutdownHook] INFO  o.jobrunr.server.BackgroundJobServer - BackgroundJobServer - stopping (may take about PT10S)
+2026-09-12 12:50:00,265 [SpringApplicationShutdownHook] INFO  o.jobrunr.server.BackgroundJobServer - BackgroundJobPerformers - stopping (waiting at most PT10S for jobs to finish)
+2026-09-12 12:50:00,277 [SpringApplicationShutdownHook] INFO  o.jobrunr.server.BackgroundJobServer - BackgroundJobServer and BackgroundJobPerformers stopped
+2026-09-12 12:50:00,280 [SpringApplicationShutdownHook] INFO  o.j.d.JobRunrDashboardWebServer - JobRunr dashboard stopped
+2026-09-12 12:50:00,287 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2026-09-12 12:50:00,303 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2026-09-12 12:50:28,183 [main] INFO  c.h.i.IngestionUiApplication - Starting IngestionUiApplication using Java 21.0.12.1 with PID 97837 (/media/sandeep/DataDrive2/hedge-fund/apps/ingestion-ui/build/classes/java/main started by sandeep in /media/sandeep/DataDrive2/hedge-fund/apps/ingestion-ui)
+2026-09-12 12:50:28,185 [main] INFO  c.h.i.IngestionUiApplication - No active profile set, falling back to 1 default profile: "default"
+2026-09-12 12:50:29,160 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2026-09-12 12:50:29,162 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-09-12 12:50:29,162 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.31]
+2026-09-12 12:50:29,196 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2026-09-12 12:50:29,356 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2026-09-12 12:50:29,555 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection conn0: url=jdbc:h2:file:./data/jobrunr user=SA
+2026-09-12 12:50:29,556 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2026-09-12 12:50:29,610 [main] INFO  liquibase.database - Set default schema name to PUBLIC
+2026-09-12 12:50:29,992 [main] INFO  liquibase.changelog - Reading from PUBLIC.DATABASECHANGELOG
+2026-09-12 12:50:30,002 [main] INFO  liquibase.ui - Database is up to date, no changesets to execute
+2026-09-12 12:50:30,003 [main] INFO  liquibase.changelog - Reading from PUBLIC.DATABASECHANGELOG
+2026-09-12 12:50:30,012 [main] INFO  liquibase.util - UPDATE SUMMARY
+2026-09-12 12:50:30,012 [main] INFO  liquibase.util - Run:                          0
+2026-09-12 12:50:30,012 [main] INFO  liquibase.util - Previously run:               0
+2026-09-12 12:50:30,012 [main] INFO  liquibase.util - Filtered out:                 0
+2026-09-12 12:50:30,012 [main] INFO  liquibase.util - -------------------------------
+2026-09-12 12:50:30,013 [main] INFO  liquibase.util - Total change sets:            0
+2026-09-12 12:50:30,013 [main] INFO  liquibase.util - Update summary generated
+2026-09-12 12:50:30,029 [main] INFO  liquibase.lockservice - Successfully released change log lock
+2026-09-12 12:50:30,030 [main] INFO  liquibase.command - Command execution complete
+2026-09-12 12:50:30,637 [main] INFO  o.j.s.t.VirtualThreadJobRunrExecutor - ThreadManager of type 'VirtualThreadPerTask' started
+2026-09-12 12:50:30,651 [main] INFO  o.j.d.JobRunrDashboardWebServer - JobRunr Dashboard using H2StorageProvider started at http://localhost:8000/dashboard
+2026-09-12 12:50:30,654 [backgroundjob-zookeeper-pool-1-thread-1] INFO  o.jobrunr.server.BackgroundJobServer - JobRunr BackgroundJobServer (9d28af24-5765-451f-9fab-b21ce27d41c2) using H2StorageProvider and 4 BackgroundJobPerformers started successfully
+2026-09-12 12:50:30,661 [backgroundjob-zookeeper-pool-1-thread-1] INFO  org.jobrunr.server.ServerZooKeeper - Server 9d28af24-5765-451f-9fab-b21ce27d41c2 is master (this BackgroundJobServer)
+2026-09-12 12:50:30,683 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2026-09-12 12:50:30,702 [main] INFO  c.h.i.IngestionUiApplication - Started IngestionUiApplication in 2.825 seconds (process running for 3.181)
+2026-09-12 12:52:26,029 [SpringApplicationShutdownHook] INFO  o.jobrunr.server.BackgroundJobServer - BackgroundJobServer - stopping (may take about PT10S)
+2026-09-12 12:52:26,030 [SpringApplicationShutdownHook] INFO  o.jobrunr.server.BackgroundJobServer - BackgroundJobPerformers - stopping (waiting at most PT10S for jobs to finish)
+2026-09-12 12:52:26,038 [SpringApplicationShutdownHook] INFO  o.jobrunr.server.BackgroundJobServer - BackgroundJobServer and BackgroundJobPerformers stopped
+2026-09-12 12:52:26,042 [SpringApplicationShutdownHook] INFO  o.j.d.JobRunrDashboardWebServer - JobRunr dashboard stopped
+2026-09-12 12:52:26,050 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2026-09-12 12:52:26,062 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2026-09-12 12:52:39,153 [main] INFO  c.h.i.IngestionUiApplication - Starting IngestionUiApplication using Java 21.0.12.1 with PID 99723 (/media/sandeep/DataDrive2/hedge-fund/apps/ingestion-ui/build/classes/java/main started by sandeep in /media/sandeep/DataDrive2/hedge-fund/apps/ingestion-ui)
+2026-09-12 12:52:39,155 [main] INFO  c.h.i.IngestionUiApplication - No active profile set, falling back to 1 default profile: "default"
+2026-09-12 12:52:40,993 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2026-09-12 12:52:40,997 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-09-12 12:52:40,998 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.31]
+2026-09-12 12:52:41,052 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2026-09-12 12:52:41,401 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2026-09-12 12:52:41,730 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection conn0: url=jdbc:h2:file:./data/jobrunr user=SA
+2026-09-12 12:52:41,732 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2026-09-12 12:52:41,810 [main] INFO  liquibase.database - Set default schema name to PUBLIC
+2026-09-12 12:52:42,413 [main] INFO  liquibase.changelog - Reading from PUBLIC.DATABASECHANGELOG
+2026-09-12 12:52:42,435 [main] INFO  liquibase.ui - Database is up to date, no changesets to execute
+2026-09-12 12:52:42,438 [main] INFO  liquibase.changelog - Reading from PUBLIC.DATABASECHANGELOG
+2026-09-12 12:52:42,446 [main] INFO  liquibase.util - UPDATE SUMMARY
+2026-09-12 12:52:42,446 [main] INFO  liquibase.util - Run:                          0
+2026-09-12 12:52:42,446 [main] INFO  liquibase.util - Previously run:               0
+2026-09-12 12:52:42,446 [main] INFO  liquibase.util - Filtered out:                 0
+2026-09-12 12:52:42,447 [main] INFO  liquibase.util - -------------------------------
+2026-09-12 12:52:42,447 [main] INFO  liquibase.util - Total change sets:            0
+2026-09-12 12:52:42,448 [main] INFO  liquibase.util - Update summary generated
+2026-09-12 12:52:42,471 [main] INFO  liquibase.lockservice - Successfully released change log lock
+2026-09-12 12:52:42,473 [main] INFO  liquibase.command - Command execution complete
+2026-09-12 12:52:43,792 [main] INFO  o.j.s.t.VirtualThreadJobRunrExecutor - ThreadManager of type 'VirtualThreadPerTask' started
+2026-09-12 12:52:43,811 [main] INFO  o.j.d.JobRunrDashboardWebServer - JobRunr Dashboard using H2StorageProvider started at http://localhost:8000/dashboard
+2026-09-12 12:52:43,826 [backgroundjob-zookeeper-pool-1-thread-1] INFO  o.jobrunr.server.BackgroundJobServer - JobRunr BackgroundJobServer (af760d2e-b21b-4863-9f85-8c10d814b787) using H2StorageProvider and 4 BackgroundJobPerformers started successfully
+2026-09-12 12:52:43,835 [backgroundjob-zookeeper-pool-1-thread-1] INFO  org.jobrunr.server.ServerZooKeeper - Server af760d2e-b21b-4863-9f85-8c10d814b787 is master (this BackgroundJobServer)
+2026-09-12 12:52:43,874 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2026-09-12 12:52:43,929 [main] INFO  c.h.i.IngestionUiApplication - Started IngestionUiApplication in 5.344 seconds (process running for 6.171)
+2026-09-12 12:52:44,532 [SpringApplicationShutdownHook] INFO  o.jobrunr.server.BackgroundJobServer - BackgroundJobServer - stopping (may take about PT10S)
+2026-09-12 12:52:44,532 [SpringApplicationShutdownHook] INFO  o.jobrunr.server.BackgroundJobServer - BackgroundJobPerformers - stopping (waiting at most PT10S for jobs to finish)
+2026-09-12 12:52:44,536 [SpringApplicationShutdownHook] INFO  o.jobrunr.server.BackgroundJobServer - BackgroundJobServer and BackgroundJobPerformers stopped
+2026-09-12 12:52:44,539 [SpringApplicationShutdownHook] INFO  o.j.d.JobRunrDashboardWebServer - JobRunr dashboard stopped
+2026-09-12 12:52:44,542 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2026-09-12 12:52:44,551 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2026-09-12 12:53:51,921 [main] INFO  c.h.i.IngestionUiApplication - Starting IngestionUiApplication using Java 21.0.12.1 with PID 101386 (/media/sandeep/DataDrive2/hedge-fund/apps/ingestion-ui/build/classes/java/main started by sandeep in /media/sandeep/DataDrive2/hedge-fund/apps/ingestion-ui)
+2026-09-12 12:53:51,924 [main] INFO  c.h.i.IngestionUiApplication - No active profile set, falling back to 1 default profile: "default"
+2026-09-12 12:53:53,846 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2026-09-12 12:53:53,850 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-09-12 12:53:53,850 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.31]
+2026-09-12 12:53:53,894 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2026-09-12 12:53:54,124 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2026-09-12 12:53:54,553 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection conn0: url=jdbc:h2:file:./data/jobrunr user=SA
+2026-09-12 12:53:54,554 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2026-09-12 12:53:54,633 [main] INFO  liquibase.database - Set default schema name to PUBLIC
+2026-09-12 12:53:55,200 [main] INFO  liquibase.changelog - Reading from PUBLIC.DATABASECHANGELOG
+2026-09-12 12:53:55,231 [main] INFO  liquibase.ui - Database is up to date, no changesets to execute
+2026-09-12 12:53:55,233 [main] INFO  liquibase.changelog - Reading from PUBLIC.DATABASECHANGELOG
+2026-09-12 12:53:55,240 [main] INFO  liquibase.util - UPDATE SUMMARY
+2026-09-12 12:53:55,240 [main] INFO  liquibase.util - Run:                          0
+2026-09-12 12:53:55,240 [main] INFO  liquibase.util - Previously run:               0
+2026-09-12 12:53:55,240 [main] INFO  liquibase.util - Filtered out:                 0
+2026-09-12 12:53:55,240 [main] INFO  liquibase.util - -------------------------------
+2026-09-12 12:53:55,241 [main] INFO  liquibase.util - Total change sets:            0
+2026-09-12 12:53:55,241 [main] INFO  liquibase.util - Update summary generated
+2026-09-12 12:53:55,267 [main] INFO  liquibase.lockservice - Successfully released change log lock
+2026-09-12 12:53:55,271 [main] INFO  liquibase.command - Command execution complete
+2026-09-12 12:53:56,223 [main] INFO  o.j.s.t.VirtualThreadJobRunrExecutor - ThreadManager of type 'VirtualThreadPerTask' started
+2026-09-12 12:53:56,250 [main] INFO  o.j.d.JobRunrDashboardWebServer - JobRunr Dashboard using H2StorageProvider started at http://localhost:8000/dashboard
+2026-09-12 12:53:56,251 [backgroundjob-zookeeper-pool-1-thread-1] INFO  o.jobrunr.server.BackgroundJobServer - JobRunr BackgroundJobServer (fae4dc53-36a2-42f1-a96c-c95adc975aa5) using H2StorageProvider and 4 BackgroundJobPerformers started successfully
+2026-09-12 12:53:56,275 [backgroundjob-zookeeper-pool-1-thread-1] INFO  org.jobrunr.server.ServerZooKeeper - Server fae4dc53-36a2-42f1-a96c-c95adc975aa5 is master (this BackgroundJobServer)
+2026-09-12 12:53:56,314 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2026-09-12 12:53:56,357 [main] INFO  c.h.i.IngestionUiApplication - Started IngestionUiApplication in 4.948 seconds (process running for 5.686)
+2026-09-12 12:54:05,000 [http-nio-8080-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-09-12 12:54:29,966 [http-nio-8080-exec-5] INFO  c.h.i.service.IngestionJobService - Enqueue ingest source=yahoo config=config/yahoo/yahoo.yaml
+2026-09-12 12:54:42,254 [backgroundjob-worker] INFO  c.h.i.service.IngestionJobService - JobRunr starting ingest source=yahoo config=config/yahoo/yahoo.yaml
+2026-09-12 12:54:42,259 [backgroundjob-worker] INFO  c.h.yahoo.ingest.YahooIngestService - Yahoo ingest start symbols=[AAPL] interval=1d range=1mo
+2026-09-12 12:54:42,761 [virtual-75] INFO  c.hedgefund.yahoo.client.YahooClient - Fetched 22 bars for AAPL
+2026-09-12 12:54:42,880 [virtual-75] INFO  c.h.yahoo.ingest.YahooIngestService - Done AAPL
+2026-09-12 12:55:15,591 [backgroundjob-worker] INFO  c.h.yahoo.ingest.YahooIngestService - Silver wrote 531450 rows to /media/sandeep/DataDrive2/hedge-fund/datalake/data/silver/yahoo/yahoo_ohlcv.csv
+2026-09-12 12:55:15,593 [backgroundjob-worker] INFO  c.h.i.service.IngestionJobService - Ingest done source=yahoo
+2026-09-12 12:55:15,596 [backgroundjob-worker] INFO  c.h.i.service.FlociSyncService - Floci not running, skip sync for yahoo
+2026-09-12 12:55:44,309 [http-nio-8080-exec-2] INFO  c.h.i.service.IngestionJobService - Enqueue ingest source=fred config=config/fred/fred.yaml
+2026-09-12 12:55:57,265 [backgroundjob-worker] INFO  c.h.i.service.IngestionJobService - JobRunr starting ingest source=fred config=config/fred/fred.yaml
+2026-09-12 12:55:57,268 [backgroundjob-worker] INFO  c.h.fred.ingest.FredIngestService - fred ingest start keys=[DGS10] base=https://fred.stlouisfed.org
+2026-09-12 12:55:57,674 [virtual-88] WARN  c.h.ingest.client.AbstractHttpClient - Fetch failed 1/3 https://fred.stlouisfed.org/api/fred/series/observations?series_id=DGS10&limit=30 -> retry 800ms java.io.IOException: Received RST_STREAM: Internal error
+2026-09-12 12:55:58,689 [virtual-88] WARN  c.h.ingest.client.AbstractHttpClient - Fetch failed 2/3 https://fred.stlouisfed.org/api/fred/series/observations?series_id=DGS10&limit=30 -> retry 1600ms java.io.IOException: Received RST_STREAM: Internal error
+2026-09-12 12:56:00,461 [virtual-88] ERROR c.h.fred.ingest.FredIngestService - Failed DGS10
+java.io.IOException: Received RST_STREAM: Internal error
+	at java.net.http/jdk.internal.net.http.HttpClientImpl.send(HttpClientImpl.java:970)
+	at java.net.http/jdk.internal.net.http.HttpClientFacade.send(HttpClientFacade.java:133)
+	at com.hedgefund.ingest.client.AbstractHttpClient.fetchWithRetry(AbstractHttpClient.java:57)
+	at com.hedgefund.fred.client.FredClient.fetchRaw(FredClient.java:26)
+	at com.hedgefund.fred.ingest.FredIngestService.lambda$run$0(FredIngestService.java:54)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:572)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at java.base/java.lang.VirtualThread.run(VirtualThread.java:329)
+Caused by: java.io.IOException: Received RST_STREAM: Internal error
+	at java.net.http/jdk.internal.net.http.Stream.handleReset(Stream.java:759)
+	at java.net.http/jdk.internal.net.http.Stream.incoming_reset(Stream.java:713)
+	at java.net.http/jdk.internal.net.http.Stream.otherFrame(Stream.java:577)
+	at java.net.http/jdk.internal.net.http.Stream.incoming(Stream.java:570)
+	at java.net.http/jdk.internal.net.http.Http2Connection.processFrame(Http2Connection.java:1055)
+	at java.net.http/jdk.internal.net.http.frame.FramesDecoder.decode(FramesDecoder.java:155)
+	at java.net.http/jdk.internal.net.http.Http2Connection$FramesController.processReceivedData(Http2Connection.java:311)
+	at java.net.http/jdk.internal.net.http.Http2Connection.asyncReceive(Http2Connection.java:863)
+	at java.net.http/jdk.internal.net.http.Http2Connection$Http2TubeSubscriber.processQueue(Http2Connection.java:1822)
+	at java.net.http/jdk.internal.net.http.common.SequentialScheduler$LockingRestartableTask.run(SequentialScheduler.java:182)
+	at java.net.http/jdk.internal.net.http.common.SequentialScheduler$CompleteRestartableTask.run(SequentialScheduler.java:149)
+	at java.net.http/jdk.internal.net.http.common.SequentialScheduler$SchedulableTask.run(SequentialScheduler.java:207)
+	at java.net.http/jdk.internal.net.http.common.SequentialScheduler.runOrSchedule(SequentialScheduler.java:280)
+	at java.net.http/jdk.internal.net.http.common.SequentialScheduler.runOrSchedule(SequentialScheduler.java:233)
+	at java.net.http/jdk.internal.net.http.Http2Connection$Http2TubeSubscriber.runOrSchedule(Http2Connection.java:1839)
+	at java.net.http/jdk.internal.net.http.Http2Connection$Http2TubeSubscriber.onNext(Http2Connection.java:1866)
+	at java.net.http/jdk.internal.net.http.Http2Connection$Http2TubeSubscriber.onNext(Http2Connection.java:1800)
+	at java.net.http/jdk.internal.net.http.common.SSLTube$DelegateWrapper.onNext(SSLTube.java:210)
+	at java.net.http/jdk.internal.net.http.common.SSLTube$SSLSubscriberWrapper.onNext(SSLTube.java:492)
+	at java.net.http/jdk.internal.net.http.common.SSLTube$SSLSubscriberWrapper.onNext(SSLTube.java:295)
+	at java.net.http/jdk.internal.net.http.common.SubscriberWrapper$DownstreamPusher.run1(SubscriberWrapper.java:316)
+	at java.net.http/jdk.internal.net.http.common.SubscriberWrapper$DownstreamPusher.run(SubscriberWrapper.java:259)
+	at java.net.http/jdk.internal.net.http.common.SequentialScheduler$LockingRestartableTask.run(SequentialScheduler.java:182)
+	at java.net.http/jdk.internal.net.http.common.SequentialScheduler$CompleteRestartableTask.run(SequentialScheduler.java:149)
+	at java.net.http/jdk.internal.net.http.common.SequentialScheduler$SchedulableTask.run(SequentialScheduler.java:207)
+	at java.net.http/jdk.internal.net.http.common.SequentialScheduler.runOrSchedule(SequentialScheduler.java:280)
+	at java.net.http/jdk.internal.net.http.common.SequentialScheduler.runOrSchedule(SequentialScheduler.java:233)
+	at java.net.http/jdk.internal.net.http.common.SubscriberWrapper.outgoing(SubscriberWrapper.java:232)
+	at java.net.http/jdk.internal.net.http.common.SubscriberWrapper.outgoing(SubscriberWrapper.java:198)
+	at java.net.http/jdk.internal.net.http.common.SSLFlowDelegate$Reader.processData(SSLFlowDelegate.java:470)
+	at java.net.http/jdk.internal.net.http.common.SSLFlowDelegate$Reader$ReaderDownstreamPusher.run(SSLFlowDelegate.java:283)
+	at java.net.http/jdk.internal.net.http.common.SequentialScheduler$LockingRestartableTask.run(SequentialScheduler.java:182)
+	at java.net.http/jdk.internal.net.http.common.SequentialScheduler$CompleteRestartableTask.run(SequentialScheduler.java:149)
+	at java.net.http/jdk.internal.net.http.common.SequentialScheduler$SchedulableTask.run(SequentialScheduler.java:207)
+	at java.base/java.util.concurrent.ThreadPerTaskExecutor$TaskRunner.run(ThreadPerTaskExecutor.java:314)
+	... 1 common frames omitted
+2026-09-12 12:56:00,471 [backgroundjob-worker] WARN  o.j.server.BackgroundJobPerformer - Job(id=01a09482-05f5-7655-ac97-97f9108f2f4a, jobName='ingest-fred') processing failed: An exception occurred during the performance of the job
+java.util.concurrent.ExecutionException: java.lang.RuntimeException: java.io.IOException: Received RST_STREAM: Internal error
+	at java.base/java.util.concurrent.FutureTask.report(FutureTask.java:122)
+	at java.base/java.util.concurrent.FutureTask.get(FutureTask.java:205)
+	at com.hedgefund.fred.ingest.FredIngestService.run(FredIngestService.java:68)
+	at com.hedgefund.ingestionui.service.SourceRegistry.lambda$new$11(SourceRegistry.java:66)
+	at com.hedgefund.ingestionui.service.IngestionJobService.runIngest(IngestionJobService.java:51)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.jobrunr.server.runner.AbstractBackgroundJobRunner$BackgroundJobWorker.invokeJobMethod(AbstractBackgroundJobRunner.java:65)
+	at org.jobrunr.server.runner.AbstractBackgroundJobRunner$BackgroundJobWorker.run(AbstractBackgroundJobRunner.java:39)
+	at org.jobrunr.server.runner.AbstractBackgroundJobRunner.run(AbstractBackgroundJobRunner.java:21)
+	at org.jobrunr.server.BackgroundJobPerformer.runActualJob(BackgroundJobPerformer.java:95)
+	at org.jobrunr.server.BackgroundJobPerformer.performJob(BackgroundJobPerformer.java:68)
+	at org.jobrunr.server.BackgroundJobPerformer.run(BackgroundJobPerformer.java:46)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:572)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at java.base/java.lang.VirtualThread.run(VirtualThread.java:329)
+Caused by: java.lang.RuntimeException: java.io.IOException: Received RST_STREAM: Internal error
+	at com.hedgefund.fred.ingest.FredIngestService.lambda$run$0(FredIngestService.java:59)
+	... 3 common frames omitted
+Caused by: java.io.IOException: Received RST_STREAM: Internal error
+	at java.net.http/jdk.internal.net.http.HttpClientImpl.send(HttpClientImpl.java:970)
+	at java.net.http/jdk.internal.net.http.HttpClientFacade.send(HttpClientFacade.java:133)
+	at com.hedgefund.ingest.client.AbstractHttpClient.fetchWithRetry(AbstractHttpClient.java:57)
+	at com.hedgefund.fred.client.FredClient.fetchRaw(FredClient.java:26)
+	at com.hedgefund.fred.ingest.FredIngestService.lambda$run$0(FredIngestService.java:54)
+	... 3 common frames omitted
+Caused by: java.io.IOException: Received RST_STREAM: Internal error
+	at java.net.http/jdk.internal.net.http.Stream.handleReset(Stream.java:759)
+	at java.net.http/jdk.internal.net.http.Stream.incoming_reset(Stream.java:713)
+	at java.net.http/jdk.internal.net.http.Stream.otherFrame(Stream.java:577)
+	at java.net.http/jdk.internal.net.http.Stream.incoming(Stream.java:570)
+	at java.net.http/jdk.internal.net.http.Http2Connection.processFrame(Http2Connection.java:1055)
+	at java.net.http/jdk.internal.net.http.frame.FramesDecoder.decode(FramesDecoder.java:155)
+	at java.net.http/jdk.internal.net.http.Http2Connection$FramesController.processReceivedData(Http2Connection.java:311)
+	at java.net.http/jdk.internal.net.http.Http2Connection.asyncReceive(Http2Connection.java:863)
+	at java.net.http/jdk.internal.net.http.Http2Connection$Http2TubeSubscriber.processQueue(Http2Connection.java:1822)
+	at java.net.http/jdk.internal.net.http.common.SequentialScheduler$LockingRestartableTask.run(SequentialScheduler.java:182)
+	at java.net.http/jdk.internal.net.http.common.SequentialScheduler$CompleteRestartableTask.run(SequentialScheduler.java:149)
+	at java.net.http/jdk.internal.net.http.common.SequentialScheduler$SchedulableTask.run(SequentialScheduler.java:207)
+	at java.net.http/jdk.internal.net.http.common.SequentialScheduler.runOrSchedule(SequentialScheduler.java:280)
+	at java.net.http/jdk.internal.net.http.common.SequentialScheduler.runOrSchedule(SequentialScheduler.java:233)
+	at java.net.http/jdk.internal.net.http.Http2Connection$Http2TubeSubscriber.runOrSchedule(Http2Connection.java:1839)
+	at java.net.http/jdk.internal.net.http.Http2Connection$Http2TubeSubscriber.onNext(Http2Connection.java:1866)
+	at java.net.http/jdk.internal.net.http.Http2Connection$Http2TubeSubscriber.onNext(Http2Connection.java:1800)
+	at java.net.http/jdk.internal.net.http.common.SSLTube$DelegateWrapper.onNext(SSLTube.java:210)
+	at java.net.http/jdk.internal.net.http.common.SSLTube$SSLSubscriberWrapper.onNext(SSLTube.java:492)
+	at java.net.http/jdk.internal.net.http.common.SSLTube$SSLSubscriberWrapper.onNext(SSLTube.java:295)
+	at java.net.http/jdk.internal.net.http.common.SubscriberWrapper$DownstreamPusher.run1(SubscriberWrapper.java:316)
+	at java.net.http/jdk.internal.net.http.common.SubscriberWrapper$DownstreamPusher.run(SubscriberWrapper.java:259)
+	at java.net.http/jdk.internal.net.http.common.SequentialScheduler$LockingRestartableTask.run(SequentialScheduler.java:182)
+	at java.net.http/jdk.internal.net.http.common.SequentialScheduler$CompleteRestartableTask.run(SequentialScheduler.java:149)
+	at java.net.http/jdk.internal.net.http.common.SequentialScheduler$SchedulableTask.run(SequentialScheduler.java:207)
+	at java.net.http/jdk.internal.net.http.common.SequentialScheduler.runOrSchedule(SequentialScheduler.java:280)
+	at java.net.http/jdk.internal.net.http.common.SequentialScheduler.runOrSchedule(SequentialScheduler.java:233)
+	at java.net.http/jdk.internal.net.http.common.SubscriberWrapper.outgoing(SubscriberWrapper.java:232)
+	at java.net.http/jdk.internal.net.http.common.SubscriberWrapper.outgoing(SubscriberWrapper.java:198)
+	at java.net.http/jdk.internal.net.http.common.SSLFlowDelegate$Reader.processData(SSLFlowDelegate.java:470)
+	at java.net.http/jdk.internal.net.http.common.SSLFlowDelegate$Reader$ReaderDownstreamPusher.run(SSLFlowDelegate.java:283)
+	at java.net.http/jdk.internal.net.http.common.SequentialScheduler$LockingRestartableTask.run(SequentialScheduler.java:182)
+	at java.net.http/jdk.internal.net.http.common.SequentialScheduler$CompleteRestartableTask.run(SequentialScheduler.java:149)
+	at java.net.http/jdk.internal.net.http.common.SequentialScheduler$SchedulableTask.run(SequentialScheduler.java:207)
+	at java.base/java.util.concurrent.ThreadPerTaskExecutor$TaskRunner.run(ThreadPerTaskExecutor.java:314)
+	... 1 common frames omitted
+2026-09-12 12:56:27,267 [backgroundjob-worker] INFO  c.h.i.service.IngestionJobService - JobRunr starting ingest source=fred config=config/fred/fred.yaml
+2026-09-12 12:56:27,268 [backgroundjob-worker] INFO  c.h.fred.ingest.FredIngestService - fred ingest start keys=[DGS10] base=https://fred.stlouisfed.org
+2026-09-12 12:56:27,497 [virtual-99] WARN  c.h.ingest.client.AbstractHttpClient - Fetch failed 1/3 https://fred.stlouisfed.org/api/fred/series/observations?series_id=DGS10&limit=30 -> retry 800ms java.io.IOException: Received RST_STREAM: Internal error
+2026-09-12 12:56:28,389 [virtual-99] WARN  c.h.ingest.client.AbstractHttpClient - Fetch failed 2/3 https://fred.stlouisfed.org/api/fred/series/observations?series_id=DGS10&limit=30 -> retry 1600ms java.io.IOException: Received RST_STREAM: Internal error
+2026-09-12 12:56:30,209 [virtual-99] ERROR c.h.fred.ingest.FredIngestService - Failed DGS10
+java.io.IOException: Received RST_STREAM: Internal error
+	at java.net.http/jdk.internal.net.http.HttpClientImpl.send(HttpClientImpl.java:970)
+	at java.net.http/jdk.internal.net.http.HttpClientFacade.send(HttpClientFacade.java:133)
+	at com.hedgefund.ingest.client.AbstractHttpClient.fetchWithRetry(AbstractHttpClient.java:57)
+	at com.hedgefund.fred.client.FredClient.fetchRaw(FredClient.java:26)
+	at com.hedgefund.fred.ingest.FredIngestService.lambda$run$0(FredIngestService.java:54)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:572)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at java.base/java.lang.VirtualThread.run(VirtualThread.java:329)
+Caused by: java.io.IOException: Received RST_STREAM: Internal error
+	at java.net.http/jdk.internal.net.http.Stream.handleReset(Stream.java:759)
+	at java.net.http/jdk.internal.net.http.Stream.incoming_reset(Stream.java:713)
+	at java.net.http/jdk.internal.net.http.Stream.otherFrame(Stream.java:577)
+	at java.net.http/jdk.internal.net.http.Stream.incoming(Stream.java:570)
+	at java.net.http/jdk.internal.net.http.Http2Connection.processFrame(Http2Connection.java:1055)
+	at java.net.http/jdk.internal.net.http.frame.FramesDecoder.decode(FramesDecoder.java:155)
+	at java.net.http/jdk.internal.net.http.Http2Connection$FramesController.processReceivedData(Http2Connection.java:311)
+	at java.net.http/jdk.internal.net.http.Http2Connection.asyncReceive(Http2Connection.java:863)
+	at java.net.http/jdk.internal.net.http.Http2Connection$Http2TubeSubscriber.processQueue(Http2Connection.java:1822)
+	at java.net.http/jdk.internal.net.http.common.SequentialScheduler$LockingRestartableTask.run(SequentialScheduler.java:182)
+	at java.net.http/jdk.internal.net.http.common.SequentialScheduler$CompleteRestartableTask.run(SequentialScheduler.java:149)
+	at java.net.http/jdk.internal.net.http.common.SequentialScheduler$SchedulableTask.run(SequentialScheduler.java:207)
+	at java.net.http/jdk.internal.net.http.common.SequentialScheduler.runOrSchedule(SequentialScheduler.java:280)
+	at java.net.http/jdk.internal.net.http.common.SequentialScheduler.runOrSchedule(SequentialScheduler.java:233)
+	at java.net.http/jdk.internal.net.http.Http2Connection$Http2TubeSubscriber.runOrSchedule(Http2Connection.java:1839)
+	at java.net.http/jdk.internal.net.http.Http2Connection$Http2TubeSubscriber.onNext(Http2Connection.java:1866)
+	at java.net.http/jdk.internal.net.http.Http2Connection$Http2TubeSubscriber.onNext(Http2Connection.java:1800)
+	at java.net.http/jdk.internal.net.http.common.SSLTube$DelegateWrapper.onNext(SSLTube.java:210)
+	at java.net.http/jdk.internal.net.http.common.SSLTube$SSLSubscriberWrapper.onNext(SSLTube.java:492)
+	at java.net.http/jdk.internal.net.http.common.SSLTube$SSLSubscriberWrapper.onNext(SSLTube.java:295)
+	at java.net.http/jdk.internal.net.http.common.SubscriberWrapper$DownstreamPusher.run1(SubscriberWrapper.java:316)
+	at java.net.http/jdk.internal.net.http.common.SubscriberWrapper$DownstreamPusher.run(SubscriberWrapper.java:259)
+	at java.net.http/jdk.internal.net.http.common.SequentialScheduler$LockingRestartableTask.run(SequentialScheduler.java:182)
+	at java.net.http/jdk.internal.net.http.common.SequentialScheduler$CompleteRestartableTask.run(SequentialScheduler.java:149)
+	at java.net.http/jdk.internal.net.http.common.SequentialScheduler$SchedulableTask.run(SequentialScheduler.java:207)
+	at java.net.http/jdk.internal.net.http.common.SequentialScheduler.runOrSchedule(SequentialScheduler.java:280)
+	at java.net.http/jdk.internal.net.http.common.SequentialScheduler.runOrSchedule(SequentialScheduler.java:233)
+	at java.net.http/jdk.internal.net.http.common.SubscriberWrapper.outgoing(SubscriberWrapper.java:232)
+	at java.net.http/jdk.internal.net.http.common.SubscriberWrapper.outgoing(SubscriberWrapper.java:198)
+	at java.net.http/jdk.internal.net.http.common.SSLFlowDelegate$Reader.processData(SSLFlowDelegate.java:470)
+	at java.net.http/jdk.internal.net.http.common.SSLFlowDelegate$Reader$ReaderDownstreamPusher.run(SSLFlowDelegate.java:283)
+	at java.net.http/jdk.internal.net.http.common.SequentialScheduler$LockingRestartableTask.run(SequentialScheduler.java:182)
+	at java.net.http/jdk.internal.net.http.common.SequentialScheduler$CompleteRestartableTask.run(SequentialScheduler.java:149)
+	at java.net.http/jdk.internal.net.http.common.SequentialScheduler$SchedulableTask.run(SequentialScheduler.java:207)
+	at java.base/java.util.concurrent.ThreadPerTaskExecutor$TaskRunner.run(ThreadPerTaskExecutor.java:314)
+	... 1 common frames omitted
+2026-09-12 12:56:30,212 [backgroundjob-worker] ERROR o.j.server.BackgroundJobPerformer - Job(id=01a09482-05f5-7655-ac97-97f9108f2f4a, jobName='ingest-fred') processing failed: An exception occurred during the performance of the job
+java.util.concurrent.ExecutionException: java.lang.RuntimeException: java.io.IOException: Received RST_STREAM: Internal error
+	at java.base/java.util.concurrent.FutureTask.report(FutureTask.java:122)
+	at java.base/java.util.concurrent.FutureTask.get(FutureTask.java:205)
+	at com.hedgefund.fred.ingest.FredIngestService.run(FredIngestService.java:68)
+	at com.hedgefund.ingestionui.service.SourceRegistry.lambda$new$11(SourceRegistry.java:66)
+	at com.hedgefund.ingestionui.service.IngestionJobService.runIngest(IngestionJobService.java:51)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.jobrunr.server.runner.AbstractBackgroundJobRunner$BackgroundJobWorker.invokeJobMethod(AbstractBackgroundJobRunner.java:65)
+	at org.jobrunr.server.runner.AbstractBackgroundJobRunner$BackgroundJobWorker.run(AbstractBackgroundJobRunner.java:39)
+	at org.jobrunr.server.runner.AbstractBackgroundJobRunner.run(AbstractBackgroundJobRunner.java:21)
+	at org.jobrunr.server.BackgroundJobPerformer.runActualJob(BackgroundJobPerformer.java:95)
+	at org.jobrunr.server.BackgroundJobPerformer.performJob(BackgroundJobPerformer.java:68)
+	at org.jobrunr.server.BackgroundJobPerformer.run(BackgroundJobPerformer.java:46)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:572)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at java.base/java.lang.VirtualThread.run(VirtualThread.java:329)
+Caused by: java.lang.RuntimeException: java.io.IOException: Received RST_STREAM: Internal error
+	at com.hedgefund.fred.ingest.FredIngestService.lambda$run$0(FredIngestService.java:59)
+	... 3 common frames omitted
+Caused by: java.io.IOException: Received RST_STREAM: Internal error
+	at java.net.http/jdk.internal.net.http.HttpClientImpl.send(HttpClientImpl.java:970)
+	at java.net.http/jdk.internal.net.http.HttpClientFacade.send(HttpClientFacade.java:133)
+	at com.hedgefund.ingest.client.AbstractHttpClient.fetchWithRetry(AbstractHttpClient.java:57)
+	at com.hedgefund.fred.client.FredClient.fetchRaw(FredClient.java:26)
+	at com.hedgefund.fred.ingest.FredIngestService.lambda$run$0(FredIngestService.java:54)
+	... 3 common frames omitted
+Caused by: java.io.IOException: Received RST_STREAM: Internal error
+	at java.net.http/jdk.internal.net.http.Stream.handleReset(Stream.java:759)
+	at java.net.http/jdk.internal.net.http.Stream.incoming_reset(Stream.java:713)
+	at java.net.http/jdk.internal.net.http.Stream.otherFrame(Stream.java:577)
+	at java.net.http/jdk.internal.net.http.Stream.incoming(Stream.java:570)
+	at java.net.http/jdk.internal.net.http.Http2Connection.processFrame(Http2Connection.java:1055)
+	at java.net.http/jdk.internal.net.http.frame.FramesDecoder.decode(FramesDecoder.java:155)
+	at java.net.http/jdk.internal.net.http.Http2Connection$FramesController.processReceivedData(Http2Connection.java:311)
+	at java.net.http/jdk.internal.net.http.Http2Connection.asyncReceive(Http2Connection.java:863)
+	at java.net.http/jdk.internal.net.http.Http2Connection$Http2TubeSubscriber.processQueue(Http2Connection.java:1822)
+	at java.net.http/jdk.internal.net.http.common.SequentialScheduler$LockingRestartableTask.run(SequentialScheduler.java:182)
+	at java.net.http/jdk.internal.net.http.common.SequentialScheduler$CompleteRestartableTask.run(SequentialScheduler.java:149)
+	at java.net.http/jdk.internal.net.http.common.SequentialScheduler$SchedulableTask.run(SequentialScheduler.java:207)
+	at java.net.http/jdk.internal.net.http.common.SequentialScheduler.runOrSchedule(SequentialScheduler.java:280)
+	at java.net.http/jdk.internal.net.http.common.SequentialScheduler.runOrSchedule(SequentialScheduler.java:233)
+	at java.net.http/jdk.internal.net.http.Http2Connection$Http2TubeSubscriber.runOrSchedule(Http2Connection.java:1839)
+	at java.net.http/jdk.internal.net.http.Http2Connection$Http2TubeSubscriber.onNext(Http2Connection.java:1866)
+	at java.net.http/jdk.internal.net.http.Http2Connection$Http2TubeSubscriber.onNext(Http2Connection.java:1800)
+	at java.net.http/jdk.internal.net.http.common.SSLTube$DelegateWrapper.onNext(SSLTube.java:210)
+	at java.net.http/jdk.internal.net.http.common.SSLTube$SSLSubscriberWrapper.onNext(SSLTube.java:492)
+	at java.net.http/jdk.internal.net.http.common.SSLTube$SSLSubscriberWrapper.onNext(SSLTube.java:295)
+	at java.net.http/jdk.internal.net.http.common.SubscriberWrapper$DownstreamPusher.run1(SubscriberWrapper.java:316)
+	at java.net.http/jdk.internal.net.http.common.SubscriberWrapper$DownstreamPusher.run(SubscriberWrapper.java:259)
+	at java.net.http/jdk.internal.net.http.common.SequentialScheduler$LockingRestartableTask.run(SequentialScheduler.java:182)
+	at java.net.http/jdk.internal.net.http.common.SequentialScheduler$CompleteRestartableTask.run(SequentialScheduler.java:149)
+	at java.net.http/jdk.internal.net.http.common.SequentialScheduler$SchedulableTask.run(SequentialScheduler.java:207)
+	at java.net.http/jdk.internal.net.http.common.SequentialScheduler.runOrSchedule(SequentialScheduler.java:280)
+	at java.net.http/jdk.internal.net.http.common.SequentialScheduler.runOrSchedule(SequentialScheduler.java:233)
+	at java.net.http/jdk.internal.net.http.common.SubscriberWrapper.outgoing(SubscriberWrapper.java:232)
+	at java.net.http/jdk.internal.net.http.common.SubscriberWrapper.outgoing(SubscriberWrapper.java:198)
+	at java.net.http/jdk.internal.net.http.common.SSLFlowDelegate$Reader.processData(SSLFlowDelegate.java:470)
+	at java.net.http/jdk.internal.net.http.common.SSLFlowDelegate$Reader$ReaderDownstreamPusher.run(SSLFlowDelegate.java:283)
+	at java.net.http/jdk.internal.net.http.common.SequentialScheduler$LockingRestartableTask.run(SequentialScheduler.java:182)
+	at java.net.http/jdk.internal.net.http.common.SequentialScheduler$CompleteRestartableTask.run(SequentialScheduler.java:149)
+	at java.net.http/jdk.internal.net.http.common.SequentialScheduler$SchedulableTask.run(SequentialScheduler.java:207)
+	at java.base/java.util.concurrent.ThreadPerTaskExecutor$TaskRunner.run(ThreadPerTaskExecutor.java:314)
+	... 1 common frames omitted

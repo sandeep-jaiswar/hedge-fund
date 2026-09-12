@@ -51,12 +51,12 @@ public class Main {
             return;
         }
 
-        Files.createDirectories(root.resolve(cfg.paths().bronze()));
-        Files.createDirectories(root.resolve(cfg.paths().silver()));
+        Files.createDirectories(root.resolve(cfg.ingestConfig().paths().bronze()));
+        Files.createDirectories(root.resolve(cfg.ingestConfig().paths().silver()));
         new WorldBankIngestService(cfg, root).run();
-        System.out.println("World Bank ingest done. Bronze=" + root.resolve(cfg.paths().bronze()) + " Silver=" + root.resolve(cfg.paths().silver()));
+        System.out.println("World Bank ingest done. Bronze=" + root.resolve(cfg.ingestConfig().paths().bronze()) + " Silver=" + root.resolve(cfg.ingestConfig().paths().silver()));
         // ensure catalog entry exists
-        var catalogPath = root.resolve(cfg.paths().catalog());
+        var catalogPath = root.resolve(cfg.ingestConfig().paths().catalog());
         if(Files.exists(catalogPath)){
             String catalog = Files.readString(catalogPath);
             if(!catalog.contains("worldbank")){

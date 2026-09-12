@@ -54,7 +54,7 @@ public class Main {
 
         new GmdIngestService(cfg, root).run();
         System.out.println("gmd ingest done. Bronze=" +
-            root.resolve(cfg.paths().bronze()) +
-            " Silver=" + root.resolve(cfg.paths().silver()));
+            root.resolve(cfg.ingestConfig().paths().bronze()) +
+            " Silver=" + root.resolve(cfg.ingestConfig().paths().silver()));
     }
 }
