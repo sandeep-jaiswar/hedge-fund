@@ -311,6 +311,49 @@
         <rollback><dropTable tableName="fact_crypto_ohlcv" schemaName="dim" /></rollback>
     </changeSet>
 
+    <!-- 010-14b: Seed Binance crypto instruments -->
+    <changeSet id="010-14b-seed-crypto-instruments" author="hedge-fund" runOnChange="true">
+        <sql><![CDATA[INSERT INTO dim.dim_instrument (instrument_id, symbol, name, asset_class_id, exchange_id, currency_id, sector_id, is_current, _source, _ingest_ts)
+             SELECT (SELECT COALESCE(MAX(instrument_id),0) FROM dim.dim_instrument) + row_number() OVER (ORDER BY pair) AS instrument_id,
+                    pair, pair, 3, 9, 7, -1, true, 'binance', now()
+             FROM (SELECT DISTINCT source_key AS pair FROM read_csv('datalake/data/silver/binance/binance.csv', header=true))
+             WHERE pair NOT IN (SELECT symbol FROM dim.dim_instrument)]]></sql>
+        <rollback><sql>DELETE FROM dim.dim_instrument WHERE _source='binance'</sql></rollback>
+    </changeSet>
+
+    <!-- 010-14c: Seed SEC filing instruments (AAPL, MSFT) -->
+    <changeSet id="010-14c-seed-sec-instruments" author="hedge-fund" runOnChange="true">
+        <sql><![CDATA[INSERT INTO dim.dim_instrument (instrument_id, symbol, name, asset_class_id, exchange_id, currency_id, sector_id, is_current, _source, _ingest_ts)
+             SELECT (SELECT COALESCE(MAX(instrument_id),0) FROM dim.dim_instrument) + row_number() OVER (ORDER BY source_key) AS instrument_id,
+                    source_key, source_key, 1, 1, 1, -1, true, 'sec', now()
+             FROM (SELECT DISTINCT source_key FROM read_csv('datalake/data/silver/sec/sec.csv', header=true))
+             WHERE source_key NOT IN (SELECT symbol FROM dim.dim_instrument)]]></sql>
+        <rollback><sql>DELETE FROM dim.dim_instrument WHERE _source='sec'</sql></rollback>
+    </changeSet>
+
+    <!-- 010-14d: Seed fact_crypto_ohlcv from Binance klines -->
+    <changeSet id="010-14d-seed-fact-crypto" author="hedge-fund" runOnChange="true">
+        <sql>DELETE FROM dim.fact_crypto_ohlcv</sql>
+        <sql><![CDATA[INSERT INTO dim.fact_crypto_ohlcv
+             SELECT d.instrument_id,
+                    to_timestamp(CAST(json_extract_string(k.data, 0) AS BIGINT)/1000)::DATE AS date,
+                    CAST(json_extract_string(k.data, 0) AS BIGINT)/1000 AS epoch,
+                    CAST(json_extract_string(k.data, 1) AS DOUBLE) AS open,
+                    CAST(json_extract_string(k.data, 2) AS DOUBLE) AS high,
+                    CAST(json_extract_string(k.data, 3) AS DOUBLE) AS low,
+                    CAST(json_extract_string(k.data, 4) AS DOUBLE) AS close,
+                    CAST(json_extract_string(k.data, 5) AS DOUBLE) AS volume,
+                    CAST(json_extract_string(k.data, 7) AS DOUBLE) AS quote_volume,
+                    CAST(json_extract_string(k.data, 8) AS BIGINT) AS trades,
+                    now(),
+                    year(to_timestamp(CAST(json_extract_string(k.data, 0) AS BIGINT)/1000)::DATE)
+             FROM (SELECT replace(replace(filename, 'datalake/data/bronze/binance/key=', ''), '/data.raw', '') AS pair,
+                          unnest(from_json(replace(cast(content as VARCHAR), chr(92)||'x22', '\"'), '["JSON[]"]')) AS data
+                   FROM read_blob('datalake/data/bronze/binance/key=*/data.raw')) k
+             JOIN dim.dim_instrument d ON d.symbol = k.pair]]></sql>
+        <rollback><sql>DELETE FROM dim.fact_crypto_ohlcv</sql></rollback>
+    </changeSet>
+
     <!-- 010-15: fact_macro_obs -->
     <changeSet id="010-15-fact-macro-obs" author="hedge-fund">
         <createTable tableName="fact_macro_obs" schemaName="dim">
@@ -367,6 +410,43 @@
         <rollback><dropTable tableName="fact_rates_daily" schemaName="dim" /></rollback>
     </changeSet>
 
+    <!-- 010-16b: Seed Treasury yield indicators -->
+    <changeSet id="010-16b-seed-rates-indicators" author="hedge-fund" runOnChange="true">
+        <sql>INSERT OR IGNORE INTO dim.dim_indicator VALUES ('TREASURY_1MO','1-Month Treasury Yield','treasury','percent','daily'), ('TREASURY_2MO','2-Month Treasury Yield','treasury','percent','daily'), ('TREASURY_3MO','3-Month Treasury Yield','treasury','percent','daily'), ('TREASURY_4MO','4-Month Treasury Yield','treasury','percent','daily'), ('TREASURY_6MO','6-Month Treasury Yield','treasury','percent','daily'), ('TREASURY_1YR','1-Year Treasury Yield','treasury','percent','daily'), ('TREASURY_2YR','2-Year Treasury Yield','treasury','percent','daily'), ('TREASURY_3YR','3-Year Treasury Yield','treasury','percent','daily'), ('TREASURY_5YR','5-Year Treasury Yield','treasury','percent','daily'), ('TREASURY_7YR','7-Year Treasury Yield','treasury','percent','daily'), ('TREASURY_10YR','10-Year Treasury Yield','treasury','percent','daily'), ('TREASURY_20YR','20-Year Treasury Yield','treasury','percent','daily'), ('TREASURY_30YR','30-Year Treasury Yield','treasury','percent','daily') ON CONFLICT DO NOTHING</sql>
+        <sql><![CDATA[INSERT OR IGNORE INTO dim.dim_indicator VALUES ('SHILLER_SP500','Shiller S&P 500','fred','index','monthly'), ('SHILLER_DIVIDEND','Shiller Dividend Rate','fred','usd','monthly'), ('SHILLER_EARNINGS','Shiller Earnings Per Share','fred','usd','monthly'), ('SHILLER_CPI','Shiller Consumer Price Index','fred','index','monthly'), ('SHILLER_LONG_RATE','Shiller Long Interest Rate','fred','percent','monthly'), ('SHILLER_REAL_PRICE','Shiller Real S&P 500 Price','fred','index','monthly'), ('SHILLER_PE10','Shiller CAPE Ratio','fred','ratio','monthly') ON CONFLICT DO NOTHING]]></sql>
+        <rollback>
+            <sql>DELETE FROM dim.dim_indicator WHERE source_id IN ('treasury','fred')</sql>
+        </rollback>
+    </changeSet>
+
+    <!-- 010-16c: Seed fact_rates_daily from Treasury yield curve -->
+    <changeSet id="010-16c-seed-fact-rates" author="hedge-fund" runOnChange="true">
+        <sql>DELETE FROM dim.fact_rates_daily</sql>
+        <sql><![CDATA[INSERT INTO dim.fact_rates_daily (indicator_id, date, value, source_id, _ingest_ts, year)
+             SELECT indicator_id, date, value, 'treasury', now(), year(date)
+             FROM (
+                 SELECT t.date,
+                        unnest(GENERATE_SERIES(1,13)) AS col_idx,
+                        unnest([t."1 Mo", t."2 Mo", t."3 Mo", t."4 Mo", t."6 Mo", t."1 Yr", t."2 Yr", t."3 Yr", t."5 Yr", t."7 Yr", t."10 Yr", t."20 Yr", t."30 Yr"]) AS value,
+                        unnest(['TREASURY_1MO','TREASURY_2MO','TREASURY_3MO','TREASURY_4MO','TREASURY_6MO','TREASURY_1YR','TREASURY_2YR','TREASURY_3YR','TREASURY_5YR','TREASURY_7YR','TREASURY_10YR','TREASURY_20YR','TREASURY_30YR']) AS indicator_id
+                 FROM read_csv('datalake/data/bronze/treasury/key=treasury/data.raw', header=true) AS t
+             ) WHERE value IS NOT NULL]]></sql>
+        <rollback><sql>DELETE FROM dim.fact_rates_daily WHERE source_id='treasury'</sql></rollback>
+    </changeSet>
+
+    <!-- 010-16d: Seed fact_rates_daily from FRED/Shiller data -->
+    <changeSet id="010-16d-seed-fact-rates-fred" author="hedge-fund" runOnChange="true">
+        <sql><![CDATA[INSERT INTO dim.fact_rates_daily (indicator_id, date, value, source_id, _ingest_ts, year)
+             SELECT indicator_id, date, value, 'fred', now(), year(date)
+             FROM (
+                 SELECT f.date,
+                        unnest(['SHILLER_SP500','SHILLER_DIVIDEND','SHILLER_EARNINGS','SHILLER_CPI','SHILLER_LONG_RATE','SHILLER_PE10']) AS indicator_id,
+                        unnest([f."SP500", f."Dividend", f."Earnings", f."Consumer Price Index", f."Long Interest Rate", f."PE10"]) AS value
+                 FROM read_csv('datalake/data/bronze/fred/key=DGS10/data.raw', header=true) AS f
+             ) WHERE value IS NOT NULL AND value != 0]]></sql>
+        <rollback><sql>DELETE FROM dim.fact_rates_daily WHERE source_id='fred'</sql></rollback>
+    </changeSet>
+
     <!-- 010-17: fact_filings -->
     <changeSet id="010-17-fact-filings" author="hedge-fund">
         <createTable tableName="fact_filings" schemaName="dim">
@@ -388,6 +468,35 @@
         <sql>CREATE INDEX IF NOT EXISTS ix_fact_filing_date ON dim.fact_filings(filing_date)</sql>
         <sql>CREATE OR REPLACE VIEW fact.fact_filings AS SELECT * FROM dim.fact_filings</sql>
         <rollback><dropTable tableName="fact_filings" schemaName="dim" /></rollback>
+    </changeSet>
+
+    <!-- 010-17b: Seed fact_filings from SEC EDGAR -->
+    <changeSet id="010-17b-seed-fact-filings" author="hedge-fund" runOnChange="true">
+        <sql>DELETE FROM dim.fact_filings</sql>
+        <sql><![CDATA[INSERT INTO dim.fact_filings (instrument_id, accession_number, filing_date, form_type, period_of_report, entity_name, cik, url, _ingest_ts)
+             SELECT d.instrument_id,
+                    replace(cast(sub.acc as VARCHAR), '"', ''),
+                    TRY_CAST(replace(cast(sub.fd as VARCHAR), '"', '') AS DATE),
+                    replace(cast(sub.frm as VARCHAR), '"', ''),
+                    NULL,
+                    sec_raw.entity_name,
+                    sec_raw.cik,
+                    'https://www.sec.gov/Archives/edgar/data/' || sec_raw.cik || '/' || replace(replace(cast(sub.acc as VARCHAR), '"', ''), '-', '') || '/' || replace(cast(sub.pd as VARCHAR), '"', ''),
+                    now()
+             FROM (SELECT replace(replace(filename, 'datalake/data/bronze/sec/key=', ''), '/data.raw', '') as ticker,
+                          json_extract_string(replace(cast(content as VARCHAR), chr(92)||'x22', '"'), '$.name') as entity_name,
+                          json_extract_string(replace(cast(content as VARCHAR), chr(92)||'x22', '"'), '$.cik') as cik,
+                          replace(cast(content as VARCHAR), chr(92)||'x22', '"') AS fc
+                   FROM read_blob('datalake/data/bronze/sec/key=*/data.raw')) sec_raw,
+             LATERAL (
+                 SELECT
+                     unnest(from_json(json_extract_string(sec_raw.fc, '$.filings.recent.accessionNumber'), '["JSON"]')) AS acc,
+                     unnest(from_json(json_extract_string(sec_raw.fc, '$.filings.recent.filingDate'), '["JSON"]')) AS fd,
+                     unnest(from_json(json_extract_string(sec_raw.fc, '$.filings.recent.form'), '["JSON"]')) AS frm,
+                     unnest(from_json(json_extract_string(sec_raw.fc, '$.filings.recent.primaryDocument'), '["JSON"]')) AS pd
+             ) sub
+             JOIN dim.dim_instrument d ON d.symbol = sec_raw.ticker]]></sql>
+        <rollback><sql>DELETE FROM dim.fact_filings</sql></rollback>
     </changeSet>
 
     <!-- 010-18: Gold analytics views -->
