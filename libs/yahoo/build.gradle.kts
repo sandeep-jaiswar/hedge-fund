@@ -2,6 +2,8 @@ plugins { id("hedgefund.java-library") }
 dependencies {
     api(project(":libs:common"))
     api(project(":libs:datalake"))
+    api(project(":libs:ingest-framework"))
+    api(project(":libs:observability"))
     api(libs.jackson.databind)
     api(libs.slf4j.api)
     api(libs.snakeyaml)
@@ -9,4 +11,5 @@ dependencies {
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.mockito.core)
     testImplementation(libs.wiremock)
+    testImplementation(project(":libs:test-support"))
 }

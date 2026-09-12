@@ -15,6 +15,8 @@ springBoot = "3.3.5"
 jobrunr = "7.4.1"
 liquibase = "4.25.1"
 h2 = "2.2.224"
+micrometer = "1.13.6"
+jacksonYaml = "2.17.2"
 
 [libraries]
 junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit" }
@@ -37,6 +39,9 @@ jobrunr = { module = "org.jobrunr:jobrunr-spring-boot-3-starter", version.ref = 
 liquibase-core = { module = "org.liquibase:liquibase-core", version.ref = "liquibase" }
 h2 = { module = "com.h2database:h2", version.ref = "h2" }
 spring-boot-starter-jdbc = { module = "org.springframework.boot:spring-boot-starter-jdbc", version.ref = "springBoot" }
+jackson-yaml = { module = "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml", version.ref = "jacksonYaml" }
+micrometer-core = { module = "io.micrometer:micrometer-core", version.ref = "micrometer" }
+micrometer-registry-prometheus = { module = "io.micrometer:micrometer-registry-prometheus", version.ref = "micrometer" }
 
 [plugins]
 # keep versions here for DRY - single source of truth

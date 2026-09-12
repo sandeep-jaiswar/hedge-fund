@@ -1,0 +1,14 @@
+.git
+.gitignore
+.gradle
+.idea
+.vscode
+build
+out
+*.md
+docs/
+node_modules/
+logs/
+.env*
+.husky/
+.vscode/

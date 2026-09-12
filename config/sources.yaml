@@ -1,0 +1,379 @@
+environment: development
+defaultConcurrency: 4
+
+datalake:
+  rootPath: datalake
+
+observability:
+  logging:
+    level: INFO
+    format: text
+  metrics:
+    enabled: true
+    prefix: hedge
+  health:
+    enabled: true
+    port: 8081
+
+sources:
+  yahoo:
+    baseUrl: https://query1.finance.yahoo.com
+    symbols: [AAPL, MSFT, GOOGL, AMZN, META, NVDA, TSLA, JPM, V, JNJ]
+    interval: 1d
+    range: 1mo
+    concurrency: 4
+    retry:
+      maxAttempts: 3
+      backoffMs: 800
+      maxBackoffMs: 8000
+    rateLimit:
+      qps: 2
+      burst: 4
+    paths:
+      bronze: data/bronze/yahoo
+      silver: data/silver/yahoo
+      catalog: catalog/glue.json
+
+  worldbank:
+    baseUrl: https://api.worldbank.org/v2
+    indicators: [NY.GDP.MKTP.CD, SP.POP.TOTL, FP.CPI.TOTL.ZG, IR.LND.TEMP.ZS]
+    countries: [USA, CHN, JPN, DEU, GBR, IND, BRA, CAN, AUS, KOR]
+    date: 2020:2026
+    concurrency: 4
+    retry:
+      maxAttempts: 3
+      backoffMs: 800
+      maxBackoffMs: 8000
+    rateLimit:
+      qps: 2
+      burst: 4
+    paths:
+      bronze: data/bronze/worldbank
+      silver: data/silver/worldbank
+      catalog: catalog/glue.json
+
+  fred:
+    baseUrl: https://api.stlouisfed.org/fred/series/observations
+    series: [GDP, UNRATE, CPIAUCSL, FEDFUNDS, DGS10, DGS2, DGS30]
+    concurrency: 2
+    retry:
+      maxAttempts: 3
+      backoffMs: 800
+      maxBackoffMs: 8000
+    rateLimit:
+      qps: 1
+      burst: 2
+    paths:
+      bronze: data/bronze/fred
+      silver: data/silver/fred
+      catalog: catalog/glue.json
+
+  treasury:
+    baseUrl: https://api.fiscaldata.treasury.gov/services/api/fiscal_service
+    endpoints: [daily_treasury_yield_curve, daily_treasury_sec_auction_data]
+    concurrency: 2
+    retry:
+      maxAttempts: 3
+      backoffMs: 800
+      maxBackoffMs: 8000
+    rateLimit:
+      qps: 1
+      burst: 2
+    paths:
+      bronze: data/bronze/treasury
+      silver: data/silver/treasury
+      catalog: catalog/glue.json
+
+  binance:
+    baseUrl: https://api.binance.com/api/v3
+    symbols: [BTCUSDT, ETHUSDT, BNBUSDT, SOLUSDT, ADAUSDT, XRPUSDT, DOTUSDT, DOGEUSDT]
+    interval: 1d
+    limit: 100
+    concurrency: 4
+    retry:
+      maxAttempts: 3
+      backoffMs: 800
+      maxBackoffMs: 8000
+    rateLimit:
+      qps: 5
+      burst: 10
+    paths:
+      bronze: data/bronze/binance
+      silver: data/silver/binance
+      catalog: catalog/glue.json
+
+  coinbase:
+    baseUrl: https://api.exchange.coinbase.com
+    pairs: [BTC-USD, ETH-USD, SOL-USD, ADA-USD]
+    granularity: 86400
+    concurrency: 2
+    retry:
+      maxAttempts: 3
+      backoffMs: 800
+      maxBackoffMs: 8000
+    rateLimit:
+      qps: 3
+      burst: 6
+    paths:
+      bronze: data/bronze/coinbase
+      silver: data/silver/coinbase
+      catalog: catalog/glue.json
+
+  cboe:
+    baseUrl: https://cdn.cboe.com/api/global/delayed_quotes/charts
+    symbols: [^VIX]
+    interval: 1d
+    range: 1mo
+    concurrency: 2
+    retry:
+      maxAttempts: 3
+      backoffMs: 800
+      maxBackoffMs: 8000
+    rateLimit:
+      qps: 1
+      burst: 2
+    paths:
+      bronze: data/bronze/cboe
+      silver: data/silver/cboe
+      catalog: catalog/glue.json
+
+  defillama:
+    baseUrl: https://api.llama.fi
+    protocols: [aave, makerdao, uniswap, lido, curve]
+    concurrency: 2
+    retry:
+      maxAttempts: 3
+      backoffMs: 800
+      maxBackoffMs: 8000
+    rateLimit:
+      qps: 2
+      burst: 4
+    paths:
+      bronze: data/bronze/defillama
+      silver: data/silver/defillama
+      catalog: catalog/glue.json
+
+  sec:
+    baseUrl: https://efts.sec.gov/LATEST/search-index
+    forms: [10-K, 10-Q, 8-K]
+    concurrency: 2
+    retry:
+      maxAttempts: 3
+      backoffMs: 1000
+      maxBackoffMs: 10000
+    rateLimit:
+      qps: 1
+      burst: 2
+    paths:
+      bronze: data/bronze/sec
+      silver: data/silver/sec
+      catalog: catalog/glue.json
+
+  oecd:
+    baseUrl: https://stats.oecd.org/restsdmx/sdmx.ashx
+    indicators: [SNA_TABLE1, SNA_TABLE2]
+    countries: [USA, GBR, DEU, FRA, JPN]
+    concurrency: 2
+    retry:
+      maxAttempts: 3
+      backoffMs: 800
+      maxBackoffMs: 8000
+    rateLimit:
+      qps: 1
+      burst: 2
+    paths:
+      bronze: data/bronze/oecd
+      silver: data/silver/oecd
+      catalog: catalog/glue.json
+
+  imf:
+    baseUrl: https://dataservices.imf.org/REST/SDMX_JSON.svc
+    datasets: [DS-BCI, PCPI_IX]
+    concurrency: 2
+    retry:
+      maxAttempts: 3
+      backoffMs: 800
+      maxBackoffMs: 8000
+    rateLimit:
+      qps: 1
+      burst: 2
+    paths:
+      bronze: data/bronze/imf
+      silver: data/silver/imf
+      catalog: catalog/glue.json
+
+  bls:
+    baseUrl: https://api.bls.gov/publicAPI/v2/timeseries/data
+    series: [CUUR0000SA0, LNS14000000, CES0000000001]
+    concurrency: 2
+    retry:
+      maxAttempts: 3
+      backoffMs: 800
+      maxBackoffMs: 8000
+    rateLimit:
+      qps: 1
+      burst: 2
+    paths:
+      bronze: data/bronze/bls
+      silver: data/silver/bls
+      catalog: catalog/glue.json
+
+  eia:
+    baseUrl: https://api.eia.gov/v2/petroleum
+    series: [PET.MCRFPUS1.M, PET.MGFPMUS1.M]
+    concurrency: 2
+    retry:
+      maxAttempts: 3
+      backoffMs: 800
+      maxBackoffMs: 8000
+    rateLimit:
+      qps: 1
+      burst: 2
+    paths:
+      bronze: data/bronze/eia
+      silver: data/silver/eia
+      catalog: catalog/glue.json
+
+  fdic:
+    baseUrl: https://efts.sec.gov/LATEST/search-index
+    endpoints: [bank/find, data/fdic]
+    concurrency: 2
+    retry:
+      maxAttempts: 3
+      backoffMs: 800
+      maxBackoffMs: 8000
+    rateLimit:
+      qps: 1
+      burst: 2
+    paths:
+      bronze: data/bronze/fdic
+      silver: data/silver/fdic
+      catalog: catalog/glue.json
+
+  bea:
+    baseUrl: https://apps.bea.gov/api/data
+    datasets: [NIPA, FixedAssets]
+    concurrency: 2
+    retry:
+      maxAttempts: 3
+      backoffMs: 800
+      maxBackoffMs: 8000
+    rateLimit:
+      qps: 1
+      burst: 2
+    paths:
+      bronze: data/bronze/bea
+      silver: data/silver/bea
+      catalog: catalog/glue.json
+
+  gmd:
+    baseUrl: https://www.globalmacrodata.net/api
+    indicators: [gdp, inflation, unemployment]
+    concurrency: 2
+    retry:
+      maxAttempts: 3
+      backoffMs: 800
+      maxBackoffMs: 8000
+    rateLimit:
+      qps: 1
+      burst: 2
+    paths:
+      bronze: data/bronze/gmd
+      silver: data/silver/gmd
+      catalog: catalog/glue.json
+
+  calcfi:
+    baseUrl: https://calcfi.com/api
+    series: [prime_rate, fed_funds]
+    concurrency: 2
+    retry:
+      maxAttempts: 3
+      backoffMs: 800
+      maxBackoffMs: 8000
+    rateLimit:
+      qps: 1
+      burst: 2
+    paths:
+      bronze: data/bronze/calcfi
+      silver: data/silver/calcfi
+      catalog: catalog/glue.json
+
+  investing:
+    baseUrl: https://api.investing.com
+    symbols: [^GSPC, ^DJI, ^IXIC, ^FTSE, ^N225]
+    concurrency: 2
+    retry:
+      maxAttempts: 3
+      backoffMs: 800
+      maxBackoffMs: 8000
+    rateLimit:
+      qps: 1
+      burst: 2
+    paths:
+      bronze: data/bronze/investing
+      silver: data/silver/investing
+      catalog: catalog/glue.json
+
+  eastmoney:
+    baseUrl: https://push2his.eastmoney.com/api/qt/stock
+    symbols: [000001.SS, 399001.SZ, 399006.SZ]
+    concurrency: 2
+    retry:
+      maxAttempts: 3
+      backoffMs: 800
+      maxBackoffMs: 8000
+    rateLimit:
+      qps: 2
+      burst: 4
+    paths:
+      bronze: data/bronze/eastmoney
+      silver: data/silver/eastmoney
+      catalog: catalog/glue.json
+
+  sina:
+    baseUrl: https://hq.sinajs.cn
+    symbols: [sh000001, sz399001, sz399006]
+    concurrency: 2
+    retry:
+      maxAttempts: 3
+      backoffMs: 800
+      maxBackoffMs: 8000
+    rateLimit:
+      qps: 2
+      burst: 4
+    paths:
+      bronze: data/bronze/sina
+      silver: data/silver/sina
+      catalog: catalog/glue.json
+
+  tencent:
+    baseUrl: https://qt.gtimg.cn
+    symbols: [sh000001, sz399001, hkHSI]
+    concurrency: 2
+    retry:
+      maxAttempts: 3
+      backoffMs: 800
+      maxBackoffMs: 8000
+    rateLimit:
+      qps: 2
+      burst: 4
+    paths:
+      bronze: data/bronze/tencent
+      silver: data/silver/tencent
+      catalog: catalog/glue.json
+
+  baostock:
+    baseUrl: http://www.baostock.com
+    symbols: [sh.600000, sh.600036, sz.000001]
+    concurrency: 2
+    retry:
+      maxAttempts: 3
+      backoffMs: 800
+      maxBackoffMs: 8000
+    rateLimit:
+      qps: 2
+      burst: 4
+    paths:
+      bronze: data/bronze/baostock
+      silver: data/silver/baostock
+      catalog: catalog/glue.json

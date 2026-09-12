@@ -1,0 +1,82 @@
+name: Build & Test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  detect-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      libs: ${{ steps.changes.outputs.libs }}
+      services: ${{ steps.changes.outputs.services }}
+      build-logic: ${{ steps.changes.outputs.build-logic }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - id: changes
+        run: |
+          LIBS=$(git diff --name-only origin/${{ github.base_ref || 'main' }} HEAD 2>/dev/null \
+            | grep '^libs/' | cut -d'/' -f2 | sort -u | jq -R -s -c 'split("\n")[:-1]')
+          SERVICES=$(git diff --name-only origin/${{ github.base_ref || 'main' }} HEAD 2>/dev/null \
+            | grep '^services/' | cut -d'/' -f2 | sort -u | jq -R -s -c 'split("\n")[:-1]')
+          BUILD_LOGIC=$(git diff --name-only origin/${{ github.base_ref || 'main' }} HEAD 2>/dev/null \
+            | grep -c 'build-logic/' | jq -R -s 'tonumber > 0')
+          echo "libs=$LIBS" >> $GITHUB_OUTPUT
+          echo "services=$SERVICES" >> $GITHUB_OUTPUT
+          echo "build-logic=$BUILD_LOGIC" >> $GITHUB_OUTPUT
+
+  build:
+    needs: detect-changes
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          cache-read-only: ${{ github.ref != 'refs/heads/main' }}
+      - run: ./gradlew assemble --parallel --build-cache
+
+  test:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          cache-read-only: true
+      - run: ./gradlew test -x :libs:datalake:test --parallel
+      - name: Upload test reports
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-reports
+          path: '**/build/reports/tests/test/'
+
+  lint:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          cache-read-only: true
+      - run: npx commitlint --from ${{ github.event.pull_request.base.sha }} --to ${{ github.event.pull_request.head.sha }} --verbose

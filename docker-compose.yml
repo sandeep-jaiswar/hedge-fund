@@ -1,0 +1,365 @@
+services:
+  # ============================================
+  # Observability Stack
+  # ============================================
+  prometheus:
+    image: prom/prometheus:v2.51.0
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./docker/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:9090/-/healthy"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    networks:
+      - hedge-network
+
+  grafana:
+    image: grafana/grafana:10.4.0
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+    volumes:
+      - ./docker/grafana/provisioning:/etc/grafana/provisioning:ro
+      - grafana-data:/var/lib/grafana
+    depends_on:
+      prometheus:
+        condition: service_healthy
+    networks:
+      - hedge-network
+
+  # ============================================
+  # Ingestion UI
+  # ============================================
+  ingestion-ui:
+    build:
+      context: .
+      dockerfile: apps/ingestion-ui/Dockerfile
+    ports:
+      - "8080:8080"
+      - "8000:8000"
+    volumes:
+      - datalake-data:/app/datalake
+      - ./config:/app/config:ro
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - HEDGE_ENVIRONMENT=docker
+    depends_on:
+      prometheus:
+        condition: service_healthy
+    networks:
+      - hedge-network
+
+  # ============================================
+  # Ingest Services (profile-gated)
+  # ============================================
+  yahoo-ingest:
+    profiles: [ingest]
+    build:
+      context: .
+      dockerfile: services/yahoo-ingest/Dockerfile
+    volumes:
+      - datalake-data:/app/datalake
+      - ./config:/app/config:ro
+    environment:
+      - HEDGE_SOURCE=yahoo
+    networks:
+      - hedge-network
+
+  worldbank-ingest:
+    profiles: [ingest]
+    build:
+      context: .
+      dockerfile: services/worldbank-ingest/Dockerfile
+    volumes:
+      - datalake-data:/app/datalake
+      - ./config:/app/config:ro
+    environment:
+      - HEDGE_SOURCE=worldbank
+    networks:
+      - hedge-network
+
+  fred-ingest:
+    profiles: [ingest]
+    build:
+      context: .
+      dockerfile: services/fred-ingest/Dockerfile
+    volumes:
+      - datalake-data:/app/datalake
+      - ./config:/app/config:ro
+    environment:
+      - HEDGE_SOURCE=fred
+    networks:
+      - hedge-network
+
+  treasury-ingest:
+    profiles: [ingest]
+    build:
+      context: .
+      dockerfile: services/treasury-ingest/Dockerfile
+    volumes:
+      - datalake-data:/app/datalake
+      - ./config:/app/config:ro
+    environment:
+      - HEDGE_SOURCE=treasury
+    networks:
+      - hedge-network
+
+  binance-ingest:
+    profiles: [ingest]
+    build:
+      context: .
+      dockerfile: services/binance-ingest/Dockerfile
+    volumes:
+      - datalake-data:/app/datalake
+      - ./config:/app/config:ro
+    environment:
+      - HEDGE_SOURCE=binance
+    networks:
+      - hedge-network
+
+  coinbase-ingest:
+    profiles: [ingest]
+    build:
+      context: .
+      dockerfile: services/coinbase-ingest/Dockerfile
+    volumes:
+      - datalake-data:/app/datalake
+      - ./config:/app/config:ro
+    environment:
+      - HEDGE_SOURCE=coinbase
+    networks:
+      - hedge-network
+
+  cboe-ingest:
+    profiles: [ingest]
+    build:
+      context: .
+      dockerfile: services/cboe-ingest/Dockerfile
+    volumes:
+      - datalake-data:/app/datalake
+      - ./config:/app/config:ro
+    environment:
+      - HEDGE_SOURCE=cboe
+    networks:
+      - hedge-network
+
+  defillama-ingest:
+    profiles: [ingest]
+    build:
+      context: .
+      dockerfile: services/defillama-ingest/Dockerfile
+    volumes:
+      - datalake-data:/app/datalake
+      - ./config:/app/config:ro
+    environment:
+      - HEDGE_SOURCE=defillama
+    networks:
+      - hedge-network
+
+  sec-ingest:
+    profiles: [ingest]
+    build:
+      context: .
+      dockerfile: services/sec-ingest/Dockerfile
+    volumes:
+      - datalake-data:/app/datalake
+      - ./config:/app/config:ro
+    environment:
+      - HEDGE_SOURCE=sec
+    networks:
+      - hedge-network
+
+  oecd-ingest:
+    profiles: [ingest]
+    build:
+      context: .
+      dockerfile: services/oecd-ingest/Dockerfile
+    volumes:
+      - datalake-data:/app/datalake
+      - ./config:/app/config:ro
+    environment:
+      - HEDGE_SOURCE=oecd
+    networks:
+      - hedge-network
+
+  imf-ingest:
+    profiles: [ingest]
+    build:
+      context: .
+      dockerfile: services/imf-ingest/Dockerfile
+    volumes:
+      - datalake-data:/app/datalake
+      - ./config:/app/config:ro
+    environment:
+      - HEDGE_SOURCE=imf
+    networks:
+      - hedge-network
+
+  bls-ingest:
+    profiles: [ingest]
+    build:
+      context: .
+      dockerfile: services/bls-ingest/Dockerfile
+    volumes:
+      - datalake-data:/app/datalake
+      - ./config:/app/config:ro
+    environment:
+      - HEDGE_SOURCE=bls
+    networks:
+      - hedge-network
+
+  eia-ingest:
+    profiles: [ingest]
+    build:
+      context: .
+      dockerfile: services/eia-ingest/Dockerfile
+    volumes:
+      - datalake-data:/app/datalake
+      - ./config:/app/config:ro
+    environment:
+      - HEDGE_SOURCE=eia
+    networks:
+      - hedge-network
+
+  fdic-ingest:
+    profiles: [ingest]
+    build:
+      context: .
+      dockerfile: services/fdic-ingest/Dockerfile
+    volumes:
+      - datalake-data:/app/datalake
+      - ./config:/app/config:ro
+    environment:
+      - HEDGE_SOURCE=fdic
+    networks:
+      - hedge-network
+
+  bea-ingest:
+    profiles: [ingest]
+    build:
+      context: .
+      dockerfile: services/bea-ingest/Dockerfile
+    volumes:
+      - datalake-data:/app/datalake
+      - ./config:/app/config:ro
+    environment:
+      - HEDGE_SOURCE=bea
+    networks:
+      - hedge-network
+
+  gmd-ingest:
+    profiles: [ingest]
+    build:
+      context: .
+      dockerfile: services/gmd-ingest/Dockerfile
+    volumes:
+      - datalake-data:/app/datalake
+      - ./config:/app/config:ro
+    environment:
+      - HEDGE_SOURCE=gmd
+    networks:
+      - hedge-network
+
+  calcfi-ingest:
+    profiles: [ingest]
+    build:
+      context: .
+      dockerfile: services/calcfi-ingest/Dockerfile
+    volumes:
+      - datalake-data:/app/datalake
+      - ./config:/app/config:ro
+    environment:
+      - HEDGE_SOURCE=calcfi
+    networks:
+      - hedge-network
+
+  investing-ingest:
+    profiles: [ingest]
+    build:
+      context: .
+      dockerfile: services/investing-ingest/Dockerfile
+    volumes:
+      - datalake-data:/app/datalake
+      - ./config:/app/config:ro
+    environment:
+      - HEDGE_SOURCE=investing
+    networks:
+      - hedge-network
+
+  eastmoney-ingest:
+    profiles: [ingest]
+    build:
+      context: .
+      dockerfile: services/eastmoney-ingest/Dockerfile
+    volumes:
+      - datalake-data:/app/datalake
+      - ./config:/app/config:ro
+    environment:
+      - HEDGE_SOURCE=eastmoney
+    networks:
+      - hedge-network
+
+  sina-ingest:
+    profiles: [ingest]
+    build:
+      context: .
+      dockerfile: services/sina-ingest/Dockerfile
+    volumes:
+      - datalake-data:/app/datalake
+      - ./config:/app/config:ro
+    environment:
+      - HEDGE_SOURCE=sina
+    networks:
+      - hedge-network
+
+  tencent-ingest:
+    profiles: [ingest]
+    build:
+      context: .
+      dockerfile: services/tencent-ingest/Dockerfile
+    volumes:
+      - datalake-data:/app/datalake
+      - ./config:/app/config:ro
+    environment:
+      - HEDGE_SOURCE=tencent
+    networks:
+      - hedge-network
+
+  baostock-ingest:
+    profiles: [ingest]
+    build:
+      context: .
+      dockerfile: services/baostock-ingest/Dockerfile
+    volumes:
+      - datalake-data:/app/datalake
+      - ./config:/app/config:ro
+    environment:
+      - HEDGE_SOURCE=baostock
+    networks:
+      - hedge-network
+
+  gold-aggregator:
+    profiles: [ingest]
+    build:
+      context: .
+      dockerfile: services/gold-aggregator/Dockerfile
+    volumes:
+      - datalake-data:/app/datalake
+    networks:
+      - hedge-network
+
+volumes:
+  datalake-data:
+    driver: local
+  grafana-data:
+    driver: local
+
+networks:
+  hedge-network:
+    driver: bridge

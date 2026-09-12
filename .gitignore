@@ -103,3 +103,11 @@ datalake/data/silver/master/
 !datalake/data/bronze/nse/equity_master/equity_master.csv
 !datalake/catalog/
 !datalake/data/gold/*.csv
+
+# Docker
+docker-compose.override.yml
+
+# Environment
+.env
+.env.local
+.env.production
