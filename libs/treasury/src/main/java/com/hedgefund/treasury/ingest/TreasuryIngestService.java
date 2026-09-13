@@ -79,6 +79,8 @@ public class TreasuryIngestService {
     }
 
     private String buildUrl(String key) {
-        return cfg.baseUrl() + "/resource-center/data-chart-center/interest-rates/daily-treasury-rates.csv/2024/all?type=daily_treasury_yield_curve";
+        int year = Integer.parseInt(key.replace("treasury_", "").replace("treasury-", "").replaceAll("[^0-9]", ""));
+        if (year < 2016 || year > 2026) year = 2024;
+        return cfg.baseUrl() + "/resource-center/data-chart-center/interest-rates/daily-treasury-rates.csv/" + year + "/all?type=daily_treasury_yield_curve";
     }
 }

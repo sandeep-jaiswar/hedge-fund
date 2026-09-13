@@ -80,6 +80,6 @@ public class BeaIngestService {
 
     private String buildUrl(String key) {
         String base = cfg.baseUrl();
-        return "https://apps.bea.gov/api/data?UserID=demo&method=GetData&DataSetName=NIPA&TableName=T10101&Frequency=Q&Year=2023";
+        return "https://apps.bea.gov/api/data?UserID=demo&method=GetData&DataSetName=NIPA&TableName=T10101&Frequency=Q&Year=2016,2017,2018,2019,2020,2021,2022,2023,2024,2025,2026";
     }
 }

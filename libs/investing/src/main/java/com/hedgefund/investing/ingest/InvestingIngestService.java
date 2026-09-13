@@ -80,6 +80,6 @@ public class InvestingIngestService {
 
     private String buildUrl(String key) {
         String base = cfg.baseUrl();
-        return "https://query1.finance.yahoo.com/v8/finance/chart/SPY?interval=1d&range=1mo";
+        return "https://query1.finance.yahoo.com/v8/finance/chart/" + key + "?interval=1d&range=10y";
     }
 }

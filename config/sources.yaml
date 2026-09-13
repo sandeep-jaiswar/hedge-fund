@@ -20,7 +20,7 @@ sources:
     baseUrl: https://query1.finance.yahoo.com
     symbols: [AAPL, MSFT, GOOGL, AMZN, META, NVDA, TSLA, JPM, V, JNJ]
     interval: 1d
-    range: 1mo
+    range: 10y
     concurrency: 4
     retry:
       maxAttempts: 3
@@ -38,7 +38,7 @@ sources:
     baseUrl: https://api.worldbank.org/v2
     indicators: [NY.GDP.MKTP.CD, SP.POP.TOTL, FP.CPI.TOTL.ZG, IR.LND.TEMP.ZS]
     countries: [USA, CHN, JPN, DEU, GBR, IND, BRA, CAN, AUS, KOR]
-    date: 2020:2026
+    date: 2016:2026
     concurrency: 4
     retry:
       maxAttempts: 3
@@ -88,7 +88,7 @@ sources:
     baseUrl: https://api.binance.com/api/v3
     symbols: [BTCUSDT, ETHUSDT, BNBUSDT, SOLUSDT, ADAUSDT, XRPUSDT, DOTUSDT, DOGEUSDT]
     interval: 1d
-    limit: 100
+    limit: 3650
     concurrency: 4
     retry:
       maxAttempts: 3
@@ -123,7 +123,7 @@ sources:
     baseUrl: https://cdn.cboe.com/api/global/delayed_quotes/charts
     symbols: [^VIX]
     interval: 1d
-    range: 1mo
+    range: 10y
     concurrency: 2
     retry:
       maxAttempts: 3
@@ -300,7 +300,7 @@ sources:
 
   investing:
     baseUrl: https://api.investing.com
-    symbols: [^GSPC, ^DJI, ^IXIC, ^FTSE, ^N225]
+    symbols: [^GSPC, ^DJI, ^IXIC, ^FTSE, ^N225, ^NSEI, ^GDAXI]
     concurrency: 2
     retry:
       maxAttempts: 3

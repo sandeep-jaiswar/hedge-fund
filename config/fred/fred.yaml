@@ -1,6 +1,7 @@
 fred:
   baseUrl: "https://fred.stlouisfed.org"
   series: ["DGS10", "DFF", "UNRATE", "CPIAUCSL", "T10Y2Y"]
+  limit: 3650
   concurrency: 3
   retry: {maxAttempts: 3, backoffMs: 800, maxBackoffMs: 8000}
   rateLimit: {qps: 2, burst: 4}

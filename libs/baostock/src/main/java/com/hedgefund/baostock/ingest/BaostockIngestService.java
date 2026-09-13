@@ -54,6 +54,6 @@ public class BaostockIngestService {
     }
     private String buildUrl(String key){
         String base=cfg.baseUrl();
-        return base+"/api/query/history_k_data_json?code=sh.600000&fields=date,code,open,high,low,close,volume&start=2023-01-01&end=2023-01-10";
+        return base+"/api/query/history_k_data_json?code="+key+"&fields=date,code,open,high,low,close,volume&start=2016-01-01&end=2026-12-31";
     }
 }

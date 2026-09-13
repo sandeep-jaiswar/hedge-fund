@@ -80,6 +80,6 @@ public class ImfIngestService {
 
     private String buildUrl(String key) {
         String base = cfg.baseUrl();
-        return "https://www.imf.org/external/datamapper/api/NGDP_RPCH?periods=2023";
+        return "https://www.imf.org/external/datamapper/api/NGDP_RPCH?periods=2016,2017,2018,2019,2020,2021,2022,2023,2024,2025,2026";
     }
 }
