@@ -8,6 +8,8 @@ import com.hedgefund.sina.config.SinaConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Map;
+
 public class SinaClient extends AbstractHttpClient {
 
     private static final Logger log = LoggerFactory.getLogger(SinaClient.class);
@@ -20,6 +22,11 @@ public class SinaClient extends AbstractHttpClient {
         this.sinaConfig = config;
         this.om = new ObjectMapper();
         om.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    }
+
+    @Override
+    protected Map<String, String> defaultHeaders() {
+        return Map.of("Referer", "https://finance.sina.com.cn");
     }
 
     public String fetchRaw(String url) throws Exception {

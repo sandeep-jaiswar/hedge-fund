@@ -10,6 +10,8 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
+import java.util.Collections;
+import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -32,6 +34,11 @@ public abstract class AbstractHttpClient {
         this.http = SHARED;
     }
 
+    /** Override to add source-specific headers (e.g., Referer for Sina). */
+    protected Map<String, String> defaultHeaders() {
+        return Collections.emptyMap();
+    }
+
     protected synchronized void throttle() throws InterruptedException {
         double qps = config.rateLimit().qps();
         long minGapMs = (long) (1000 / qps);
@@ -51,12 +58,15 @@ public abstract class AbstractHttpClient {
             attempts++;
             try {
                 throttle();
-                HttpRequest request = HttpRequest.newBuilder(URI.create(url))
+                HttpRequest.Builder builder = HttpRequest.newBuilder(URI.create(url))
                     .timeout(Duration.ofSeconds(30))
                     .GET()
-                    .header("User-Agent", "Mozilla/5.0")
-                    .header("Accept", "application/json")
-                    .build();
+                    .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36")
+                    .header("Accept", "text/html,application/json,*/*");
+                for (Map.Entry<String, String> h : defaultHeaders().entrySet()) {
+                    builder.header(h.getKey(), h.getValue());
+                }
+                HttpRequest request = builder.build();
                 HttpResponse<String> resp = http.send(request, HttpResponse.BodyHandlers.ofString());
 
                 if (resp.statusCode() == 429 || resp.statusCode() >= 500) {

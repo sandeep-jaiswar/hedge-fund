@@ -41,6 +41,6 @@ public class SinaIngestService extends AbstractIngestService {
 
     private String buildUrl(String key) {
         String base = cfg.baseUrl();
-        return "https://hq.sinajs.cn/list=sh600000";
+        return base + "/list=" + key;
     }
 }

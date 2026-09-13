@@ -222,7 +222,6 @@ public class Main {
         if (Files.exists(centralizedPath)) {
             HedgeConfig hedgeConfig = HedgeConfig.load(centralizedPath);
             ConfigValidator.validateAndFailFast(hedgeConfig);
-            return defaults.get();
         }
         Path cfgFile = Path.of(cfgPath);
         if (!Files.exists(cfgFile)) { Path alt = root.getParent().resolve(cfgPath); if (Files.exists(alt)) cfgFile = alt; }

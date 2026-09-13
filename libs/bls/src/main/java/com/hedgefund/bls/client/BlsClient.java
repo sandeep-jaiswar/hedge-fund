@@ -28,39 +28,28 @@ public class BlsClient extends AbstractHttpClient {
 
     /**
      * Fetch BLS data using the public API v2 with POST request.
-     * Requires registration for a free API key (500 requests/day).
-     * Falls back to CSV download if API key is not provided.
+     * Free tier: 25 requests/day without API key.
      */
     public String fetchBlsSeries(List<String> seriesIds) throws Exception {
         String apiKey = cfg.apiKey();
-        if (apiKey != null && !apiKey.isEmpty()) {
-            return fetchViaApi(seriesIds, apiKey);
-        } else {
-            return fetchViaCsv(seriesIds);
-        }
-    }
-
-    private String fetchViaApi(List<String> seriesIds, String apiKey) throws Exception {
         String apiUrl = "https://api.bls.gov/publicAPI/v2/timeseries/data/";
-        String seriesList = String.join(",", seriesIds);
+        String seriesList = String.join("\",\"", seriesIds);
         String requestBody = String.format(
-            "{\"seriesid\": [\"%s\"], \"startyear\": \"2020\", \"endyear\": \"2024\"}",
-            seriesList.replace(",", "\",\"")
+            "{\"seriesid\": [\"%s\"], \"startyear\": \"2020\", \"endyear\": \"2025\"}",
+            seriesList
         );
+        String url = (apiKey != null && !apiKey.isEmpty())
+            ? apiUrl + "?registrationkey=" + apiKey
+            : apiUrl;
 
         HttpRequest request = HttpRequest.newBuilder()
-            .uri(URI.create(apiUrl + "?registrationkey=" + apiKey))
+            .uri(URI.create(url))
             .header("Content-Type", "application/json")
             .POST(HttpRequest.BodyPublishers.ofString(requestBody))
             .build();
 
         HttpResponse<String> response = http.send(request, HttpResponse.BodyHandlers.ofString());
         return response.body();
-    }
-
-    private String fetchViaCsv(List<String> seriesIds) throws Exception {
-        // Fallback to CSV download (blocked by WAF, but keeps existing behavior)
-        return fetchWithRetry("https://download.bls.gov/pub/time.series/ap/ap.data.0.Current");
     }
 
     public JsonNode fetchJson(String url) throws Exception {
