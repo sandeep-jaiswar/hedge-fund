@@ -9,17 +9,30 @@ import java.nio.file.Path;
 import java.time.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 /**
  * Wires ingestion-ui into monorepo datalake + Floci: after each ingest, best-effort sync that source's
  * bronze/silver to s3://hedge-* if Floci is reachable at http://localhost:4566/_floci/health.
  * Falls back gracefully (no Docker required).
+ * 
+ * Scheduled sync: runs every hour (configurable via cron) to keep S3/Glue in sync.
  */
 @Service
 public class FlociSyncService {
     private static final Logger log = LoggerFactory.getLogger(FlociSyncService.class);
     private final HttpClient http = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(2)).build();
+
+    /**
+     * Scheduled sync: runs every hour to keep S3/Glue in sync with local datalake.
+     * Only syncs if Floci is running and accessible.
+     */
+    @Scheduled(cron = "0 0 * * * *")  // Every hour at minute 0
+    public void scheduledSync() {
+        log.info("Starting scheduled Floci sync...");
+        syncAfterIngest("all");
+    }
 
     public boolean isFlociRunning() {
         try {
