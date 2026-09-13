@@ -2,8 +2,6 @@ package com.hedgefund.treasury.ingest;
 
 import com.hedgefund.treasury.client.TreasuryClient;
 import com.hedgefund.treasury.config.TreasuryConfig;
-import com.hedgefund.treasury.store.TreasuryBronzeWriter;
-import com.hedgefund.treasury.store.TreasurySilverTransformer;
 import java.nio.file.Path;
 import java.util.List;
 import com.hedgefund.ingest.service.AbstractIngestService;
@@ -13,15 +11,11 @@ public class TreasuryIngestService extends AbstractIngestService {
 
     private final TreasuryConfig cfg;
     private final TreasuryClient client;
-    private final TreasuryBronzeWriter bronzeWriter;
-    private final TreasurySilverTransformer silverTransformer;
 
     public TreasuryIngestService(TreasuryConfig cfg, Path datalakeRoot) {
         super(cfg.ingestConfig(), datalakeRoot);
         this.cfg = cfg;
         this.client = new TreasuryClient(cfg);
-        this.bronzeWriter = new TreasuryBronzeWriter(bronzeRoot);
-        this.silverTransformer = new TreasurySilverTransformer();
     }
 
     @Override
@@ -31,12 +25,12 @@ public class TreasuryIngestService extends AbstractIngestService {
 
     @Override
     protected void ingestSymbol(String symbol) throws Exception {
-        bronzeWriter.write(symbol, client.fetchRaw(buildUrl(symbol)));
+        bronze.writeRawJson(symbol, client.fetchRaw(buildUrl(symbol)));
     }
 
     @Override
     protected void transformSilver() throws Exception {
-        silverTransformer.transform(bronzeRoot, silverRoot, "treasury.csv");
+        silver.transformGeneric(bronzeRoot, silverRoot, "treasury.csv");
     }
 
     private String buildUrl(String key) {

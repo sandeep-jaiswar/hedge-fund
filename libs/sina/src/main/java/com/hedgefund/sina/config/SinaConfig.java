@@ -55,9 +55,6 @@ public record SinaConfig(
     }
 
     public List<String> effectiveKeys() {
-        if (!series.isEmpty() && !series.get(0).equals("sina")) return series;
-        if (!tickers.isEmpty() && !tickers.get(0).equals("sina")) return tickers;
-        if (!protocols.isEmpty() && !protocols.get(0).equals("sina")) return protocols;
-        return symbols;
+        return ingestConfig.resolveSymbols(symbols);
     }
 }

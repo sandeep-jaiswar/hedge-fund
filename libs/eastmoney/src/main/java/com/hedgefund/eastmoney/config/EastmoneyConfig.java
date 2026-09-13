@@ -55,9 +55,6 @@ public record EastmoneyConfig(
     }
 
     public List<String> effectiveKeys() {
-        if (!series.isEmpty() && !series.get(0).equals("eastmoney")) return series;
-        if (!tickers.isEmpty() && !tickers.get(0).equals("eastmoney")) return tickers;
-        if (!protocols.isEmpty() && !protocols.get(0).equals("eastmoney")) return protocols;
-        return symbols;
+        return ingestConfig.resolveSymbols(symbols);
     }
 }

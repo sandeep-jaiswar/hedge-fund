@@ -32,6 +32,6 @@ public record BlsConfig(String baseUrl, String apiKey, List<String> series, Inge
     }
 
     public List<String> effectiveKeys() {
-        return series != null && !series.isEmpty() ? series : ingestConfig().symbols();
+        return ingestConfig.resolveSymbols(series);
     }
 }

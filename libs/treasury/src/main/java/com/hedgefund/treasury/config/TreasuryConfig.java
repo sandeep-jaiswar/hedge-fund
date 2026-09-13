@@ -41,6 +41,6 @@ public record TreasuryConfig(
     }
 
     public List<String> effectiveKeys() {
-        return endpoints != null && !endpoints.isEmpty() ? endpoints : ingestConfig().symbols();
+        return ingestConfig.resolveSymbols(endpoints);
     }
 }

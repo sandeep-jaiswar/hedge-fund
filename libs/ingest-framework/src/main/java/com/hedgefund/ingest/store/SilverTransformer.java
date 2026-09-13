@@ -1,9 +1,13 @@
 package com.hedgefund.ingest.store;
 
+import com.hedgefund.common.FileUtils;
+import com.hedgefund.common.Json;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
@@ -31,21 +35,19 @@ public class SilverTransformer {
         csv.append(csvHeader).append("\n");
 
         if (!Files.exists(bronzeRoot)) {
-            atomicWrite(out, csv.toString());
+            FileUtils.atomicWrite(out, csv.toString());
             return out;
         }
-
-        com.fasterxml.jackson.databind.ObjectMapper om = new com.fasterxml.jackson.databind.ObjectMapper();
-        om.configure(com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
         Map<String, T> dedup = new LinkedHashMap<>();
         Files.walk(bronzeRoot)
             .filter(p -> p.getFileName().toString().equals("data.ndjson"))
             .forEach(p -> {
-                try {
-                    for (String line : Files.readAllLines(p)) {
+                try (BufferedReader br = new BufferedReader(new InputStreamReader(Files.newInputStream(p)))) {
+                    String line;
+                    while ((line = br.readLine()) != null) {
                         if (line.isBlank()) continue;
-                        T record = om.readValue(line, recordType);
+                        T record = Json.shared().readValue(line, recordType);
                         String key = dedupKey.apply(null, record);
                         dedup.put(key, record);
                     }
@@ -58,7 +60,7 @@ public class SilverTransformer {
             csv.append(csvFormatter.apply(record)).append("\n");
         }
 
-        atomicWrite(out, csv.toString());
+        FileUtils.atomicWrite(out, csv.toString());
         log.info("Silver wrote {} rows to {}", dedup.size(), out);
         return out;
     }
@@ -96,14 +98,8 @@ public class SilverTransformer {
             }
         }
 
-        atomicWrite(out, csv.toString());
+        FileUtils.atomicWrite(out, csv.toString());
         log.info("Silver generic wrote {}", out);
         return out;
-    }
-
-    private void atomicWrite(Path target, String content) throws IOException {
-        Path tmp = target.resolveSibling(target.getFileName() + ".tmp");
-        Files.writeString(tmp, content);
-        Files.move(tmp, target, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
     }
 }

@@ -1,0 +1,3 @@
+2026-09-12 11:32:21,864 [Test worker] INFO  c.hedgefund.yahoo.client.YahooClient - Fetched 2 bars for AAPL
+2026-09-12 11:32:21,919 [Test worker] INFO  c.hedgefund.yahoo.client.YahooClient - Fetched 2 bars for AAPL
+2026-09-12 11:32:21,950 [Test worker] INFO  c.hedgefund.yahoo.client.YahooClient - Fetched 2 bars for AAPL

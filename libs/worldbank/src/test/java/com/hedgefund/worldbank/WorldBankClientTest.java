@@ -37,8 +37,8 @@ class WorldBankClientTest {
                 .willReturn(aResponse().withHeader("Content-Type","application/json").withBody(json)));
 
         WorldBankConfig cfg = new WorldBankConfig(wm.baseUrl()+"/v2", List.of("NY.GDP.MKTP.CD"), List.of("all"), "2022", null, null, 3, 2, 20,20,
-                new WorldBankConfig.Retry(2,10,100), new WorldBankConfig.RateLimit(100,10),
-                new WorldBankConfig.Paths("data/bronze/worldbank","data/silver/worldbank","catalog/glue.json"), false, 0, "2",
+                new IngestConfig.Retry(2,10,100), new IngestConfig.RateLimit(100,10),
+                new IngestConfig.Paths("data/bronze/worldbank","data/silver/worldbank","catalog/glue.json"), false, 0, "2",
                 IngestConfig.defaults("worldbank"));
         var client = new WorldBankClient(cfg);
         var res = client.fetchPage(List.of("NY.GDP.MKTP.CD"), List.of("all"), "2022",1);
@@ -62,8 +62,8 @@ class WorldBankClientTest {
         wm.stubFor(get(urlPathEqualTo("/v2/indicator")).withQueryParam("page", equalTo("2")).willReturn(aResponse().withBody(p2)));
 
         WorldBankConfig cfg = new WorldBankConfig(wm.baseUrl()+"/v2", List.of(), List.of("all"), "2020:2022", null,null,1000,2,20,20,
-                new WorldBankConfig.Retry(2,10,100), new WorldBankConfig.RateLimit(100,10),
-                new WorldBankConfig.Paths("data/bronze/worldbank","data/silver/worldbank","catalog/glue.json"), true,0, "2",
+                new IngestConfig.Retry(2,10,100), new IngestConfig.RateLimit(100,10),
+                new IngestConfig.Paths("data/bronze/worldbank","data/silver/worldbank","catalog/glue.json"), true,0, "2",
                 IngestConfig.defaults("worldbank"));
         var client = new WorldBankClient(cfg);
         var codes = client.listAllIndicatorCodes();

@@ -9,6 +9,7 @@ application {
 
 tasks.named<JavaExec>("run") {
     workingDir = rootProject.projectDir
+    maxHeapSize = "2g"
 }
 
 dependencies {

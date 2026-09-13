@@ -1,2 +1,10 @@
-2026-09-12 11:54:05,849 [Test worker] INFO  c.h.worldbank.client.WorldBankClient - Listed indicators page 1/2 total 2
-2026-09-12 11:54:06,349 [Test worker] INFO  c.h.worldbank.client.WorldBankClient - Listed indicators page 2/2 total 3
+2026-09-13 11:13:14,147 [Test worker] INFO  c.h.worldbank.client.WorldBankClient - Listed indicators page 1/2 total 2
+2026-09-13 11:13:14,645 [Test worker] INFO  c.h.worldbank.client.WorldBankClient - Listed indicators page 2/2 total 3
+2026-09-13 22:45:57,875 [Test worker] INFO  c.h.worldbank.client.WorldBankClient - Listed indicators page 1/2 total 2
+2026-09-13 22:45:58,369 [Test worker] INFO  c.h.worldbank.client.WorldBankClient - Listed indicators page 2/2 total 3
+2026-09-13 22:49:06,442 [Test worker] INFO  c.h.worldbank.client.WorldBankClient - Listed indicators page 1/2 total 2
+2026-09-13 22:49:06,942 [Test worker] INFO  c.h.worldbank.client.WorldBankClient - Listed indicators page 2/2 total 3
+2026-09-13 23:21:41,443 [Test worker] INFO  c.h.worldbank.client.WorldBankClient - Listed indicators page 1/2 total 2
+2026-09-13 23:21:41,940 [Test worker] INFO  c.h.worldbank.client.WorldBankClient - Listed indicators page 2/2 total 3
+2026-09-13 23:33:37,541 [Test worker] INFO  c.h.worldbank.client.WorldBankClient - Listed indicators page 1/2 total 2
+2026-09-13 23:33:38,038 [Test worker] INFO  c.h.worldbank.client.WorldBankClient - Listed indicators page 2/2 total 3

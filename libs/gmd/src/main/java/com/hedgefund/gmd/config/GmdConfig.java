@@ -65,18 +65,7 @@ public record GmdConfig(
     }
 
     public List<String> effectiveKeys() {
-        if (series != null && !series.isEmpty() && !series.get(0).equals("gmd")) return series;
-        if (tickers != null && !tickers.isEmpty() && !tickers.get(0).equals("gmd")) return tickers;
-        if (protocols != null && !protocols.isEmpty() && !protocols.get(0).equals("gmd")) return protocols;
-        return ingestConfig().symbols();
+        return ingestConfig.resolveSymbols(series);
     }
 
-    public Retry retry() { return new Retry(ingestConfig().retry().maxAttempts(), ingestConfig().retry().backoffMs(), ingestConfig().retry().maxBackoffMs()); }
-    public RateLimit rateLimit() { return new RateLimit(ingestConfig().rateLimit().qps(), ingestConfig().rateLimit().burst()); }
-    public Paths paths() { return new Paths(ingestConfig().paths().bronze(), ingestConfig().paths().silver(), ingestConfig().paths().catalog()); }
-    public int concurrency() { return ingestConfig().concurrency(); }
-
-    public record Retry(int maxAttempts, long backoffMs, long maxBackoffMs) {}
-    public record RateLimit(double qps, int burst) {}
-    public record Paths(String bronze, String silver, String catalog) {}
 }

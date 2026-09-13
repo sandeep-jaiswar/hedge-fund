@@ -46,6 +46,6 @@ public record BinanceConfig(
     }
 
     public List<String> effectiveKeys() {
-        return symbols != null && !symbols.isEmpty() ? symbols : ingestConfig().symbols();
+        return ingestConfig.resolveSymbols(symbols);
     }
 }

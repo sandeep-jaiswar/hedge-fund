@@ -1,3 +1,1694 @@
 2026-09-13 09:59:19,682 [main] INFO  c.hedgefund.config.ConfigValidator - Config validation passed for environment='development', sources=22
 2026-09-13 09:59:21,668 [main] INFO  c.hedgefund.config.ConfigValidator - Config validation passed for environment='development', sources=22
 2026-09-13 09:59:38,538 [main] INFO  c.h.ingest.config.IngestConfigLoader - Loaded config for source 'fred' from /media/sandeep/DataDrive2/hedge-fund/config/fred/fred.yaml
+2026-09-13 11:17:14,910 [main] INFO  c.hedgefund.config.ConfigValidator - Config validation passed for environment='development', sources=22
+2026-09-13 11:17:17,393 [main] INFO  c.hedgefund.config.ConfigValidator - Config validation passed for environment='development', sources=22
+2026-09-13 11:17:19,669 [main] INFO  c.hedgefund.config.ConfigValidator - Config validation passed for environment='development', sources=22
+2026-09-13 11:17:21,852 [main] INFO  c.hedgefund.config.ConfigValidator - Config validation passed for environment='development', sources=22
+2026-09-13 11:17:24,112 [main] INFO  c.hedgefund.config.ConfigValidator - Config validation passed for environment='development', sources=22
+2026-09-13 11:17:26,285 [main] INFO  c.hedgefund.config.ConfigValidator - Config validation passed for environment='development', sources=22
+2026-09-13 11:17:28,628 [main] INFO  c.hedgefund.config.ConfigValidator - Config validation passed for environment='development', sources=22
+2026-09-13 11:17:30,927 [main] INFO  c.hedgefund.config.ConfigValidator - Config validation passed for environment='development', sources=22
+2026-09-13 11:17:33,120 [main] INFO  c.hedgefund.config.ConfigValidator - Config validation passed for environment='development', sources=22
+2026-09-13 11:17:35,282 [main] INFO  c.hedgefund.config.ConfigValidator - Config validation passed for environment='development', sources=22
+2026-09-13 11:17:37,524 [main] INFO  c.hedgefund.config.ConfigValidator - Config validation passed for environment='development', sources=22
+2026-09-13 11:17:39,558 [main] INFO  c.hedgefund.config.ConfigValidator - Config validation passed for environment='development', sources=22
+2026-09-13 11:17:41,618 [main] INFO  c.hedgefund.config.ConfigValidator - Config validation passed for environment='development', sources=22
+2026-09-13 11:17:43,830 [main] INFO  c.hedgefund.config.ConfigValidator - Config validation passed for environment='development', sources=22
+2026-09-13 11:17:45,946 [main] INFO  c.hedgefund.config.ConfigValidator - Config validation passed for environment='development', sources=22
+2026-09-13 11:17:48,040 [main] INFO  c.hedgefund.config.ConfigValidator - Config validation passed for environment='development', sources=22
+2026-09-13 11:17:50,141 [main] INFO  c.hedgefund.config.ConfigValidator - Config validation passed for environment='development', sources=22
+2026-09-13 11:17:52,186 [main] INFO  c.hedgefund.config.ConfigValidator - Config validation passed for environment='development', sources=22
+2026-09-13 11:17:54,314 [main] INFO  c.hedgefund.config.ConfigValidator - Config validation passed for environment='development', sources=22
+2026-09-13 11:17:56,382 [main] INFO  c.hedgefund.config.ConfigValidator - Config validation passed for environment='development', sources=22
+2026-09-13 11:17:58,470 [main] INFO  c.hedgefund.config.ConfigValidator - Config validation passed for environment='development', sources=22
+2026-09-13 11:18:00,675 [main] INFO  c.hedgefund.config.ConfigValidator - Config validation passed for environment='development', sources=22
+2026-09-13 11:18:48,099 [main] INFO  c.hedgefund.config.ConfigValidator - Config validation passed for environment='development', sources=22
+2026-09-13 11:18:48,473 [main] INFO  c.h.i.service.AbstractIngestService - Ingest start: source=fred symbols=1
+2026-09-13 11:18:49,326 [virtual-28] WARN  c.h.ingest.client.AbstractHttpClient - Fetch failed 1/3 https://fred.stlouisfed.org/api/fred/series/observations?series_id=DGS10&limit=30 -> retry 800ms java.io.IOException: Received RST_STREAM: Internal error
+2026-09-13 11:18:50,418 [virtual-28] WARN  c.h.ingest.client.AbstractHttpClient - Fetch failed 2/3 https://fred.stlouisfed.org/api/fred/series/observations?series_id=DGS10&limit=30 -> retry 1600ms java.io.IOException: Received RST_STREAM: Internal error
+2026-09-13 11:18:52,172 [virtual-28] ERROR c.h.i.service.AbstractIngestService - Failed: fred [DGS10]
+java.io.IOException: Received RST_STREAM: Internal error
+	at java.net.http/jdk.internal.net.http.HttpClientImpl.send(HttpClientImpl.java:970)
+	at java.net.http/jdk.internal.net.http.HttpClientFacade.send(HttpClientFacade.java:133)
+	at com.hedgefund.ingest.client.AbstractHttpClient.fetchWithRetry(AbstractHttpClient.java:60)
+	at com.hedgefund.fred.client.FredClient.fetchRaw(FredClient.java:26)
+	at com.hedgefund.fred.ingest.FredIngestService.ingestSymbol(FredIngestService.java:34)
+	at com.hedgefund.ingest.service.AbstractIngestService.lambda$run$0(AbstractIngestService.java:52)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:572)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at java.base/java.lang.VirtualThread.run(VirtualThread.java:329)
+Caused by: java.io.IOException: Received RST_STREAM: Internal error
+	at java.net.http/jdk.internal.net.http.Stream.handleReset(Stream.java:759)
+	at java.net.http/jdk.internal.net.http.Stream.incoming_reset(Stream.java:713)
+	at java.net.http/jdk.internal.net.http.Stream.otherFrame(Stream.java:577)
+	at java.net.http/jdk.internal.net.http.Stream.incoming(Stream.java:570)
+	at java.net.http/jdk.internal.net.http.Http2Connection.processFrame(Http2Connection.java:1055)
+	at java.net.http/jdk.internal.net.http.frame.FramesDecoder.decode(FramesDecoder.java:155)
+	at java.net.http/jdk.internal.net.http.Http2Connection$FramesController.processReceivedData(Http2Connection.java:311)
+	at java.net.http/jdk.internal.net.http.Http2Connection.asyncReceive(Http2Connection.java:863)
+	at java.net.http/jdk.internal.net.http.Http2Connection$Http2TubeSubscriber.processQueue(Http2Connection.java:1822)
+	at java.net.http/jdk.internal.net.http.common.SequentialScheduler$LockingRestartableTask.run(SequentialScheduler.java:182)
+	at java.net.http/jdk.internal.net.http.common.SequentialScheduler$CompleteRestartableTask.run(SequentialScheduler.java:149)
+	at java.net.http/jdk.internal.net.http.common.SequentialScheduler$SchedulableTask.run(SequentialScheduler.java:207)
+	at java.net.http/jdk.internal.net.http.common.SequentialScheduler.runOrSchedule(SequentialScheduler.java:280)
+	at java.net.http/jdk.internal.net.http.common.SequentialScheduler.runOrSchedule(SequentialScheduler.java:233)
+	at java.net.http/jdk.internal.net.http.Http2Connection$Http2TubeSubscriber.runOrSchedule(Http2Connection.java:1839)
+	at java.net.http/jdk.internal.net.http.Http2Connection$Http2TubeSubscriber.onNext(Http2Connection.java:1866)
+	at java.net.http/jdk.internal.net.http.Http2Connection$Http2TubeSubscriber.onNext(Http2Connection.java:1800)
+	at java.net.http/jdk.internal.net.http.common.SSLTube$DelegateWrapper.onNext(SSLTube.java:210)
+	at java.net.http/jdk.internal.net.http.common.SSLTube$SSLSubscriberWrapper.onNext(SSLTube.java:492)
+	at java.net.http/jdk.internal.net.http.common.SSLTube$SSLSubscriberWrapper.onNext(SSLTube.java:295)
+	at java.net.http/jdk.internal.net.http.common.SubscriberWrapper$DownstreamPusher.run1(SubscriberWrapper.java:316)
+	at java.net.http/jdk.internal.net.http.common.SubscriberWrapper$DownstreamPusher.run(SubscriberWrapper.java:259)
+	at java.net.http/jdk.internal.net.http.common.SequentialScheduler$LockingRestartableTask.run(SequentialScheduler.java:182)
+	at java.net.http/jdk.internal.net.http.common.SequentialScheduler$CompleteRestartableTask.run(SequentialScheduler.java:149)
+	at java.net.http/jdk.internal.net.http.common.SequentialScheduler$SchedulableTask.run(SequentialScheduler.java:207)
+	at java.net.http/jdk.internal.net.http.common.SequentialScheduler.runOrSchedule(SequentialScheduler.java:280)
+	at java.net.http/jdk.internal.net.http.common.SequentialScheduler.runOrSchedule(SequentialScheduler.java:233)
+	at java.net.http/jdk.internal.net.http.common.SubscriberWrapper.outgoing(SubscriberWrapper.java:232)
+	at java.net.http/jdk.internal.net.http.common.SubscriberWrapper.outgoing(SubscriberWrapper.java:198)
+	at java.net.http/jdk.internal.net.http.common.SSLFlowDelegate$Reader.processData(SSLFlowDelegate.java:470)
+	at java.net.http/jdk.internal.net.http.common.SSLFlowDelegate$Reader$ReaderDownstreamPusher.run(SSLFlowDelegate.java:283)
+	at java.net.http/jdk.internal.net.http.common.SequentialScheduler$LockingRestartableTask.run(SequentialScheduler.java:182)
+	at java.net.http/jdk.internal.net.http.common.SequentialScheduler$CompleteRestartableTask.run(SequentialScheduler.java:149)
+	at java.net.http/jdk.internal.net.http.common.SequentialScheduler$SchedulableTask.run(SequentialScheduler.java:207)
+	at java.base/java.util.concurrent.ThreadPerTaskExecutor$TaskRunner.run(ThreadPerTaskExecutor.java:314)
+	... 1 common frames omitted
+2026-09-13 11:19:03,348 [main] INFO  c.hedgefund.config.ConfigValidator - Config validation passed for environment='development', sources=22
+2026-09-13 11:19:03,724 [main] INFO  c.h.i.service.AbstractIngestService - Ingest start: source=fred symbols=1
+2026-09-13 11:19:04,293 [virtual-28] WARN  c.h.ingest.client.AbstractHttpClient - Fetch failed 1/3 https://fred.stlouisfed.org/api/fred/series/observations?series_id=DGS10&limit=30 -> retry 800ms java.io.IOException: Received RST_STREAM: Internal error
+2026-09-13 11:19:05,367 [virtual-28] WARN  c.h.ingest.client.AbstractHttpClient - Fetch failed 2/3 https://fred.stlouisfed.org/api/fred/series/observations?series_id=DGS10&limit=30 -> retry 1600ms java.io.IOException: Received RST_STREAM: Internal error
+2026-09-13 11:19:07,208 [virtual-28] ERROR c.h.i.service.AbstractIngestService - Failed: fred [DGS10]
+java.io.IOException: Received RST_STREAM: Internal error
+	at java.net.http/jdk.internal.net.http.HttpClientImpl.send(HttpClientImpl.java:970)
+	at java.net.http/jdk.internal.net.http.HttpClientFacade.send(HttpClientFacade.java:133)
+	at com.hedgefund.ingest.client.AbstractHttpClient.fetchWithRetry(AbstractHttpClient.java:60)
+	at com.hedgefund.fred.client.FredClient.fetchRaw(FredClient.java:26)
+	at com.hedgefund.fred.ingest.FredIngestService.ingestSymbol(FredIngestService.java:34)
+	at com.hedgefund.ingest.service.AbstractIngestService.lambda$run$0(AbstractIngestService.java:52)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:572)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at java.base/java.lang.VirtualThread.run(VirtualThread.java:329)
+Caused by: java.io.IOException: Received RST_STREAM: Internal error
+	at java.net.http/jdk.internal.net.http.Stream.handleReset(Stream.java:759)
+	at java.net.http/jdk.internal.net.http.Stream.incoming_reset(Stream.java:713)
+	at java.net.http/jdk.internal.net.http.Stream.otherFrame(Stream.java:577)
+	at java.net.http/jdk.internal.net.http.Stream.incoming(Stream.java:570)
+	at java.net.http/jdk.internal.net.http.Http2Connection.processFrame(Http2Connection.java:1055)
+	at java.net.http/jdk.internal.net.http.frame.FramesDecoder.decode(FramesDecoder.java:155)
+	at java.net.http/jdk.internal.net.http.Http2Connection$FramesController.processReceivedData(Http2Connection.java:311)
+	at java.net.http/jdk.internal.net.http.Http2Connection.asyncReceive(Http2Connection.java:863)
+	at java.net.http/jdk.internal.net.http.Http2Connection$Http2TubeSubscriber.processQueue(Http2Connection.java:1822)
+	at java.net.http/jdk.internal.net.http.common.SequentialScheduler$LockingRestartableTask.run(SequentialScheduler.java:182)
+	at java.net.http/jdk.internal.net.http.common.SequentialScheduler$CompleteRestartableTask.run(SequentialScheduler.java:149)
+	at java.net.http/jdk.internal.net.http.common.SequentialScheduler$SchedulableTask.run(SequentialScheduler.java:207)
+	at java.net.http/jdk.internal.net.http.common.SequentialScheduler.runOrSchedule(SequentialScheduler.java:280)
+	at java.net.http/jdk.internal.net.http.common.SequentialScheduler.runOrSchedule(SequentialScheduler.java:233)
+	at java.net.http/jdk.internal.net.http.Http2Connection$Http2TubeSubscriber.runOrSchedule(Http2Connection.java:1839)
+	at java.net.http/jdk.internal.net.http.Http2Connection$Http2TubeSubscriber.onNext(Http2Connection.java:1866)
+	at java.net.http/jdk.internal.net.http.Http2Connection$Http2TubeSubscriber.onNext(Http2Connection.java:1800)
+	at java.net.http/jdk.internal.net.http.common.SSLTube$DelegateWrapper.onNext(SSLTube.java:210)
+	at java.net.http/jdk.internal.net.http.common.SSLTube$SSLSubscriberWrapper.onNext(SSLTube.java:492)
+	at java.net.http/jdk.internal.net.http.common.SSLTube$SSLSubscriberWrapper.onNext(SSLTube.java:295)
+	at java.net.http/jdk.internal.net.http.common.SubscriberWrapper$DownstreamPusher.run1(SubscriberWrapper.java:316)
+	at java.net.http/jdk.internal.net.http.common.SubscriberWrapper$DownstreamPusher.run(SubscriberWrapper.java:259)
+	at java.net.http/jdk.internal.net.http.common.SequentialScheduler$LockingRestartableTask.run(SequentialScheduler.java:182)
+	at java.net.http/jdk.internal.net.http.common.SequentialScheduler$CompleteRestartableTask.run(SequentialScheduler.java:149)
+	at java.net.http/jdk.internal.net.http.common.SequentialScheduler$SchedulableTask.run(SequentialScheduler.java:207)
+	at java.net.http/jdk.internal.net.http.common.SequentialScheduler.runOrSchedule(SequentialScheduler.java:280)
+	at java.net.http/jdk.internal.net.http.common.SequentialScheduler.runOrSchedule(SequentialScheduler.java:233)
+	at java.net.http/jdk.internal.net.http.common.SubscriberWrapper.outgoing(SubscriberWrapper.java:232)
+	at java.net.http/jdk.internal.net.http.common.SubscriberWrapper.outgoing(SubscriberWrapper.java:198)
+	at java.net.http/jdk.internal.net.http.common.SSLFlowDelegate$Reader.processData(SSLFlowDelegate.java:470)
+	at java.net.http/jdk.internal.net.http.common.SSLFlowDelegate$Reader$ReaderDownstreamPusher.run(SSLFlowDelegate.java:283)
+	at java.net.http/jdk.internal.net.http.common.SequentialScheduler$LockingRestartableTask.run(SequentialScheduler.java:182)
+	at java.net.http/jdk.internal.net.http.common.SequentialScheduler$CompleteRestartableTask.run(SequentialScheduler.java:149)
+	at java.net.http/jdk.internal.net.http.common.SequentialScheduler$SchedulableTask.run(SequentialScheduler.java:207)
+	at java.base/java.util.concurrent.ThreadPerTaskExecutor$TaskRunner.run(ThreadPerTaskExecutor.java:314)
+	... 1 common frames omitted
+2026-09-13 11:19:15,114 [main] INFO  c.hedgefund.config.ConfigValidator - Config validation passed for environment='development', sources=22
+2026-09-13 11:19:15,518 [main] INFO  c.h.i.service.AbstractIngestService - Ingest start: source=fred symbols=1
+2026-09-13 11:19:16,092 [virtual-28] WARN  c.h.ingest.client.AbstractHttpClient - Fetch failed 1/3 https://fred.stlouisfed.org/api/fred/series/observations?series_id=DGS10&limit=30 -> retry 800ms java.io.IOException: Received RST_STREAM: Internal error
+2026-09-13 11:19:17,129 [virtual-28] WARN  c.h.ingest.client.AbstractHttpClient - Fetch failed 2/3 https://fred.stlouisfed.org/api/fred/series/observations?series_id=DGS10&limit=30 -> retry 1600ms java.io.IOException: Received RST_STREAM: Internal error
+2026-09-13 11:19:18,951 [virtual-28] ERROR c.h.i.service.AbstractIngestService - Failed: fred [DGS10]
+java.io.IOException: Received RST_STREAM: Internal error
+	at java.net.http/jdk.internal.net.http.HttpClientImpl.send(HttpClientImpl.java:970)
+	at java.net.http/jdk.internal.net.http.HttpClientFacade.send(HttpClientFacade.java:133)
+	at com.hedgefund.ingest.client.AbstractHttpClient.fetchWithRetry(AbstractHttpClient.java:60)
+	at com.hedgefund.fred.client.FredClient.fetchRaw(FredClient.java:26)
+	at com.hedgefund.fred.ingest.FredIngestService.ingestSymbol(FredIngestService.java:34)
+	at com.hedgefund.ingest.service.AbstractIngestService.lambda$run$0(AbstractIngestService.java:52)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:572)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at java.base/java.lang.VirtualThread.run(VirtualThread.java:329)
+Caused by: java.io.IOException: Received RST_STREAM: Internal error
+	at java.net.http/jdk.internal.net.http.Stream.handleReset(Stream.java:759)
+	at java.net.http/jdk.internal.net.http.Stream.incoming_reset(Stream.java:713)
+	at java.net.http/jdk.internal.net.http.Stream.otherFrame(Stream.java:577)
+	at java.net.http/jdk.internal.net.http.Stream.incoming(Stream.java:570)
+	at java.net.http/jdk.internal.net.http.Http2Connection.processFrame(Http2Connection.java:1055)
+	at java.net.http/jdk.internal.net.http.frame.FramesDecoder.decode(FramesDecoder.java:155)
+	at java.net.http/jdk.internal.net.http.Http2Connection$FramesController.processReceivedData(Http2Connection.java:311)
+	at java.net.http/jdk.internal.net.http.Http2Connection.asyncReceive(Http2Connection.java:863)
+	at java.net.http/jdk.internal.net.http.Http2Connection$Http2TubeSubscriber.processQueue(Http2Connection.java:1822)
+	at java.net.http/jdk.internal.net.http.common.SequentialScheduler$LockingRestartableTask.run(SequentialScheduler.java:182)
+	at java.net.http/jdk.internal.net.http.common.SequentialScheduler$CompleteRestartableTask.run(SequentialScheduler.java:149)
+	at java.net.http/jdk.internal.net.http.common.SequentialScheduler$SchedulableTask.run(SequentialScheduler.java:207)
+	at java.net.http/jdk.internal.net.http.common.SequentialScheduler.runOrSchedule(SequentialScheduler.java:280)
+	at java.net.http/jdk.internal.net.http.common.SequentialScheduler.runOrSchedule(SequentialScheduler.java:233)
+	at java.net.http/jdk.internal.net.http.Http2Connection$Http2TubeSubscriber.runOrSchedule(Http2Connection.java:1839)
+	at java.net.http/jdk.internal.net.http.Http2Connection$Http2TubeSubscriber.onNext(Http2Connection.java:1866)
+	at java.net.http/jdk.internal.net.http.Http2Connection$Http2TubeSubscriber.onNext(Http2Connection.java:1800)
+	at java.net.http/jdk.internal.net.http.common.SSLTube$DelegateWrapper.onNext(SSLTube.java:210)
+	at java.net.http/jdk.internal.net.http.common.SSLTube$SSLSubscriberWrapper.onNext(SSLTube.java:492)
+	at java.net.http/jdk.internal.net.http.common.SSLTube$SSLSubscriberWrapper.onNext(SSLTube.java:295)
+	at java.net.http/jdk.internal.net.http.common.SubscriberWrapper$DownstreamPusher.run1(SubscriberWrapper.java:316)
+	at java.net.http/jdk.internal.net.http.common.SubscriberWrapper$DownstreamPusher.run(SubscriberWrapper.java:259)
+	at java.net.http/jdk.internal.net.http.common.SequentialScheduler$LockingRestartableTask.run(SequentialScheduler.java:182)
+	at java.net.http/jdk.internal.net.http.common.SequentialScheduler$CompleteRestartableTask.run(SequentialScheduler.java:149)
+	at java.net.http/jdk.internal.net.http.common.SequentialScheduler$SchedulableTask.run(SequentialScheduler.java:207)
+	at java.net.http/jdk.internal.net.http.common.SequentialScheduler.runOrSchedule(SequentialScheduler.java:280)
+	at java.net.http/jdk.internal.net.http.common.SequentialScheduler.runOrSchedule(SequentialScheduler.java:233)
+	at java.net.http/jdk.internal.net.http.common.SubscriberWrapper.outgoing(SubscriberWrapper.java:232)
+	at java.net.http/jdk.internal.net.http.common.SubscriberWrapper.outgoing(SubscriberWrapper.java:198)
+	at java.net.http/jdk.internal.net.http.common.SSLFlowDelegate$Reader.processData(SSLFlowDelegate.java:470)
+	at java.net.http/jdk.internal.net.http.common.SSLFlowDelegate$Reader$ReaderDownstreamPusher.run(SSLFlowDelegate.java:283)
+	at java.net.http/jdk.internal.net.http.common.SequentialScheduler$LockingRestartableTask.run(SequentialScheduler.java:182)
+	at java.net.http/jdk.internal.net.http.common.SequentialScheduler$CompleteRestartableTask.run(SequentialScheduler.java:149)
+	at java.net.http/jdk.internal.net.http.common.SequentialScheduler$SchedulableTask.run(SequentialScheduler.java:207)
+	at java.base/java.util.concurrent.ThreadPerTaskExecutor$TaskRunner.run(ThreadPerTaskExecutor.java:314)
+	... 1 common frames omitted
+2026-09-13 11:19:30,851 [main] INFO  c.hedgefund.config.ConfigValidator - Config validation passed for environment='development', sources=22
+2026-09-13 11:19:31,242 [main] INFO  c.h.yahoo.ingest.YahooIngestService - Yahoo ingest start symbols=[AAPL, MSFT, GOOGL, AMZN, META, NVDA, TSLA, JPM, V, JNJ] interval=1d range=1mo
+2026-09-13 11:19:31,941 [virtual-32] INFO  c.hedgefund.yahoo.client.YahooClient - Fetched 22 bars for AMZN
+2026-09-13 11:19:31,944 [virtual-30] INFO  c.hedgefund.yahoo.client.YahooClient - Fetched 22 bars for MSFT
+2026-09-13 11:19:32,001 [virtual-32] INFO  c.h.yahoo.ingest.YahooIngestService - Done AMZN
+2026-09-13 11:19:32,011 [virtual-30] INFO  c.h.yahoo.ingest.YahooIngestService - Done MSFT
+2026-09-13 11:19:32,362 [virtual-31] INFO  c.hedgefund.yahoo.client.YahooClient - Fetched 22 bars for GOOGL
+2026-09-13 11:19:32,373 [virtual-31] INFO  c.h.yahoo.ingest.YahooIngestService - Done GOOGL
+2026-09-13 11:19:32,930 [virtual-60] INFO  c.hedgefund.yahoo.client.YahooClient - Fetched 22 bars for NVDA
+2026-09-13 11:19:32,933 [virtual-60] INFO  c.h.yahoo.ingest.YahooIngestService - Done NVDA
+2026-09-13 11:19:33,394 [virtual-59] INFO  c.hedgefund.yahoo.client.YahooClient - Fetched 22 bars for META
+2026-09-13 11:19:33,397 [virtual-59] INFO  c.h.yahoo.ingest.YahooIngestService - Done META
+2026-09-13 11:19:33,907 [virtual-28] INFO  c.hedgefund.yahoo.client.YahooClient - Fetched 22 bars for AAPL
+2026-09-13 11:19:33,911 [virtual-28] INFO  c.h.yahoo.ingest.YahooIngestService - Done AAPL
+2026-09-13 11:19:34,378 [virtual-66] INFO  c.hedgefund.yahoo.client.YahooClient - Fetched 22 bars for V
+2026-09-13 11:19:34,380 [virtual-66] INFO  c.h.yahoo.ingest.YahooIngestService - Done V
+2026-09-13 11:19:34,967 [virtual-64] INFO  c.hedgefund.yahoo.client.YahooClient - Fetched 22 bars for JPM
+2026-09-13 11:19:34,969 [virtual-64] INFO  c.h.yahoo.ingest.YahooIngestService - Done JPM
+2026-09-13 11:19:35,385 [virtual-62] INFO  c.hedgefund.yahoo.client.YahooClient - Fetched 22 bars for TSLA
+2026-09-13 11:19:35,388 [virtual-62] INFO  c.h.yahoo.ingest.YahooIngestService - Done TSLA
+2026-09-13 11:19:36,030 [virtual-69] INFO  c.hedgefund.yahoo.client.YahooClient - Fetched 22 bars for JNJ
+2026-09-13 11:19:36,032 [virtual-69] INFO  c.h.yahoo.ingest.YahooIngestService - Done JNJ
+2026-09-13 11:19:57,035 [main] INFO  c.h.yahoo.ingest.YahooIngestService - Silver wrote 530393 rows to /media/sandeep/DataDrive2/hedge-fund/datalake/data/silver/yahoo/yahoo_ohlcv.csv
+2026-09-13 11:20:06,395 [main] INFO  c.hedgefund.config.ConfigValidator - Config validation passed for environment='development', sources=22
+2026-09-13 11:20:06,961 [main] INFO  c.h.i.service.AbstractIngestService - Ingest start: source=sec symbols=2
+2026-09-13 11:20:08,463 [virtual-28] INFO  c.h.i.service.AbstractIngestService - Done: sec [AAPL]
+2026-09-13 11:20:09,287 [virtual-30] INFO  c.h.i.service.AbstractIngestService - Done: sec [MSFT]
+2026-09-13 11:20:09,291 [main] INFO  c.h.ingest.store.SilverTransformer - Silver generic wrote /media/sandeep/DataDrive2/hedge-fund/datalake/data/silver/sec/sec.csv
+2026-09-13 11:20:09,292 [main] INFO  c.h.i.service.AbstractIngestService - Ingest complete: source=sec
+2026-09-13 11:20:26,598 [main] INFO  c.hedgefund.config.ConfigValidator - Config validation passed for environment='development', sources=22
+2026-09-13 11:20:27,125 [main] INFO  c.h.i.service.AbstractIngestService - Ingest start: source=sina symbols=1
+2026-09-13 11:20:27,748 [main] INFO  c.hedgefund.config.ConfigValidator - Config validation passed for environment='development', sources=22
+2026-09-13 11:20:28,182 [main] INFO  c.h.i.service.AbstractIngestService - Ingest start: source=tencent symbols=0
+2026-09-13 11:20:28,188 [main] INFO  c.h.ingest.store.SilverTransformer - Silver generic wrote /media/sandeep/DataDrive2/hedge-fund/datalake/data/silver/tencent/tencent.csv
+2026-09-13 11:20:28,189 [main] INFO  c.h.i.service.AbstractIngestService - Ingest complete: source=tencent
+2026-09-13 11:20:33,925 [virtual-28] WARN  c.h.ingest.client.AbstractHttpClient - Fetch failed 1/3 https://hq.sinajs.cn/list=sh600000 -> retry 800ms java.io.IOException: HTTP 403 Forbidden
+2026-09-13 11:20:40,264 [virtual-28] WARN  c.h.ingest.client.AbstractHttpClient - Fetch failed 2/3 https://hq.sinajs.cn/list=sh600000 -> retry 1600ms java.io.IOException: HTTP 403 Forbidden
+2026-09-13 11:20:47,943 [virtual-28] ERROR c.h.i.service.AbstractIngestService - Failed: sina [sina]
+java.io.IOException: HTTP 403 Forbidden
+	at com.hedgefund.ingest.client.AbstractHttpClient.fetchWithRetry(AbstractHttpClient.java:68)
+	at com.hedgefund.sina.client.SinaClient.fetchRaw(SinaClient.java:26)
+	at com.hedgefund.sina.ingest.SinaIngestService.ingestSymbol(SinaIngestService.java:34)
+	at com.hedgefund.ingest.service.AbstractIngestService.lambda$run$0(AbstractIngestService.java:52)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:572)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at java.base/java.lang.VirtualThread.run(VirtualThread.java:329)
+2026-09-13 11:21:02,538 [main] INFO  c.hedgefund.config.ConfigValidator - Config validation passed for environment='development', sources=22
+2026-09-13 11:21:03,085 [main] INFO  c.h.w.ingest.WorldBankIngestService - Full crawl enabled - listing all indicators
+2026-09-13 11:21:03,317 [main] INFO  c.hedgefund.config.ConfigValidator - Config validation passed for environment='development', sources=22
+2026-09-13 11:21:03,972 [main] INFO  c.h.i.service.AbstractIngestService - Ingest start: source=binance symbols=1
+2026-09-13 11:21:04,496 [main] INFO  c.h.worldbank.client.WorldBankClient - Listed indicators page 1/2 total 1000
+2026-09-13 11:21:04,920 [main] INFO  c.h.worldbank.client.WorldBankClient - Listed indicators page 2/2 total 1498
+2026-09-13 11:21:04,921 [main] INFO  c.h.w.ingest.WorldBankIngestService - Full crawl 1498 indicators discovered
+2026-09-13 11:21:04,927 [virtual-28] DEBUG c.h.ingest.store.BronzeWriter - Bronze wrote 5566 bytes to /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/binance/symbol=BTCUSDT/data.ndjson
+2026-09-13 11:21:04,930 [virtual-28] INFO  c.h.i.service.AbstractIngestService - Done: binance [BTCUSDT]
+2026-09-13 11:21:04,926 [virtual-119] INFO  c.h.w.ingest.WorldBankIngestService - Fetching batch 1/75 [AG.CON.FERT.PT.ZS, AG.CON.FERT.ZS, AG.LND.AGRI.K2, AG.LND.AGRI.ZS, AG.LND.ARBL.HA, AG.LND.ARBL.HA.PC, AG.LND.ARBL.ZS, AG.LND.CREL.HA, AG.LND.CROP.ZS, AG.LND.EL5M.RU.K2, AG.LND.EL5M.RU.ZS, AG.LND.EL5M.UR.K2, AG.LND.EL5M.UR.ZS, AG.LND.EL5M.ZS, AG.LND.FRST.K2, AG.LND.FRST.ZS, AG.LND.IRIG.AG.ZS, AG.LND.PRCP.MM, AG.LND.TOTL.K2, AG.LND.TOTL.RU.K2] date 2010:2024 countries [all]
+2026-09-13 11:21:04,926 [virtual-121] INFO  c.h.w.ingest.WorldBankIngestService - Fetching batch 3/75 [BM.TRF.PRVT.CD, BM.TRF.PWKR.CD.DT, BN.CAB.XOKA.CD, BN.CAB.XOKA.GD.ZS, BN.FIN.TOTL.CD, BN.GSR.FCTY.CD, BN.GSR.GNFS.CD, BN.GSR.MRCH.CD, BN.KAC.EOMS.CD, BN.KLT.DINV.CD, BN.KLT.PTXL.CD, BN.RES.INCL.CD, BN.TRF.CURR.CD, BN.TRF.KOGT.CD, BX.GRT.EXTA.CD.WD, BX.GRT.TECH.CD.WD, BX.GSR.CCIS.CD, BX.GSR.CCIS.ZS, BX.GSR.CMCP.ZS, BX.GSR.FCTY.CD] date 2010:2024 countries [all]
+2026-09-13 11:21:04,926 [virtual-122] INFO  c.h.w.ingest.WorldBankIngestService - Fetching batch 4/75 [BX.GSR.GNFS.CD, BX.GSR.INSF.ZS, BX.GSR.MRCH.CD, BX.GSR.NFSV.CD, BX.GSR.ROYL.CD, BX.GSR.TOTL.CD, BX.GSR.TRAN.ZS, BX.GSR.TRVL.ZS, BX.KLT.DINV.CD.WD, BX.KLT.DINV.WD.GD.ZS, BX.PEF.TOTL.CD.WD, BX.TRF.CURR.CD, BX.TRF.PWKR.CD, BX.TRF.PWKR.CD.DT, BX.TRF.PWKR.DT.GD.ZS, CM.MKT.INDX.ZG, CM.MKT.LCAP.CD, CM.MKT.LCAP.GD.ZS, CM.MKT.LDOM.NO, CM.MKT.TRAD.CD] date 2010:2024 countries [all]
+2026-09-13 11:21:04,927 [virtual-127] INFO  c.h.w.ingest.WorldBankIngestService - Fetching batch 8/75 [DT.NFL.FAOG.CD, DT.NFL.IAEA.CD, DT.NFL.IFAD.CD, DT.NFL.ILOG.CD, DT.NFL.IMFC.CD, DT.NFL.IMFN.CD, DT.NFL.MIBR.CD, DT.NFL.MIDA.CD, DT.NFL.MLAT.CD, DT.NFL.MOTH.CD, DT.NFL.NIFC.CD, DT.NFL.OFFT.CD, DT.NFL.PBND.CD, DT.NFL.PCBK.CD, DT.NFL.PCBO.CD, DT.NFL.PNGB.CD, DT.NFL.PNGC.CD, DT.NFL.PROP.CD, DT.NFL.PRVT.CD, DT.NFL.RDBC.CD] date 2010:2024 countries [all]
+2026-09-13 11:21:04,926 [virtual-120] INFO  c.h.w.ingest.WorldBankIngestService - Fetching batch 2/75 [AG.LND.TOTL.UR.K2, AG.PRD.CREL.MT, AG.PRD.CROP.XD, AG.PRD.FOOD.XD, AG.PRD.LVSK.XD, AG.SRF.TOTL.K2, AG.YLD.CREL.KG, BG.GSR.NFSV.GD.ZS, BM.GSR.CMCP.ZS, BM.GSR.FCTY.CD, BM.GSR.GNFS.CD, BM.GSR.INSF.ZS, BM.GSR.MRCH.CD, BM.GSR.NFSV.CD, BM.GSR.ROYL.CD, BM.GSR.TOTL.CD, BM.GSR.TRAN.ZS, BM.GSR.TRVL.ZS, BM.KLT.DINV.CD.WD, BM.KLT.DINV.WD.GD.ZS] date 2010:2024 countries [all]
+2026-09-13 11:21:04,927 [virtual-125] INFO  c.h.w.ingest.WorldBankIngestService - Fetching batch 7/75 [DT.DOD.DECT.CD, DT.DOD.DECT.GN.ZS, DT.DOD.DIMF.CD, DT.DOD.DLXF.CD, DT.DOD.DPNG.CD, DT.DOD.DPPG.CD, DT.DOD.DSTC.CD, DT.DOD.DSTC.IR.ZS, DT.DOD.DSTC.XP.ZS, DT.DOD.DSTC.ZS, DT.DOD.MIBR.CD, DT.DOD.MIDA.CD, DT.DOD.MWBG.CD, DT.DOD.PVLX.CD, DT.DOD.PVLX.EX.ZS, DT.DOD.PVLX.GN.ZS, DT.NFL.BLAT.CD, DT.NFL.BOND.CD, DT.NFL.CERF.CD, DT.NFL.DPNG.CD] date 2010:2024 countries [all]
+2026-09-13 11:21:04,927 [virtual-123] INFO  c.h.w.ingest.WorldBankIngestService - Fetching batch 5/75 [CM.MKT.TRAD.GD.ZS, CM.MKT.TRNR, DC.DAC.AUSL.CD, DC.DAC.AUTL.CD, DC.DAC.BELL.CD, DC.DAC.CANL.CD, DC.DAC.CECL.CD, DC.DAC.CHEL.CD, DC.DAC.CZEL.CD, DC.DAC.DEUL.CD, DC.DAC.DNKL.CD, DC.DAC.ESPL.CD, DC.DAC.ESTL.CD, DC.DAC.FINL.CD, DC.DAC.FRAL.CD, DC.DAC.GBRL.CD, DC.DAC.GRCL.CD, DC.DAC.HUNL.CD, DC.DAC.IRLL.CD, DC.DAC.ISLL.CD] date 2010:2024 countries [all]
+2026-09-13 11:21:04,927 [virtual-124] INFO  c.h.w.ingest.WorldBankIngestService - Fetching batch 6/75 [DC.DAC.ITAL.CD, DC.DAC.JPNL.CD, DC.DAC.KORL.CD, DC.DAC.LTUL.CD, DC.DAC.LUXL.CD, DC.DAC.NLDL.CD, DC.DAC.NORL.CD, DC.DAC.NZLL.CD, DC.DAC.POLL.CD, DC.DAC.PRTL.CD, DC.DAC.SVKL.CD, DC.DAC.SVNL.CD, DC.DAC.SWEL.CD, DC.DAC.TOTL.CD, DC.DAC.USAL.CD, DC.ODA.TLDC.CD, DC.ODA.TLDC.GN.ZS, DC.ODA.TOTL.CD, DC.ODA.TOTL.GN.ZS, DC.ODA.TOTL.KD] date 2010:2024 countries [all]
+2026-09-13 11:21:04,939 [main] INFO  c.h.ingest.store.SilverTransformer - Silver generic wrote /media/sandeep/DataDrive2/hedge-fund/datalake/data/silver/binance/binance.csv
+2026-09-13 11:21:04,940 [main] INFO  c.h.i.service.AbstractIngestService - Ingest complete: source=binance
+2026-09-13 11:21:14,219 [main] INFO  c.hedgefund.config.ConfigValidator - Config validation passed for environment='development', sources=22
+2026-09-13 11:21:14,616 [main] INFO  c.h.i.service.AbstractIngestService - Ingest start: source=coinbase symbols=0
+2026-09-13 11:21:14,620 [main] INFO  c.h.ingest.store.SilverTransformer - Silver generic wrote /media/sandeep/DataDrive2/hedge-fund/datalake/data/silver/coinbase/coinbase.csv
+2026-09-13 11:21:14,621 [main] INFO  c.h.i.service.AbstractIngestService - Ingest complete: source=coinbase
+2026-09-13 11:21:36,999 [virtual-120] WARN  c.h.ingest.client.AbstractHttpClient - Fetch failed 1/3 https://api.worldbank.org/v2/country/all/indicator/AG.LND.TOTL.UR.K2;AG.PRD.CREL.MT;AG.PRD.CROP.XD;AG.PRD.FOOD.XD;AG.PRD.LVSK.XD;AG.SRF.TOTL.K2;AG.YLD.CREL.KG;BG.GSR.NFSV.GD.ZS;BM.GSR.CMCP.ZS;BM.GSR.FCTY.CD;BM.GSR.GNFS.CD;BM.GSR.INSF.ZS;BM.GSR.MRCH.CD;BM.GSR.NFSV.CD;BM.GSR.ROYL.CD;BM.GSR.TOTL.CD;BM.GSR.TRAN.ZS;BM.GSR.TRVL.ZS;BM.KLT.DINV.CD.WD;BM.KLT.DINV.WD.GD.ZS?format=json&per_page=1000&page=1&date=2010:2024&source=2 -> retry 800ms java.net.http.HttpTimeoutException: request timed out
+2026-09-13 11:21:37,498 [virtual-127] WARN  c.h.ingest.client.AbstractHttpClient - Fetch failed 1/3 https://api.worldbank.org/v2/country/all/indicator/DT.NFL.FAOG.CD;DT.NFL.IAEA.CD;DT.NFL.IFAD.CD;DT.NFL.ILOG.CD;DT.NFL.IMFC.CD;DT.NFL.IMFN.CD;DT.NFL.MIBR.CD;DT.NFL.MIDA.CD;DT.NFL.MLAT.CD;DT.NFL.MOTH.CD;DT.NFL.NIFC.CD;DT.NFL.OFFT.CD;DT.NFL.PBND.CD;DT.NFL.PCBK.CD;DT.NFL.PCBO.CD;DT.NFL.PNGB.CD;DT.NFL.PNGC.CD;DT.NFL.PROP.CD;DT.NFL.PRVT.CD;DT.NFL.RDBC.CD?format=json&per_page=1000&page=1&date=2010:2024&source=2 -> retry 800ms java.net.http.HttpTimeoutException: request timed out
+2026-09-13 11:21:37,999 [virtual-122] WARN  c.h.ingest.client.AbstractHttpClient - Fetch failed 1/3 https://api.worldbank.org/v2/country/all/indicator/BX.GSR.GNFS.CD;BX.GSR.INSF.ZS;BX.GSR.MRCH.CD;BX.GSR.NFSV.CD;BX.GSR.ROYL.CD;BX.GSR.TOTL.CD;BX.GSR.TRAN.ZS;BX.GSR.TRVL.ZS;BX.KLT.DINV.CD.WD;BX.KLT.DINV.WD.GD.ZS;BX.PEF.TOTL.CD.WD;BX.TRF.CURR.CD;BX.TRF.PWKR.CD;BX.TRF.PWKR.CD.DT;BX.TRF.PWKR.DT.GD.ZS;CM.MKT.INDX.ZG;CM.MKT.LCAP.CD;CM.MKT.LCAP.GD.ZS;CM.MKT.LDOM.NO;CM.MKT.TRAD.CD?format=json&per_page=1000&page=1&date=2010:2024&source=2 -> retry 800ms java.net.http.HttpTimeoutException: request timed out
+2026-09-13 11:21:38,499 [virtual-121] WARN  c.h.ingest.client.AbstractHttpClient - Fetch failed 1/3 https://api.worldbank.org/v2/country/all/indicator/BM.TRF.PRVT.CD;BM.TRF.PWKR.CD.DT;BN.CAB.XOKA.CD;BN.CAB.XOKA.GD.ZS;BN.FIN.TOTL.CD;BN.GSR.FCTY.CD;BN.GSR.GNFS.CD;BN.GSR.MRCH.CD;BN.KAC.EOMS.CD;BN.KLT.DINV.CD;BN.KLT.PTXL.CD;BN.RES.INCL.CD;BN.TRF.CURR.CD;BN.TRF.KOGT.CD;BX.GRT.EXTA.CD.WD;BX.GRT.TECH.CD.WD;BX.GSR.CCIS.CD;BX.GSR.CCIS.ZS;BX.GSR.CMCP.ZS;BX.GSR.FCTY.CD?format=json&per_page=1000&page=1&date=2010:2024&source=2 -> retry 800ms java.net.http.HttpTimeoutException: request timed out
+2026-09-13 11:21:45,501 [virtual-187] WARN  c.h.ingest.client.AbstractHttpClient - Fetch failed 1/3 https://api.worldbank.org/v2/country/all/indicator/AG.CON.FERT.PT.ZS;AG.CON.FERT.ZS;AG.LND.AGRI.K2;AG.LND.AGRI.ZS;AG.LND.ARBL.HA;AG.LND.ARBL.HA.PC;AG.LND.ARBL.ZS;AG.LND.CREL.HA;AG.LND.CROP.ZS;AG.LND.EL5M.RU.K2;AG.LND.EL5M.RU.ZS;AG.LND.EL5M.UR.K2;AG.LND.EL5M.UR.ZS;AG.LND.EL5M.ZS;AG.LND.FRST.K2;AG.LND.FRST.ZS;AG.LND.IRIG.AG.ZS;AG.LND.PRCP.MM;AG.LND.TOTL.K2;AG.LND.TOTL.RU.K2?format=json&per_page=1000&page=5&date=2010:2024&source=2 -> retry 800ms java.net.http.HttpTimeoutException: request timed out
+2026-09-13 11:21:45,999 [virtual-186] WARN  c.h.ingest.client.AbstractHttpClient - Fetch failed 1/3 https://api.worldbank.org/v2/country/all/indicator/AG.CON.FERT.PT.ZS;AG.CON.FERT.ZS;AG.LND.AGRI.K2;AG.LND.AGRI.ZS;AG.LND.ARBL.HA;AG.LND.ARBL.HA.PC;AG.LND.ARBL.ZS;AG.LND.CREL.HA;AG.LND.CROP.ZS;AG.LND.EL5M.RU.K2;AG.LND.EL5M.RU.ZS;AG.LND.EL5M.UR.K2;AG.LND.EL5M.UR.ZS;AG.LND.EL5M.ZS;AG.LND.FRST.K2;AG.LND.FRST.ZS;AG.LND.IRIG.AG.ZS;AG.LND.PRCP.MM;AG.LND.TOTL.K2;AG.LND.TOTL.RU.K2?format=json&per_page=1000&page=4&date=2010:2024&source=2 -> retry 800ms java.net.http.HttpTimeoutException: request timed out
+2026-09-13 11:21:46,500 [virtual-185] WARN  c.h.ingest.client.AbstractHttpClient - Fetch failed 1/3 https://api.worldbank.org/v2/country/all/indicator/AG.CON.FERT.PT.ZS;AG.CON.FERT.ZS;AG.LND.AGRI.K2;AG.LND.AGRI.ZS;AG.LND.ARBL.HA;AG.LND.ARBL.HA.PC;AG.LND.ARBL.ZS;AG.LND.CREL.HA;AG.LND.CROP.ZS;AG.LND.EL5M.RU.K2;AG.LND.EL5M.RU.ZS;AG.LND.EL5M.UR.K2;AG.LND.EL5M.UR.ZS;AG.LND.EL5M.ZS;AG.LND.FRST.K2;AG.LND.FRST.ZS;AG.LND.IRIG.AG.ZS;AG.LND.PRCP.MM;AG.LND.TOTL.K2;AG.LND.TOTL.RU.K2?format=json&per_page=1000&page=3&date=2010:2024&source=2 -> retry 800ms java.net.http.HttpTimeoutException: request timed out
+2026-09-13 11:21:46,999 [virtual-184] WARN  c.h.ingest.client.AbstractHttpClient - Fetch failed 1/3 https://api.worldbank.org/v2/country/all/indicator/AG.CON.FERT.PT.ZS;AG.CON.FERT.ZS;AG.LND.AGRI.K2;AG.LND.AGRI.ZS;AG.LND.ARBL.HA;AG.LND.ARBL.HA.PC;AG.LND.ARBL.ZS;AG.LND.CREL.HA;AG.LND.CROP.ZS;AG.LND.EL5M.RU.K2;AG.LND.EL5M.RU.ZS;AG.LND.EL5M.UR.K2;AG.LND.EL5M.UR.ZS;AG.LND.EL5M.ZS;AG.LND.FRST.K2;AG.LND.FRST.ZS;AG.LND.IRIG.AG.ZS;AG.LND.PRCP.MM;AG.LND.TOTL.K2;AG.LND.TOTL.RU.K2?format=json&per_page=1000&page=2&date=2010:2024&source=2 -> retry 800ms java.net.http.HttpTimeoutException: request timed out
+2026-09-13 11:21:55,103 [virtual-190] WARN  c.h.ingest.client.AbstractHttpClient - Fetch failed 1/3 https://api.worldbank.org/v2/country/all/indicator/AG.CON.FERT.PT.ZS;AG.CON.FERT.ZS;AG.LND.AGRI.K2;AG.LND.AGRI.ZS;AG.LND.ARBL.HA;AG.LND.ARBL.HA.PC;AG.LND.ARBL.ZS;AG.LND.CREL.HA;AG.LND.CROP.ZS;AG.LND.EL5M.RU.K2;AG.LND.EL5M.RU.ZS;AG.LND.EL5M.UR.K2;AG.LND.EL5M.UR.ZS;AG.LND.EL5M.ZS;AG.LND.FRST.K2;AG.LND.FRST.ZS;AG.LND.IRIG.AG.ZS;AG.LND.PRCP.MM;AG.LND.TOTL.K2;AG.LND.TOTL.RU.K2?format=json&per_page=1000&page=8&date=2010:2024&source=2 -> retry 800ms java.net.http.HttpTimeoutException: request timed out
+2026-09-13 11:21:55,603 [virtual-292] WARN  c.h.ingest.client.AbstractHttpClient - Fetch failed 1/3 https://api.worldbank.org/v2/country/all/indicator/DT.DOD.DECT.CD;DT.DOD.DECT.GN.ZS;DT.DOD.DIMF.CD;DT.DOD.DLXF.CD;DT.DOD.DPNG.CD;DT.DOD.DPPG.CD;DT.DOD.DSTC.CD;DT.DOD.DSTC.IR.ZS;DT.DOD.DSTC.XP.ZS;DT.DOD.DSTC.ZS;DT.DOD.MIBR.CD;DT.DOD.MIDA.CD;DT.DOD.MWBG.CD;DT.DOD.PVLX.CD;DT.DOD.PVLX.EX.ZS;DT.DOD.PVLX.GN.ZS;DT.NFL.BLAT.CD;DT.NFL.BOND.CD;DT.NFL.CERF.CD;DT.NFL.DPNG.CD?format=json&per_page=1000&page=12&date=2010:2024&source=2 -> retry 800ms java.net.http.HttpTimeoutException: request timed out
+2026-09-13 11:21:56,601 [virtual-291] WARN  c.h.ingest.client.AbstractHttpClient - Fetch failed 1/3 https://api.worldbank.org/v2/country/all/indicator/DT.DOD.DECT.CD;DT.DOD.DECT.GN.ZS;DT.DOD.DIMF.CD;DT.DOD.DLXF.CD;DT.DOD.DPNG.CD;DT.DOD.DPPG.CD;DT.DOD.DSTC.CD;DT.DOD.DSTC.IR.ZS;DT.DOD.DSTC.XP.ZS;DT.DOD.DSTC.ZS;DT.DOD.MIBR.CD;DT.DOD.MIDA.CD;DT.DOD.MWBG.CD;DT.DOD.PVLX.CD;DT.DOD.PVLX.EX.ZS;DT.DOD.PVLX.GN.ZS;DT.NFL.BLAT.CD;DT.NFL.BOND.CD;DT.NFL.CERF.CD;DT.NFL.DPNG.CD?format=json&per_page=1000&page=11&date=2010:2024&source=2 -> retry 800ms java.net.http.HttpTimeoutException: request timed out
+2026-09-13 11:21:57,102 [virtual-268] WARN  c.h.ingest.client.AbstractHttpClient - Fetch failed 1/3 https://api.worldbank.org/v2/country/all/indicator/DT.DOD.DECT.CD;DT.DOD.DECT.GN.ZS;DT.DOD.DIMF.CD;DT.DOD.DLXF.CD;DT.DOD.DPNG.CD;DT.DOD.DPPG.CD;DT.DOD.DSTC.CD;DT.DOD.DSTC.IR.ZS;DT.DOD.DSTC.XP.ZS;DT.DOD.DSTC.ZS;DT.DOD.MIBR.CD;DT.DOD.MIDA.CD;DT.DOD.MWBG.CD;DT.DOD.PVLX.CD;DT.DOD.PVLX.EX.ZS;DT.DOD.PVLX.GN.ZS;DT.NFL.BLAT.CD;DT.NFL.BOND.CD;DT.NFL.CERF.CD;DT.NFL.DPNG.CD?format=json&per_page=1000&page=10&date=2010:2024&source=2 -> retry 800ms java.net.http.HttpTimeoutException: request timed out
+2026-09-13 11:22:02,603 [virtual-324] WARN  c.h.ingest.client.AbstractHttpClient - Fetch failed 1/3 https://api.worldbank.org/v2/country/all/indicator/AG.CON.FERT.PT.ZS;AG.CON.FERT.ZS;AG.LND.AGRI.K2;AG.LND.AGRI.ZS;AG.LND.ARBL.HA;AG.LND.ARBL.HA.PC;AG.LND.ARBL.ZS;AG.LND.CREL.HA;AG.LND.CROP.ZS;AG.LND.EL5M.RU.K2;AG.LND.EL5M.RU.ZS;AG.LND.EL5M.UR.K2;AG.LND.EL5M.UR.ZS;AG.LND.EL5M.ZS;AG.LND.FRST.K2;AG.LND.FRST.ZS;AG.LND.IRIG.AG.ZS;AG.LND.PRCP.MM;AG.LND.TOTL.K2;AG.LND.TOTL.RU.K2?format=json&per_page=1000&page=10&date=2010:2024&source=2 -> retry 800ms java.net.http.HttpTimeoutException: request timed out
+2026-09-13 11:22:09,603 [virtual-446] WARN  c.h.ingest.client.AbstractHttpClient - Fetch failed 1/3 https://api.worldbank.org/v2/country/all/indicator/AG.CON.FERT.PT.ZS;AG.CON.FERT.ZS;AG.LND.AGRI.K2;AG.LND.AGRI.ZS;AG.LND.ARBL.HA;AG.LND.ARBL.HA.PC;AG.LND.ARBL.ZS;AG.LND.CREL.HA;AG.LND.CROP.ZS;AG.LND.EL5M.RU.K2;AG.LND.EL5M.RU.ZS;AG.LND.EL5M.UR.K2;AG.LND.EL5M.UR.ZS;AG.LND.EL5M.ZS;AG.LND.FRST.K2;AG.LND.FRST.ZS;AG.LND.IRIG.AG.ZS;AG.LND.PRCP.MM;AG.LND.TOTL.K2;AG.LND.TOTL.RU.K2?format=json&per_page=1000&page=12&date=2010:2024&source=2 -> retry 800ms java.net.http.HttpTimeoutException: request timed out
+2026-09-13 11:22:09,605 [virtual-120] WARN  c.h.ingest.client.AbstractHttpClient - Fetch failed 2/3 https://api.worldbank.org/v2/country/all/indicator/AG.LND.TOTL.UR.K2;AG.PRD.CREL.MT;AG.PRD.CROP.XD;AG.PRD.FOOD.XD;AG.PRD.LVSK.XD;AG.SRF.TOTL.K2;AG.YLD.CREL.KG;BG.GSR.NFSV.GD.ZS;BM.GSR.CMCP.ZS;BM.GSR.FCTY.CD;BM.GSR.GNFS.CD;BM.GSR.INSF.ZS;BM.GSR.MRCH.CD;BM.GSR.NFSV.CD;BM.GSR.ROYL.CD;BM.GSR.TOTL.CD;BM.GSR.TRAN.ZS;BM.GSR.TRVL.ZS;BM.KLT.DINV.CD.WD;BM.KLT.DINV.WD.GD.ZS?format=json&per_page=1000&page=1&date=2010:2024&source=2 -> retry 1600ms java.net.http.HttpTimeoutException: request timed out
+2026-09-13 11:22:09,605 [virtual-122] WARN  c.h.ingest.client.AbstractHttpClient - Fetch failed 2/3 https://api.worldbank.org/v2/country/all/indicator/BX.GSR.GNFS.CD;BX.GSR.INSF.ZS;BX.GSR.MRCH.CD;BX.GSR.NFSV.CD;BX.GSR.ROYL.CD;BX.GSR.TOTL.CD;BX.GSR.TRAN.ZS;BX.GSR.TRVL.ZS;BX.KLT.DINV.CD.WD;BX.KLT.DINV.WD.GD.ZS;BX.PEF.TOTL.CD.WD;BX.TRF.CURR.CD;BX.TRF.PWKR.CD;BX.TRF.PWKR.CD.DT;BX.TRF.PWKR.DT.GD.ZS;CM.MKT.INDX.ZG;CM.MKT.LCAP.CD;CM.MKT.LCAP.GD.ZS;CM.MKT.LDOM.NO;CM.MKT.TRAD.CD?format=json&per_page=1000&page=1&date=2010:2024&source=2 -> retry 1600ms java.net.http.HttpTimeoutException: request timed out
+2026-09-13 11:22:10,604 [virtual-121] WARN  c.h.ingest.client.AbstractHttpClient - Fetch failed 2/3 https://api.worldbank.org/v2/country/all/indicator/BM.TRF.PRVT.CD;BM.TRF.PWKR.CD.DT;BN.CAB.XOKA.CD;BN.CAB.XOKA.GD.ZS;BN.FIN.TOTL.CD;BN.GSR.FCTY.CD;BN.GSR.GNFS.CD;BN.GSR.MRCH.CD;BN.KAC.EOMS.CD;BN.KLT.DINV.CD;BN.KLT.PTXL.CD;BN.RES.INCL.CD;BN.TRF.CURR.CD;BN.TRF.KOGT.CD;BX.GRT.EXTA.CD.WD;BX.GRT.TECH.CD.WD;BX.GSR.CCIS.CD;BX.GSR.CCIS.ZS;BX.GSR.CMCP.ZS;BX.GSR.FCTY.CD?format=json&per_page=1000&page=1&date=2010:2024&source=2 -> retry 1600ms java.net.http.HttpTimeoutException: request timed out
+2026-09-13 11:22:16,607 [virtual-187] WARN  c.h.ingest.client.AbstractHttpClient - Fetch failed 2/3 https://api.worldbank.org/v2/country/all/indicator/AG.CON.FERT.PT.ZS;AG.CON.FERT.ZS;AG.LND.AGRI.K2;AG.LND.AGRI.ZS;AG.LND.ARBL.HA;AG.LND.ARBL.HA.PC;AG.LND.ARBL.ZS;AG.LND.CREL.HA;AG.LND.CROP.ZS;AG.LND.EL5M.RU.K2;AG.LND.EL5M.RU.ZS;AG.LND.EL5M.UR.K2;AG.LND.EL5M.UR.ZS;AG.LND.EL5M.ZS;AG.LND.FRST.K2;AG.LND.FRST.ZS;AG.LND.IRIG.AG.ZS;AG.LND.PRCP.MM;AG.LND.TOTL.K2;AG.LND.TOTL.RU.K2?format=json&per_page=1000&page=5&date=2010:2024&source=2 -> retry 1600ms java.net.http.HttpTimeoutException: request timed out
+2026-09-13 11:22:17,106 [virtual-186] WARN  c.h.ingest.client.AbstractHttpClient - Fetch failed 2/3 https://api.worldbank.org/v2/country/all/indicator/AG.CON.FERT.PT.ZS;AG.CON.FERT.ZS;AG.LND.AGRI.K2;AG.LND.AGRI.ZS;AG.LND.ARBL.HA;AG.LND.ARBL.HA.PC;AG.LND.ARBL.ZS;AG.LND.CREL.HA;AG.LND.CROP.ZS;AG.LND.EL5M.RU.K2;AG.LND.EL5M.RU.ZS;AG.LND.EL5M.UR.K2;AG.LND.EL5M.UR.ZS;AG.LND.EL5M.ZS;AG.LND.FRST.K2;AG.LND.FRST.ZS;AG.LND.IRIG.AG.ZS;AG.LND.PRCP.MM;AG.LND.TOTL.K2;AG.LND.TOTL.RU.K2?format=json&per_page=1000&page=4&date=2010:2024&source=2 -> retry 1600ms java.net.http.HttpTimeoutException: request timed out
+2026-09-13 11:22:17,607 [virtual-185] WARN  c.h.ingest.client.AbstractHttpClient - Fetch failed 2/3 https://api.worldbank.org/v2/country/all/indicator/AG.CON.FERT.PT.ZS;AG.CON.FERT.ZS;AG.LND.AGRI.K2;AG.LND.AGRI.ZS;AG.LND.ARBL.HA;AG.LND.ARBL.HA.PC;AG.LND.ARBL.ZS;AG.LND.CREL.HA;AG.LND.CROP.ZS;AG.LND.EL5M.RU.K2;AG.LND.EL5M.RU.ZS;AG.LND.EL5M.UR.K2;AG.LND.EL5M.UR.ZS;AG.LND.EL5M.ZS;AG.LND.FRST.K2;AG.LND.FRST.ZS;AG.LND.IRIG.AG.ZS;AG.LND.PRCP.MM;AG.LND.TOTL.K2;AG.LND.TOTL.RU.K2?format=json&per_page=1000&page=3&date=2010:2024&source=2 -> retry 1600ms java.net.http.HttpTimeoutException: request timed out
+2026-09-13 11:22:18,105 [virtual-184] WARN  c.h.ingest.client.AbstractHttpClient - Fetch failed 2/3 https://api.worldbank.org/v2/country/all/indicator/AG.CON.FERT.PT.ZS;AG.CON.FERT.ZS;AG.LND.AGRI.K2;AG.LND.AGRI.ZS;AG.LND.ARBL.HA;AG.LND.ARBL.HA.PC;AG.LND.ARBL.ZS;AG.LND.CREL.HA;AG.LND.CROP.ZS;AG.LND.EL5M.RU.K2;AG.LND.EL5M.RU.ZS;AG.LND.EL5M.UR.K2;AG.LND.EL5M.UR.ZS;AG.LND.EL5M.ZS;AG.LND.FRST.K2;AG.LND.FRST.ZS;AG.LND.IRIG.AG.ZS;AG.LND.PRCP.MM;AG.LND.TOTL.K2;AG.LND.TOTL.RU.K2?format=json&per_page=1000&page=2&date=2010:2024&source=2 -> retry 1600ms java.net.http.HttpTimeoutException: request timed out
+2026-09-13 11:22:23,606 [virtual-580] WARN  c.h.ingest.client.AbstractHttpClient - Fetch failed 1/3 https://api.worldbank.org/v2/country/all/indicator/CM.MKT.TRAD.GD.ZS;CM.MKT.TRNR;DC.DAC.AUSL.CD;DC.DAC.AUTL.CD;DC.DAC.BELL.CD;DC.DAC.CANL.CD;DC.DAC.CECL.CD;DC.DAC.CHEL.CD;DC.DAC.CZEL.CD;DC.DAC.DEUL.CD;DC.DAC.DNKL.CD;DC.DAC.ESPL.CD;DC.DAC.ESTL.CD;DC.DAC.FINL.CD;DC.DAC.FRAL.CD;DC.DAC.GBRL.CD;DC.DAC.GRCL.CD;DC.DAC.HUNL.CD;DC.DAC.IRLL.CD;DC.DAC.ISLL.CD?format=json&per_page=1000&page=19&date=2010:2024&source=2 -> retry 800ms java.net.http.HttpTimeoutException: request timed out
+2026-09-13 11:22:24,106 [virtual-555] WARN  c.h.ingest.client.AbstractHttpClient - Fetch failed 1/3 https://api.worldbank.org/v2/country/all/indicator/DT.DOD.DECT.CD;DT.DOD.DECT.GN.ZS;DT.DOD.DIMF.CD;DT.DOD.DLXF.CD;DT.DOD.DPNG.CD;DT.DOD.DPPG.CD;DT.DOD.DSTC.CD;DT.DOD.DSTC.IR.ZS;DT.DOD.DSTC.XP.ZS;DT.DOD.DSTC.ZS;DT.DOD.MIBR.CD;DT.DOD.MIDA.CD;DT.DOD.MWBG.CD;DT.DOD.PVLX.CD;DT.DOD.PVLX.EX.ZS;DT.DOD.PVLX.GN.ZS;DT.NFL.BLAT.CD;DT.NFL.BOND.CD;DT.NFL.CERF.CD;DT.NFL.DPNG.CD?format=json&per_page=1000&page=19&date=2010:2024&source=2 -> retry 800ms java.net.http.HttpTimeoutException: request timed out
+2026-09-13 11:22:25,606 [virtual-539] WARN  c.h.ingest.client.AbstractHttpClient - Fetch failed 1/3 https://api.worldbank.org/v2/country/all/indicator/DT.DOD.DECT.CD;DT.DOD.DECT.GN.ZS;DT.DOD.DIMF.CD;DT.DOD.DLXF.CD;DT.DOD.DPNG.CD;DT.DOD.DPPG.CD;DT.DOD.DSTC.CD;DT.DOD.DSTC.IR.ZS;DT.DOD.DSTC.XP.ZS;DT.DOD.DSTC.ZS;DT.DOD.MIBR.CD;DT.DOD.MIDA.CD;DT.DOD.MWBG.CD;DT.DOD.PVLX.CD;DT.DOD.PVLX.EX.ZS;DT.DOD.PVLX.GN.ZS;DT.NFL.BLAT.CD;DT.NFL.BOND.CD;DT.NFL.CERF.CD;DT.NFL.DPNG.CD?format=json&per_page=1000&page=18&date=2010:2024&source=2 -> retry 800ms java.net.http.HttpTimeoutException: request timed out
+2026-09-13 11:22:29,107 [virtual-679] WARN  c.h.ingest.client.AbstractHttpClient - Fetch failed 1/3 https://api.worldbank.org/v2/country/all/indicator/DT.DOD.DECT.CD;DT.DOD.DECT.GN.ZS;DT.DOD.DIMF.CD;DT.DOD.DLXF.CD;DT.DOD.DPNG.CD;DT.DOD.DPPG.CD;DT.DOD.DSTC.CD;DT.DOD.DSTC.IR.ZS;DT.DOD.DSTC.XP.ZS;DT.DOD.DSTC.ZS;DT.DOD.MIBR.CD;DT.DOD.MIDA.CD;DT.DOD.MWBG.CD;DT.DOD.PVLX.CD;DT.DOD.PVLX.EX.ZS;DT.DOD.PVLX.GN.ZS;DT.NFL.BLAT.CD;DT.NFL.BOND.CD;DT.NFL.CERF.CD;DT.NFL.DPNG.CD?format=json&per_page=1000&page=20&date=2010:2024&source=2 -> retry 800ms java.net.http.HttpTimeoutException: request timed out
+2026-09-13 11:22:40,609 [virtual-268] WARN  c.h.ingest.client.AbstractHttpClient - Fetch failed 2/3 https://api.worldbank.org/v2/country/all/indicator/DT.DOD.DECT.CD;DT.DOD.DECT.GN.ZS;DT.DOD.DIMF.CD;DT.DOD.DLXF.CD;DT.DOD.DPNG.CD;DT.DOD.DPPG.CD;DT.DOD.DSTC.CD;DT.DOD.DSTC.IR.ZS;DT.DOD.DSTC.XP.ZS;DT.DOD.DSTC.ZS;DT.DOD.MIBR.CD;DT.DOD.MIDA.CD;DT.DOD.MWBG.CD;DT.DOD.PVLX.CD;DT.DOD.PVLX.EX.ZS;DT.DOD.PVLX.GN.ZS;DT.NFL.BLAT.CD;DT.NFL.BOND.CD;DT.NFL.CERF.CD;DT.NFL.DPNG.CD?format=json&per_page=1000&page=10&date=2010:2024&source=2 -> retry 1600ms java.net.http.HttpTimeoutException: request timed out
+2026-09-13 11:22:40,611 [virtual-292] WARN  c.h.ingest.client.AbstractHttpClient - Fetch failed 2/3 https://api.worldbank.org/v2/country/all/indicator/DT.DOD.DECT.CD;DT.DOD.DECT.GN.ZS;DT.DOD.DIMF.CD;DT.DOD.DLXF.CD;DT.DOD.DPNG.CD;DT.DOD.DPPG.CD;DT.DOD.DSTC.CD;DT.DOD.DSTC.IR.ZS;DT.DOD.DSTC.XP.ZS;DT.DOD.DSTC.ZS;DT.DOD.MIBR.CD;DT.DOD.MIDA.CD;DT.DOD.MWBG.CD;DT.DOD.PVLX.CD;DT.DOD.PVLX.EX.ZS;DT.DOD.PVLX.GN.ZS;DT.NFL.BLAT.CD;DT.NFL.BOND.CD;DT.NFL.CERF.CD;DT.NFL.DPNG.CD?format=json&per_page=1000&page=12&date=2010:2024&source=2 -> retry 1600ms java.net.http.HttpTimeoutException: request timed out
+2026-09-13 11:22:40,612 [virtual-190] WARN  c.h.ingest.client.AbstractHttpClient - Fetch failed 2/3 https://api.worldbank.org/v2/country/all/indicator/AG.CON.FERT.PT.ZS;AG.CON.FERT.ZS;AG.LND.AGRI.K2;AG.LND.AGRI.ZS;AG.LND.ARBL.HA;AG.LND.ARBL.HA.PC;AG.LND.ARBL.ZS;AG.LND.CREL.HA;AG.LND.CROP.ZS;AG.LND.EL5M.RU.K2;AG.LND.EL5M.RU.ZS;AG.LND.EL5M.UR.K2;AG.LND.EL5M.UR.ZS;AG.LND.EL5M.ZS;AG.LND.FRST.K2;AG.LND.FRST.ZS;AG.LND.IRIG.AG.ZS;AG.LND.PRCP.MM;AG.LND.TOTL.K2;AG.LND.TOTL.RU.K2?format=json&per_page=1000&page=8&date=2010:2024&source=2 -> retry 1600ms java.net.http.HttpTimeoutException: request timed out
+2026-09-13 11:22:40,612 [virtual-720] WARN  c.h.ingest.client.AbstractHttpClient - Fetch failed 1/3 https://api.worldbank.org/v2/country/all/indicator/AG.CON.FERT.PT.ZS;AG.CON.FERT.ZS;AG.LND.AGRI.K2;AG.LND.AGRI.ZS;AG.LND.ARBL.HA;AG.LND.ARBL.HA.PC;AG.LND.ARBL.ZS;AG.LND.CREL.HA;AG.LND.CROP.ZS;AG.LND.EL5M.RU.K2;AG.LND.EL5M.RU.ZS;AG.LND.EL5M.UR.K2;AG.LND.EL5M.UR.ZS;AG.LND.EL5M.ZS;AG.LND.FRST.K2;AG.LND.FRST.ZS;AG.LND.IRIG.AG.ZS;AG.LND.PRCP.MM;AG.LND.TOTL.K2;AG.LND.TOTL.RU.K2?format=json&per_page=1000&page=13&date=2010:2024&source=2 -> retry 800ms java.net.http.HttpTimeoutException: request timed out
+2026-09-13 11:22:46,611 [virtual-825] WARN  c.h.ingest.client.AbstractHttpClient - Fetch failed 1/3 https://api.worldbank.org/v2/country/all/indicator/DT.NFL.FAOG.CD;DT.NFL.IAEA.CD;DT.NFL.IFAD.CD;DT.NFL.ILOG.CD;DT.NFL.IMFC.CD;DT.NFL.IMFN.CD;DT.NFL.MIBR.CD;DT.NFL.MIDA.CD;DT.NFL.MLAT.CD;DT.NFL.MOTH.CD;DT.NFL.NIFC.CD;DT.NFL.OFFT.CD;DT.NFL.PBND.CD;DT.NFL.PCBK.CD;DT.NFL.PCBO.CD;DT.NFL.PNGB.CD;DT.NFL.PNGC.CD;DT.NFL.PROP.CD;DT.NFL.PRVT.CD;DT.NFL.RDBC.CD?format=json&per_page=1000&page=3&date=2010:2024&source=2 -> retry 800ms java.net.http.HttpTimeoutException: request timed out
+2026-09-13 11:22:46,613 [virtual-824] WARN  c.h.ingest.client.AbstractHttpClient - Fetch failed 1/3 https://api.worldbank.org/v2/country/all/indicator/DT.NFL.FAOG.CD;DT.NFL.IAEA.CD;DT.NFL.IFAD.CD;DT.NFL.ILOG.CD;DT.NFL.IMFC.CD;DT.NFL.IMFN.CD;DT.NFL.MIBR.CD;DT.NFL.MIDA.CD;DT.NFL.MLAT.CD;DT.NFL.MOTH.CD;DT.NFL.NIFC.CD;DT.NFL.OFFT.CD;DT.NFL.PBND.CD;DT.NFL.PCBK.CD;DT.NFL.PCBO.CD;DT.NFL.PNGB.CD;DT.NFL.PNGC.CD;DT.NFL.PROP.CD;DT.NFL.PRVT.CD;DT.NFL.RDBC.CD?format=json&per_page=1000&page=2&date=2010:2024&source=2 -> retry 800ms java.net.http.HttpTimeoutException: request timed out
+2026-09-13 11:22:47,110 [virtual-907] WARN  c.h.ingest.client.AbstractHttpClient - Fetch failed 1/3 https://api.worldbank.org/v2/country/all/indicator/DC.DAC.ITAL.CD;DC.DAC.JPNL.CD;DC.DAC.KORL.CD;DC.DAC.LTUL.CD;DC.DAC.LUXL.CD;DC.DAC.NLDL.CD;DC.DAC.NORL.CD;DC.DAC.NZLL.CD;DC.DAC.POLL.CD;DC.DAC.PRTL.CD;DC.DAC.SVKL.CD;DC.DAC.SVNL.CD;DC.DAC.SWEL.CD;DC.DAC.TOTL.CD;DC.DAC.USAL.CD;DC.ODA.TLDC.CD;DC.ODA.TLDC.GN.ZS;DC.ODA.TOTL.CD;DC.ODA.TOTL.GN.ZS;DC.ODA.TOTL.KD?format=json&per_page=1000&page=45&date=2010:2024&source=2 -> retry 800ms java.net.http.HttpTimeoutException: request timed out
+2026-09-13 11:22:49,613 [virtual-898] WARN  c.h.ingest.client.AbstractHttpClient - Fetch failed 1/3 https://api.worldbank.org/v2/country/all/indicator/DC.DAC.ITAL.CD;DC.DAC.JPNL.CD;DC.DAC.KORL.CD;DC.DAC.LTUL.CD;DC.DAC.LUXL.CD;DC.DAC.NLDL.CD;DC.DAC.NORL.CD;DC.DAC.NZLL.CD;DC.DAC.POLL.CD;DC.DAC.PRTL.CD;DC.DAC.SVKL.CD;DC.DAC.SVNL.CD;DC.DAC.SWEL.CD;DC.DAC.TOTL.CD;DC.DAC.USAL.CD;DC.ODA.TLDC.CD;DC.ODA.TLDC.GN.ZS;DC.ODA.TOTL.CD;DC.ODA.TOTL.GN.ZS;DC.ODA.TOTL.KD?format=json&per_page=1000&page=44&date=2010:2024&source=2 -> retry 800ms java.net.http.HttpTimeoutException: request timed out
+2026-09-13 11:22:49,614 [virtual-884] WARN  c.h.ingest.client.AbstractHttpClient - Fetch failed 1/3 https://api.worldbank.org/v2/country/all/indicator/DT.DOD.DECT.CD;DT.DOD.DECT.GN.ZS;DT.DOD.DIMF.CD;DT.DOD.DLXF.CD;DT.DOD.DPNG.CD;DT.DOD.DPPG.CD;DT.DOD.DSTC.CD;DT.DOD.DSTC.IR.ZS;DT.DOD.DSTC.XP.ZS;DT.DOD.DSTC.ZS;DT.DOD.MIBR.CD;DT.DOD.MIDA.CD;DT.DOD.MWBG.CD;DT.DOD.PVLX.CD;DT.DOD.PVLX.EX.ZS;DT.DOD.PVLX.GN.ZS;DT.NFL.BLAT.CD;DT.NFL.BOND.CD;DT.NFL.CERF.CD;DT.NFL.DPNG.CD?format=json&per_page=1000&page=24&date=2010:2024&source=2 -> retry 800ms java.net.http.HttpTimeoutException: request timed out
+2026-09-13 11:23:09,242 [main] INFO  c.hedgefund.config.ConfigValidator - Config validation passed for environment='development', sources=22
+2026-09-13 11:23:09,882 [main] INFO  c.h.i.service.AbstractIngestService - Ingest start: source=defillama symbols=0
+2026-09-13 11:23:09,889 [main] INFO  c.h.ingest.store.SilverTransformer - Silver generic wrote /media/sandeep/DataDrive2/hedge-fund/datalake/data/silver/defillama/defillama.csv
+2026-09-13 11:23:09,891 [main] INFO  c.h.i.service.AbstractIngestService - Ingest complete: source=defillama
+2026-09-13 11:23:12,462 [main] INFO  c.hedgefund.config.ConfigValidator - Config validation passed for environment='development', sources=22
+2026-09-13 11:23:13,004 [main] INFO  c.h.i.service.AbstractIngestService - Ingest start: source=investing symbols=1
+2026-09-13 11:23:13,736 [virtual-28] WARN  c.h.ingest.client.AbstractHttpClient - Fetch failed 1/3 https://query1.finance.yahoo.com/v8/finance/chart/investing?interval=1d&range=10y -> retry 800ms java.io.IOException: HTTP 404 {"chart":{"result":null,"error":{"code":"Not Found","description":"No data found, symbol may be delisted"}}}
+2026-09-13 11:23:14,834 [virtual-28] WARN  c.h.ingest.client.AbstractHttpClient - Fetch failed 2/3 https://query1.finance.yahoo.com/v8/finance/chart/investing?interval=1d&range=10y -> retry 1600ms java.io.IOException: HTTP 404 {"chart":{"result":null,"error":{"code":"Not Found","description":"No data found, symbol may be delisted"}}}
+2026-09-13 11:23:16,594 [virtual-28] ERROR c.h.i.service.AbstractIngestService - Failed: investing [investing]
+java.io.IOException: HTTP 404 {"chart":{"result":null,"error":{"code":"Not Found","description":"No data found, symbol may be delisted"}}}
+	at com.hedgefund.ingest.client.AbstractHttpClient.fetchWithRetry(AbstractHttpClient.java:68)
+	at com.hedgefund.investing.client.InvestingClient.fetchRaw(InvestingClient.java:26)
+	at com.hedgefund.investing.ingest.InvestingIngestService.ingestSymbol(InvestingIngestService.java:34)
+	at com.hedgefund.ingest.service.AbstractIngestService.lambda$run$0(AbstractIngestService.java:52)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:572)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at java.base/java.lang.VirtualThread.run(VirtualThread.java:329)
+2026-09-13 11:23:29,128 [main] INFO  c.hedgefund.config.ConfigValidator - Config validation passed for environment='development', sources=22
+2026-09-13 11:23:29,500 [main] INFO  c.h.i.service.AbstractIngestService - Ingest start: source=cboe symbols=0
+2026-09-13 11:23:29,508 [main] INFO  c.h.ingest.store.SilverTransformer - Silver generic wrote /media/sandeep/DataDrive2/hedge-fund/datalake/data/silver/cboe/cboe.csv
+2026-09-13 11:23:29,509 [main] INFO  c.h.i.service.AbstractIngestService - Ingest complete: source=cboe
+2026-09-13 11:23:44,434 [main] INFO  c.hedgefund.config.ConfigValidator - Config validation passed for environment='development', sources=22
+2026-09-13 11:23:45,076 [main] INFO  c.h.i.service.AbstractIngestService - Ingest start: source=treasury symbols=1
+2026-09-13 11:23:45,095 [virtual-28] ERROR c.h.i.service.AbstractIngestService - Failed: treasury [treasury]
+java.lang.NumberFormatException: For input string: ""
+	at java.base/java.lang.NumberFormatException.forInputString(NumberFormatException.java:67)
+	at java.base/java.lang.Integer.parseInt(Integer.java:672)
+	at java.base/java.lang.Integer.parseInt(Integer.java:778)
+	at com.hedgefund.treasury.ingest.TreasuryIngestService.buildUrl(TreasuryIngestService.java:43)
+	at com.hedgefund.treasury.ingest.TreasuryIngestService.ingestSymbol(TreasuryIngestService.java:34)
+	at com.hedgefund.ingest.service.AbstractIngestService.lambda$run$0(AbstractIngestService.java:52)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:572)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at java.base/java.lang.VirtualThread.run(VirtualThread.java:329)
+2026-09-13 11:24:03,591 [main] INFO  c.hedgefund.config.ConfigValidator - Config validation passed for environment='development', sources=22
+2026-09-13 11:24:04,183 [main] INFO  c.h.i.service.AbstractIngestService - Ingest start: source=eastmoney symbols=1
+2026-09-13 11:24:05,360 [main] INFO  c.hedgefund.config.ConfigValidator - Config validation passed for environment='development', sources=22
+2026-09-13 11:24:05,871 [main] INFO  c.h.i.service.AbstractIngestService - Ingest start: source=bls symbols=0
+2026-09-13 11:24:05,905 [main] INFO  c.h.ingest.store.SilverTransformer - Silver generic wrote /media/sandeep/DataDrive2/hedge-fund/datalake/data/silver/bls/bls.csv
+2026-09-13 11:24:05,906 [main] INFO  c.h.i.service.AbstractIngestService - Ingest complete: source=bls
+2026-09-13 11:24:06,154 [virtual-28] DEBUG c.h.ingest.store.BronzeWriter - Bronze wrote 510 bytes to /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/eastmoney/symbol=eastmoney/data.ndjson
+2026-09-13 11:24:06,156 [virtual-28] INFO  c.h.i.service.AbstractIngestService - Done: eastmoney [eastmoney]
+2026-09-13 11:24:06,270 [main] INFO  c.h.ingest.store.SilverTransformer - Silver generic wrote /media/sandeep/DataDrive2/hedge-fund/datalake/data/silver/eastmoney/eastmoney.csv
+2026-09-13 11:24:06,271 [main] INFO  c.h.i.service.AbstractIngestService - Ingest complete: source=eastmoney
+2026-09-13 11:30:40,886 [main] INFO  c.hedgefund.config.ConfigValidator - Config validation passed for environment='development', sources=22
+2026-09-13 11:30:40,896 [main] INFO  c.h.ingest.config.IngestConfigLoader - Loaded config for source 'treasury' from /media/sandeep/DataDrive2/hedge-fund/config/treasury/treasury.yaml
+2026-09-13 11:30:41,408 [main] INFO  c.h.i.service.AbstractIngestService - Ingest start: source=treasury symbols=11
+2026-09-13 11:30:42,962 [virtual-30] DEBUG c.h.ingest.store.BronzeWriter - Bronze wrote 16584 bytes to /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/treasury/symbol=2017/data.ndjson
+2026-09-13 11:30:42,968 [virtual-30] INFO  c.h.i.service.AbstractIngestService - Done: treasury [2017]
+2026-09-13 11:30:43,375 [virtual-28] DEBUG c.h.ingest.store.BronzeWriter - Bronze wrote 16584 bytes to /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/treasury/symbol=2016/data.ndjson
+2026-09-13 11:30:43,376 [virtual-28] INFO  c.h.i.service.AbstractIngestService - Done: treasury [2016]
+2026-09-13 11:30:44,162 [virtual-49] DEBUG c.h.ingest.store.BronzeWriter - Bronze wrote 16978 bytes to /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/treasury/symbol=2018/data.ndjson
+2026-09-13 11:30:44,163 [virtual-49] INFO  c.h.i.service.AbstractIngestService - Done: treasury [2018]
+2026-09-13 11:30:45,223 [virtual-52] DEBUG c.h.ingest.store.BronzeWriter - Bronze wrote 17841 bytes to /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/treasury/symbol=2019/data.ndjson
+2026-09-13 11:30:45,223 [virtual-52] INFO  c.h.i.service.AbstractIngestService - Done: treasury [2019]
+2026-09-13 11:30:46,189 [virtual-58] DEBUG c.h.ingest.store.BronzeWriter - Bronze wrote 17912 bytes to /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/treasury/symbol=2020/data.ndjson
+2026-09-13 11:30:46,190 [virtual-58] INFO  c.h.i.service.AbstractIngestService - Done: treasury [2020]
+2026-09-13 11:30:47,236 [virtual-62] DEBUG c.h.ingest.store.BronzeWriter - Bronze wrote 17912 bytes to /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/treasury/symbol=2021/data.ndjson
+2026-09-13 11:30:47,236 [virtual-62] INFO  c.h.i.service.AbstractIngestService - Done: treasury [2021]
+2026-09-13 11:30:49,143 [virtual-71] DEBUG c.h.ingest.store.BronzeWriter - Bronze wrote 19098 bytes to /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/treasury/symbol=2023/data.ndjson
+2026-09-13 11:30:49,144 [virtual-71] INFO  c.h.i.service.AbstractIngestService - Done: treasury [2023]
+2026-09-13 11:30:49,366 [virtual-65] DEBUG c.h.ingest.store.BronzeWriter - Bronze wrote 18226 bytes to /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/treasury/symbol=2022/data.ndjson
+2026-09-13 11:30:49,366 [virtual-65] INFO  c.h.i.service.AbstractIngestService - Done: treasury [2022]
+2026-09-13 11:30:50,129 [virtual-79] DEBUG c.h.ingest.store.BronzeWriter - Bronze wrote 19098 bytes to /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/treasury/symbol=2024/data.ndjson
+2026-09-13 11:30:50,130 [virtual-79] INFO  c.h.i.service.AbstractIngestService - Done: treasury [2024]
+2026-09-13 11:30:51,203 [virtual-86] DEBUG c.h.ingest.store.BronzeWriter - Bronze wrote 20155 bytes to /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/treasury/symbol=2025/data.ndjson
+2026-09-13 11:30:51,205 [virtual-86] INFO  c.h.i.service.AbstractIngestService - Done: treasury [2025]
+2026-09-13 11:30:52,118 [virtual-92] DEBUG c.h.ingest.store.BronzeWriter - Bronze wrote 14285 bytes to /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/treasury/symbol=2026/data.ndjson
+2026-09-13 11:30:52,119 [virtual-92] INFO  c.h.i.service.AbstractIngestService - Done: treasury [2026]
+2026-09-13 11:30:52,187 [main] INFO  c.h.ingest.store.SilverTransformer - Silver generic wrote /media/sandeep/DataDrive2/hedge-fund/datalake/data/silver/treasury/treasury.csv
+2026-09-13 11:30:52,188 [main] INFO  c.h.i.service.AbstractIngestService - Ingest complete: source=treasury
+2026-09-13 11:30:55,719 [main] INFO  c.hedgefund.config.ConfigValidator - Config validation passed for environment='development', sources=22
+2026-09-13 11:30:55,736 [main] INFO  c.h.ingest.config.IngestConfigLoader - Loaded config for source 'sina' from /media/sandeep/DataDrive2/hedge-fund/config/sina/sina.yaml
+2026-09-13 11:30:56,316 [main] INFO  c.h.i.service.AbstractIngestService - Ingest start: source=sina symbols=1
+2026-09-13 11:31:00,516 [main] INFO  c.hedgefund.config.ConfigValidator - Config validation passed for environment='development', sources=22
+2026-09-13 11:31:00,532 [main] INFO  c.h.ingest.config.IngestConfigLoader - Loaded config for source 'treasury' from /media/sandeep/DataDrive2/hedge-fund/config/treasury/treasury.yaml
+2026-09-13 11:31:01,174 [main] INFO  c.h.i.service.AbstractIngestService - Ingest start: source=treasury symbols=11
+2026-09-13 11:31:02,446 [virtual-28] DEBUG c.h.ingest.store.BronzeWriter - Bronze wrote 16584 bytes to /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/treasury/symbol=2016/data.ndjson
+2026-09-13 11:31:02,447 [virtual-28] INFO  c.h.i.service.AbstractIngestService - Done: treasury [2016]
+2026-09-13 11:31:03,102 [virtual-30] DEBUG c.h.ingest.store.BronzeWriter - Bronze wrote 16584 bytes to /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/treasury/symbol=2017/data.ndjson
+2026-09-13 11:31:03,102 [virtual-30] INFO  c.h.i.service.AbstractIngestService - Done: treasury [2017]
+2026-09-13 11:31:03,105 [virtual-28] WARN  c.h.ingest.client.AbstractHttpClient - Fetch failed 1/3 https://hq.sinajs.cn/list=sh600000 -> retry 800ms java.io.IOException: HTTP 403 Forbidden
+2026-09-13 11:31:03,624 [virtual-45] DEBUG c.h.ingest.store.BronzeWriter - Bronze wrote 16978 bytes to /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/treasury/symbol=2018/data.ndjson
+2026-09-13 11:31:03,625 [virtual-45] INFO  c.h.i.service.AbstractIngestService - Done: treasury [2018]
+2026-09-13 11:31:04,866 [main] INFO  c.hedgefund.config.ConfigValidator - Config validation passed for environment='development', sources=22
+2026-09-13 11:31:04,877 [main] INFO  c.h.ingest.config.IngestConfigLoader - Loaded config for source 'bls' from /media/sandeep/DataDrive2/hedge-fund/config/bls/bls.yaml
+2026-09-13 11:31:05,292 [main] INFO  c.h.i.service.AbstractIngestService - Ingest start: source=bls symbols=3
+2026-09-13 11:31:05,400 [virtual-48] DEBUG c.h.ingest.store.BronzeWriter - Bronze wrote 17841 bytes to /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/treasury/symbol=2019/data.ndjson
+2026-09-13 11:31:05,401 [virtual-48] INFO  c.h.i.service.AbstractIngestService - Done: treasury [2019]
+2026-09-13 11:31:05,651 [virtual-54] DEBUG c.h.ingest.store.BronzeWriter - Bronze wrote 17912 bytes to /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/treasury/symbol=2020/data.ndjson
+2026-09-13 11:31:05,651 [virtual-54] INFO  c.h.i.service.AbstractIngestService - Done: treasury [2020]
+2026-09-13 11:31:06,177 [virtual-28] WARN  c.h.ingest.client.AbstractHttpClient - Fetch failed 1/3 https://download.bls.gov/pub/time.series/ap/ap.data.0.Current -> retry 800ms java.io.IOException: HTTP 403 <!DOCTYPE HTML>
+<html lang="en-us">      
+               <head> 
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Access Denied</title>
+</head>
+  <style type="text/css">
+    .centerDiv
+    {
+      width: 60%;
+      height:200px;
+      margin: 0 auto;
+      background-color:#FFFFFF ;
+    }
+  </style>
+<body>
+<div class="centerDiv">
+               <h1><a href=https://www.b
+2026-09-13 11:31:06,177 [virtual-30] WARN  c.h.ingest.client.AbstractHttpClient - Fetch failed 1/3 https://download.bls.gov/pub/time.series/ap/ap.data.0.Current -> retry 800ms java.io.IOException: HTTP 403 <!DOCTYPE HTML>
+<html lang="en-us">      
+               <head> 
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Access Denied</title>
+</head>
+  <style type="text/css">
+    .centerDiv
+    {
+      width: 60%;
+      height:200px;
+      margin: 0 auto;
+      background-color:#FFFFFF ;
+    }
+  </style>
+<body>
+<div class="centerDiv">
+               <h1><a href=https://www.b
+2026-09-13 11:31:06,654 [virtual-59] DEBUG c.h.ingest.store.BronzeWriter - Bronze wrote 17912 bytes to /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/treasury/symbol=2021/data.ndjson
+2026-09-13 11:31:06,655 [virtual-59] INFO  c.h.i.service.AbstractIngestService - Done: treasury [2021]
+2026-09-13 11:31:07,102 [virtual-30] WARN  c.h.ingest.client.AbstractHttpClient - Fetch failed 2/3 https://download.bls.gov/pub/time.series/ap/ap.data.0.Current -> retry 1600ms java.io.IOException: HTTP 403 <!DOCTYPE HTML>
+<html lang="en-us">      
+               <head> 
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Access Denied</title>
+</head>
+  <style type="text/css">
+    .centerDiv
+    {
+      width: 60%;
+      height:200px;
+      margin: 0 auto;
+      background-color:#FFFFFF ;
+    }
+  </style>
+<body>
+<div class="centerDiv">
+               <h1><a href=https://www.b
+2026-09-13 11:31:07,594 [virtual-28] WARN  c.h.ingest.client.AbstractHttpClient - Fetch failed 2/3 https://download.bls.gov/pub/time.series/ap/ap.data.0.Current -> retry 1600ms java.io.IOException: HTTP 403 <!DOCTYPE HTML>
+<html lang="en-us">      
+               <head> 
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Access Denied</title>
+</head>
+  <style type="text/css">
+    .centerDiv
+    {
+      width: 60%;
+      height:200px;
+      margin: 0 auto;
+      background-color:#FFFFFF ;
+    }
+  </style>
+<body>
+<div class="centerDiv">
+               <h1><a href=https://www.b
+2026-09-13 11:31:07,600 [virtual-65] DEBUG c.h.ingest.store.BronzeWriter - Bronze wrote 18226 bytes to /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/treasury/symbol=2022/data.ndjson
+2026-09-13 11:31:07,601 [virtual-65] INFO  c.h.i.service.AbstractIngestService - Done: treasury [2022]
+2026-09-13 11:31:08,596 [virtual-67] DEBUG c.h.ingest.store.BronzeWriter - Bronze wrote 19098 bytes to /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/treasury/symbol=2023/data.ndjson
+2026-09-13 11:31:08,597 [virtual-67] INFO  c.h.i.service.AbstractIngestService - Done: treasury [2023]
+2026-09-13 11:31:08,923 [virtual-30] ERROR c.h.i.service.AbstractIngestService - Failed: bls [LNS14000000]
+java.io.IOException: HTTP 403 <!DOCTYPE HTML>
+<html lang="en-us">      
+               <head> 
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Access Denied</title>
+</head>
+  <style type="text/css">
+    .centerDiv
+    {
+      width: 60%;
+      height:200px;
+      margin: 0 auto;
+      background-color:#FFFFFF ;
+    }
+  </style>
+<body>
+<div class="centerDiv">
+               <h1><a href=https://www.b
+	at com.hedgefund.ingest.client.AbstractHttpClient.fetchWithRetry(AbstractHttpClient.java:69)
+	at com.hedgefund.bls.client.BlsClient.fetchViaCsv(BlsClient.java:63)
+	at com.hedgefund.bls.client.BlsClient.fetchBlsSeries(BlsClient.java:39)
+	at com.hedgefund.bls.ingest.BlsIngestService.ingestSymbol(BlsIngestService.java:35)
+	at com.hedgefund.ingest.service.AbstractIngestService.lambda$run$0(AbstractIngestService.java:52)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:572)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at java.base/java.lang.VirtualThread.run(VirtualThread.java:329)
+2026-09-13 11:31:09,419 [virtual-53] WARN  c.h.ingest.client.AbstractHttpClient - Fetch failed 1/3 https://download.bls.gov/pub/time.series/ap/ap.data.0.Current -> retry 800ms java.io.IOException: HTTP 403 <!DOCTYPE HTML>
+<html lang="en-us">      
+               <head> 
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Access Denied</title>
+</head>
+  <style type="text/css">
+    .centerDiv
+    {
+      width: 60%;
+      height:200px;
+      margin: 0 auto;
+      background-color:#FFFFFF ;
+    }
+  </style>
+<body>
+<div class="centerDiv">
+               <h1><a href=https://www.b
+2026-09-13 11:31:09,512 [virtual-28] WARN  c.h.ingest.client.AbstractHttpClient - Fetch failed 2/3 https://hq.sinajs.cn/list=sh600000 -> retry 1600ms java.io.IOException: HTTP 403 Forbidden
+2026-09-13 11:31:09,918 [virtual-28] ERROR c.h.i.service.AbstractIngestService - Failed: bls [CUUR0000SA0]
+java.io.IOException: HTTP 403 <!DOCTYPE HTML>
+<html lang="en-us">      
+               <head> 
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Access Denied</title>
+</head>
+  <style type="text/css">
+    .centerDiv
+    {
+      width: 60%;
+      height:200px;
+      margin: 0 auto;
+      background-color:#FFFFFF ;
+    }
+  </style>
+<body>
+<div class="centerDiv">
+               <h1><a href=https://www.b
+	at com.hedgefund.ingest.client.AbstractHttpClient.fetchWithRetry(AbstractHttpClient.java:69)
+	at com.hedgefund.bls.client.BlsClient.fetchViaCsv(BlsClient.java:63)
+	at com.hedgefund.bls.client.BlsClient.fetchBlsSeries(BlsClient.java:39)
+	at com.hedgefund.bls.ingest.BlsIngestService.ingestSymbol(BlsIngestService.java:35)
+	at com.hedgefund.ingest.service.AbstractIngestService.lambda$run$0(AbstractIngestService.java:52)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:572)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at java.base/java.lang.VirtualThread.run(VirtualThread.java:329)
+2026-09-13 11:31:10,166 [virtual-73] DEBUG c.h.ingest.store.BronzeWriter - Bronze wrote 19098 bytes to /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/treasury/symbol=2024/data.ndjson
+2026-09-13 11:31:10,167 [virtual-73] INFO  c.h.i.service.AbstractIngestService - Done: treasury [2024]
+2026-09-13 11:31:10,424 [virtual-53] WARN  c.h.ingest.client.AbstractHttpClient - Fetch failed 2/3 https://download.bls.gov/pub/time.series/ap/ap.data.0.Current -> retry 1600ms java.io.IOException: HTTP 403 <!DOCTYPE HTML>
+<html lang="en-us">      
+               <head> 
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Access Denied</title>
+</head>
+  <style type="text/css">
+    .centerDiv
+    {
+      width: 60%;
+      height:200px;
+      margin: 0 auto;
+      background-color:#FFFFFF ;
+    }
+  </style>
+<body>
+<div class="centerDiv">
+               <h1><a href=https://www.b
+2026-09-13 11:31:11,660 [virtual-77] DEBUG c.h.ingest.store.BronzeWriter - Bronze wrote 20155 bytes to /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/treasury/symbol=2025/data.ndjson
+2026-09-13 11:31:11,661 [virtual-77] INFO  c.h.i.service.AbstractIngestService - Done: treasury [2025]
+2026-09-13 11:31:11,910 [virtual-87] DEBUG c.h.ingest.store.BronzeWriter - Bronze wrote 14285 bytes to /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/treasury/symbol=2026/data.ndjson
+2026-09-13 11:31:11,910 [virtual-87] INFO  c.h.i.service.AbstractIngestService - Done: treasury [2026]
+2026-09-13 11:31:11,914 [main] INFO  c.h.ingest.store.SilverTransformer - Silver generic wrote /media/sandeep/DataDrive2/hedge-fund/datalake/data/silver/treasury/treasury.csv
+2026-09-13 11:31:11,915 [main] INFO  c.h.i.service.AbstractIngestService - Ingest complete: source=treasury
+2026-09-13 11:31:12,129 [virtual-53] ERROR c.h.i.service.AbstractIngestService - Failed: bls [CES0000000001]
+java.io.IOException: HTTP 403 <!DOCTYPE HTML>
+<html lang="en-us">      
+               <head> 
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Access Denied</title>
+</head>
+  <style type="text/css">
+    .centerDiv
+    {
+      width: 60%;
+      height:200px;
+      margin: 0 auto;
+      background-color:#FFFFFF ;
+    }
+  </style>
+<body>
+<div class="centerDiv">
+               <h1><a href=https://www.b
+	at com.hedgefund.ingest.client.AbstractHttpClient.fetchWithRetry(AbstractHttpClient.java:69)
+	at com.hedgefund.bls.client.BlsClient.fetchViaCsv(BlsClient.java:63)
+	at com.hedgefund.bls.client.BlsClient.fetchBlsSeries(BlsClient.java:39)
+	at com.hedgefund.bls.ingest.BlsIngestService.ingestSymbol(BlsIngestService.java:35)
+	at com.hedgefund.ingest.service.AbstractIngestService.lambda$run$0(AbstractIngestService.java:52)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:572)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at java.base/java.lang.VirtualThread.run(VirtualThread.java:329)
+2026-09-13 11:31:16,578 [virtual-28] ERROR c.h.i.service.AbstractIngestService - Failed: sina [sh600000]
+java.io.IOException: HTTP 403 Forbidden
+	at com.hedgefund.ingest.client.AbstractHttpClient.fetchWithRetry(AbstractHttpClient.java:69)
+	at com.hedgefund.sina.client.SinaClient.fetchRaw(SinaClient.java:26)
+	at com.hedgefund.sina.ingest.SinaIngestService.ingestSymbol(SinaIngestService.java:34)
+	at com.hedgefund.ingest.service.AbstractIngestService.lambda$run$0(AbstractIngestService.java:52)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:572)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at java.base/java.lang.VirtualThread.run(VirtualThread.java:329)
+2026-09-13 11:31:19,922 [main] INFO  c.hedgefund.config.ConfigValidator - Config validation passed for environment='development', sources=22
+2026-09-13 11:31:19,933 [main] INFO  c.h.ingest.config.IngestConfigLoader - Loaded config for source 'bls' from /media/sandeep/DataDrive2/hedge-fund/config/bls/bls.yaml
+2026-09-13 11:31:24,620 [main] INFO  c.hedgefund.config.ConfigValidator - Config validation passed for environment='development', sources=22
+2026-09-13 11:31:24,632 [main] INFO  c.h.ingest.config.IngestConfigLoader - Loaded config for source 'sina' from /media/sandeep/DataDrive2/hedge-fund/config/sina/sina.yaml
+2026-09-13 11:31:25,156 [main] INFO  c.h.i.service.AbstractIngestService - Ingest start: source=sina symbols=1
+2026-09-13 11:31:27,956 [main] INFO  c.hedgefund.config.ConfigValidator - Config validation passed for environment='development', sources=22
+2026-09-13 11:31:27,963 [main] INFO  c.h.ingest.config.IngestConfigLoader - Loaded config for source 'bls' from /media/sandeep/DataDrive2/hedge-fund/config/bls/bls.yaml
+2026-09-13 11:31:28,344 [main] INFO  c.h.i.service.AbstractIngestService - Ingest start: source=bls symbols=3
+2026-09-13 11:31:28,832 [virtual-28] WARN  c.h.ingest.client.AbstractHttpClient - Fetch failed 1/3 https://download.bls.gov/pub/time.series/ap/ap.data.0.Current -> retry 800ms java.io.IOException: HTTP 403 <!DOCTYPE HTML>
+<html lang="en-us">      
+               <head> 
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Access Denied</title>
+</head>
+  <style type="text/css">
+    .centerDiv
+    {
+      width: 60%;
+      height:200px;
+      margin: 0 auto;
+      background-color:#FFFFFF ;
+    }
+  </style>
+<body>
+<div class="centerDiv">
+               <h1><a href=https://www.b
+2026-09-13 11:31:28,904 [virtual-30] WARN  c.h.ingest.client.AbstractHttpClient - Fetch failed 1/3 https://download.bls.gov/pub/time.series/ap/ap.data.0.Current -> retry 800ms java.io.IOException: HTTP 403 <!DOCTYPE HTML>
+<html lang="en-us">      
+               <head> 
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Access Denied</title>
+</head>
+  <style type="text/css">
+    .centerDiv
+    {
+      width: 60%;
+      height:200px;
+      margin: 0 auto;
+      background-color:#FFFFFF ;
+    }
+  </style>
+<body>
+<div class="centerDiv">
+               <h1><a href=https://www.b
+2026-09-13 11:31:29,819 [virtual-28] WARN  c.h.ingest.client.AbstractHttpClient - Fetch failed 2/3 https://download.bls.gov/pub/time.series/ap/ap.data.0.Current -> retry 1600ms java.io.IOException: HTTP 403 <!DOCTYPE HTML>
+<html lang="en-us">      
+               <head> 
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Access Denied</title>
+</head>
+  <style type="text/css">
+    .centerDiv
+    {
+      width: 60%;
+      height:200px;
+      margin: 0 auto;
+      background-color:#FFFFFF ;
+    }
+  </style>
+<body>
+<div class="centerDiv">
+               <h1><a href=https://www.b
+2026-09-13 11:31:30,324 [virtual-30] WARN  c.h.ingest.client.AbstractHttpClient - Fetch failed 2/3 https://download.bls.gov/pub/time.series/ap/ap.data.0.Current -> retry 1600ms java.io.IOException: HTTP 403 <!DOCTYPE HTML>
+<html lang="en-us">      
+               <head> 
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Access Denied</title>
+</head>
+  <style type="text/css">
+    .centerDiv
+    {
+      width: 60%;
+      height:200px;
+      margin: 0 auto;
+      background-color:#FFFFFF ;
+    }
+  </style>
+<body>
+<div class="centerDiv">
+               <h1><a href=https://www.b
+2026-09-13 11:31:30,963 [virtual-28] WARN  c.h.ingest.client.AbstractHttpClient - Fetch failed 1/3 https://hq.sinajs.cn/list=sh600000 -> retry 800ms java.io.IOException: HTTP 403 Forbidden
+2026-09-13 11:31:31,642 [virtual-28] ERROR c.h.i.service.AbstractIngestService - Failed: bls [CUUR0000SA0]
+java.io.IOException: HTTP 403 <!DOCTYPE HTML>
+<html lang="en-us">      
+               <head> 
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Access Denied</title>
+</head>
+  <style type="text/css">
+    .centerDiv
+    {
+      width: 60%;
+      height:200px;
+      margin: 0 auto;
+      background-color:#FFFFFF ;
+    }
+  </style>
+<body>
+<div class="centerDiv">
+               <h1><a href=https://www.b
+	at com.hedgefund.ingest.client.AbstractHttpClient.fetchWithRetry(AbstractHttpClient.java:69)
+	at com.hedgefund.bls.client.BlsClient.fetchViaCsv(BlsClient.java:63)
+	at com.hedgefund.bls.client.BlsClient.fetchBlsSeries(BlsClient.java:39)
+	at com.hedgefund.bls.ingest.BlsIngestService.ingestSymbol(BlsIngestService.java:35)
+	at com.hedgefund.ingest.service.AbstractIngestService.lambda$run$0(AbstractIngestService.java:52)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:572)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at java.base/java.lang.VirtualThread.run(VirtualThread.java:329)
+2026-09-13 11:31:32,219 [virtual-47] WARN  c.h.ingest.client.AbstractHttpClient - Fetch failed 1/3 https://download.bls.gov/pub/time.series/ap/ap.data.0.Current -> retry 800ms java.io.IOException: HTTP 403 <!DOCTYPE HTML>
+<html lang="en-us">      
+               <head> 
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Access Denied</title>
+</head>
+  <style type="text/css">
+    .centerDiv
+    {
+      width: 60%;
+      height:200px;
+      margin: 0 auto;
+      background-color:#FFFFFF ;
+    }
+  </style>
+<body>
+<div class="centerDiv">
+               <h1><a href=https://www.b
+2026-09-13 11:31:32,690 [virtual-30] ERROR c.h.i.service.AbstractIngestService - Failed: bls [LNS14000000]
+java.io.IOException: HTTP 403 <!DOCTYPE HTML>
+<html lang="en-us">      
+               <head> 
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Access Denied</title>
+</head>
+  <style type="text/css">
+    .centerDiv
+    {
+      width: 60%;
+      height:200px;
+      margin: 0 auto;
+      background-color:#FFFFFF ;
+    }
+  </style>
+<body>
+<div class="centerDiv">
+               <h1><a href=https://www.b
+	at com.hedgefund.ingest.client.AbstractHttpClient.fetchWithRetry(AbstractHttpClient.java:69)
+	at com.hedgefund.bls.client.BlsClient.fetchViaCsv(BlsClient.java:63)
+	at com.hedgefund.bls.client.BlsClient.fetchBlsSeries(BlsClient.java:39)
+	at com.hedgefund.bls.ingest.BlsIngestService.ingestSymbol(BlsIngestService.java:35)
+	at com.hedgefund.ingest.service.AbstractIngestService.lambda$run$0(AbstractIngestService.java:52)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:572)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at java.base/java.lang.VirtualThread.run(VirtualThread.java:329)
+2026-09-13 11:31:33,175 [virtual-47] WARN  c.h.ingest.client.AbstractHttpClient - Fetch failed 2/3 https://download.bls.gov/pub/time.series/ap/ap.data.0.Current -> retry 1600ms java.io.IOException: HTTP 403 <!DOCTYPE HTML>
+<html lang="en-us">      
+               <head> 
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Access Denied</title>
+</head>
+  <style type="text/css">
+    .centerDiv
+    {
+      width: 60%;
+      height:200px;
+      margin: 0 auto;
+      background-color:#FFFFFF ;
+    }
+  </style>
+<body>
+<div class="centerDiv">
+               <h1><a href=https://www.b
+2026-09-13 11:31:33,868 [main] INFO  c.hedgefund.config.ConfigValidator - Config validation passed for environment='development', sources=22
+2026-09-13 11:31:33,876 [main] INFO  c.h.ingest.config.IngestConfigLoader - Loaded config for source 'treasury' from /media/sandeep/DataDrive2/hedge-fund/config/treasury/treasury.yaml
+2026-09-13 11:31:34,256 [main] INFO  c.h.i.service.AbstractIngestService - Ingest start: source=treasury symbols=11
+2026-09-13 11:31:34,842 [virtual-47] ERROR c.h.i.service.AbstractIngestService - Failed: bls [CES0000000001]
+java.io.IOException: HTTP 403 <!DOCTYPE HTML>
+<html lang="en-us">      
+               <head> 
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Access Denied</title>
+</head>
+  <style type="text/css">
+    .centerDiv
+    {
+      width: 60%;
+      height:200px;
+      margin: 0 auto;
+      background-color:#FFFFFF ;
+    }
+  </style>
+<body>
+<div class="centerDiv">
+               <h1><a href=https://www.b
+	at com.hedgefund.ingest.client.AbstractHttpClient.fetchWithRetry(AbstractHttpClient.java:69)
+	at com.hedgefund.bls.client.BlsClient.fetchViaCsv(BlsClient.java:63)
+	at com.hedgefund.bls.client.BlsClient.fetchBlsSeries(BlsClient.java:39)
+	at com.hedgefund.bls.ingest.BlsIngestService.ingestSymbol(BlsIngestService.java:35)
+	at com.hedgefund.ingest.service.AbstractIngestService.lambda$run$0(AbstractIngestService.java:52)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:572)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at java.base/java.lang.VirtualThread.run(VirtualThread.java:329)
+2026-09-13 11:31:37,440 [virtual-28] WARN  c.h.ingest.client.AbstractHttpClient - Fetch failed 2/3 https://hq.sinajs.cn/list=sh600000 -> retry 1600ms java.io.IOException: HTTP 403 Forbidden
+2026-09-13 11:31:38,648 [virtual-30] DEBUG c.h.ingest.store.BronzeWriter - Bronze wrote 16584 bytes to /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/treasury/symbol=2017/data.ndjson
+2026-09-13 11:31:38,649 [virtual-30] INFO  c.h.i.service.AbstractIngestService - Done: treasury [2017]
+2026-09-13 11:31:38,963 [virtual-28] DEBUG c.h.ingest.store.BronzeWriter - Bronze wrote 16584 bytes to /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/treasury/symbol=2016/data.ndjson
+2026-09-13 11:31:38,964 [virtual-28] INFO  c.h.i.service.AbstractIngestService - Done: treasury [2016]
+2026-09-13 11:31:40,725 [virtual-48] DEBUG c.h.ingest.store.BronzeWriter - Bronze wrote 16978 bytes to /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/treasury/symbol=2018/data.ndjson
+2026-09-13 11:31:40,726 [virtual-48] INFO  c.h.i.service.AbstractIngestService - Done: treasury [2018]
+2026-09-13 11:31:41,585 [virtual-51] DEBUG c.h.ingest.store.BronzeWriter - Bronze wrote 17841 bytes to /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/treasury/symbol=2019/data.ndjson
+2026-09-13 11:31:41,586 [virtual-51] INFO  c.h.i.service.AbstractIngestService - Done: treasury [2019]
+2026-09-13 11:31:43,556 [virtual-56] DEBUG c.h.ingest.store.BronzeWriter - Bronze wrote 17912 bytes to /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/treasury/symbol=2020/data.ndjson
+2026-09-13 11:31:43,556 [virtual-56] INFO  c.h.i.service.AbstractIngestService - Done: treasury [2020]
+2026-09-13 11:31:43,606 [virtual-58] DEBUG c.h.ingest.store.BronzeWriter - Bronze wrote 17912 bytes to /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/treasury/symbol=2021/data.ndjson
+2026-09-13 11:31:43,607 [virtual-58] INFO  c.h.i.service.AbstractIngestService - Done: treasury [2021]
+2026-09-13 11:31:44,567 [virtual-28] ERROR c.h.i.service.AbstractIngestService - Failed: sina [sh600000]
+java.io.IOException: HTTP 403 Forbidden
+	at com.hedgefund.ingest.client.AbstractHttpClient.fetchWithRetry(AbstractHttpClient.java:69)
+	at com.hedgefund.sina.client.SinaClient.fetchRaw(SinaClient.java:26)
+	at com.hedgefund.sina.ingest.SinaIngestService.ingestSymbol(SinaIngestService.java:34)
+	at com.hedgefund.ingest.service.AbstractIngestService.lambda$run$0(AbstractIngestService.java:52)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:572)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at java.base/java.lang.VirtualThread.run(VirtualThread.java:329)
+2026-09-13 11:31:46,013 [virtual-63] DEBUG c.h.ingest.store.BronzeWriter - Bronze wrote 18226 bytes to /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/treasury/symbol=2022/data.ndjson
+2026-09-13 11:31:46,014 [virtual-63] INFO  c.h.i.service.AbstractIngestService - Done: treasury [2022]
+2026-09-13 11:31:46,814 [virtual-71] DEBUG c.h.ingest.store.BronzeWriter - Bronze wrote 19098 bytes to /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/treasury/symbol=2024/data.ndjson
+2026-09-13 11:31:46,814 [virtual-71] INFO  c.h.i.service.AbstractIngestService - Done: treasury [2024]
+2026-09-13 11:31:46,945 [virtual-68] DEBUG c.h.ingest.store.BronzeWriter - Bronze wrote 19098 bytes to /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/treasury/symbol=2023/data.ndjson
+2026-09-13 11:31:46,945 [virtual-68] INFO  c.h.i.service.AbstractIngestService - Done: treasury [2023]
+2026-09-13 11:31:47,800 [virtual-74] DEBUG c.h.ingest.store.BronzeWriter - Bronze wrote 20155 bytes to /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/treasury/symbol=2025/data.ndjson
+2026-09-13 11:31:47,800 [virtual-74] INFO  c.h.i.service.AbstractIngestService - Done: treasury [2025]
+2026-09-13 11:31:48,901 [virtual-79] DEBUG c.h.ingest.store.BronzeWriter - Bronze wrote 14285 bytes to /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/treasury/symbol=2026/data.ndjson
+2026-09-13 11:31:48,902 [virtual-79] INFO  c.h.i.service.AbstractIngestService - Done: treasury [2026]
+2026-09-13 11:31:48,906 [main] INFO  c.h.ingest.store.SilverTransformer - Silver generic wrote /media/sandeep/DataDrive2/hedge-fund/datalake/data/silver/treasury/treasury.csv
+2026-09-13 11:31:48,907 [main] INFO  c.h.i.service.AbstractIngestService - Ingest complete: source=treasury
+2026-09-13 11:35:23,146 [main] INFO  c.hedgefund.config.ConfigValidator - Config validation passed for environment='development', sources=22
+2026-09-13 11:35:23,152 [main] INFO  c.h.ingest.config.IngestConfigLoader - Loaded config for source 'treasury' from /media/sandeep/DataDrive2/hedge-fund/config/treasury/treasury.yaml
+2026-09-13 11:35:23,408 [main] INFO  c.h.i.service.AbstractIngestService - Ingest start: source=treasury symbols=11
+2026-09-13 11:35:24,639 [virtual-28] DEBUG c.h.ingest.store.BronzeWriter - Bronze wrote 16584 bytes to /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/treasury/symbol=2016/data.ndjson
+2026-09-13 11:35:24,640 [virtual-28] INFO  c.h.i.service.AbstractIngestService - Done: treasury [2016]
+2026-09-13 11:35:25,923 [virtual-30] DEBUG c.h.ingest.store.BronzeWriter - Bronze wrote 16584 bytes to /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/treasury/symbol=2017/data.ndjson
+2026-09-13 11:35:25,923 [virtual-30] INFO  c.h.i.service.AbstractIngestService - Done: treasury [2017]
+2026-09-13 11:35:26,643 [virtual-47] DEBUG c.h.ingest.store.BronzeWriter - Bronze wrote 16978 bytes to /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/treasury/symbol=2018/data.ndjson
+2026-09-13 11:35:26,644 [virtual-47] INFO  c.h.i.service.AbstractIngestService - Done: treasury [2018]
+2026-09-13 11:35:27,284 [virtual-52] DEBUG c.h.ingest.store.BronzeWriter - Bronze wrote 17841 bytes to /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/treasury/symbol=2019/data.ndjson
+2026-09-13 11:35:27,285 [virtual-52] INFO  c.h.i.service.AbstractIngestService - Done: treasury [2019]
+2026-09-13 11:35:28,115 [virtual-56] DEBUG c.h.ingest.store.BronzeWriter - Bronze wrote 17912 bytes to /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/treasury/symbol=2020/data.ndjson
+2026-09-13 11:35:28,115 [virtual-56] INFO  c.h.i.service.AbstractIngestService - Done: treasury [2020]
+2026-09-13 11:35:29,059 [virtual-61] DEBUG c.h.ingest.store.BronzeWriter - Bronze wrote 17912 bytes to /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/treasury/symbol=2021/data.ndjson
+2026-09-13 11:35:29,059 [virtual-61] INFO  c.h.i.service.AbstractIngestService - Done: treasury [2021]
+2026-09-13 11:35:30,132 [virtual-65] DEBUG c.h.ingest.store.BronzeWriter - Bronze wrote 18226 bytes to /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/treasury/symbol=2022/data.ndjson
+2026-09-13 11:35:30,133 [virtual-65] INFO  c.h.i.service.AbstractIngestService - Done: treasury [2022]
+2026-09-13 11:35:31,085 [virtual-69] DEBUG c.h.ingest.store.BronzeWriter - Bronze wrote 19098 bytes to /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/treasury/symbol=2023/data.ndjson
+2026-09-13 11:35:31,085 [virtual-69] INFO  c.h.i.service.AbstractIngestService - Done: treasury [2023]
+2026-09-13 11:35:32,081 [virtual-74] DEBUG c.h.ingest.store.BronzeWriter - Bronze wrote 19098 bytes to /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/treasury/symbol=2024/data.ndjson
+2026-09-13 11:35:32,081 [virtual-74] INFO  c.h.i.service.AbstractIngestService - Done: treasury [2024]
+2026-09-13 11:35:33,216 [virtual-79] DEBUG c.h.ingest.store.BronzeWriter - Bronze wrote 20155 bytes to /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/treasury/symbol=2025/data.ndjson
+2026-09-13 11:35:33,217 [virtual-79] INFO  c.h.i.service.AbstractIngestService - Done: treasury [2025]
+2026-09-13 11:35:33,809 [virtual-84] DEBUG c.h.ingest.store.BronzeWriter - Bronze wrote 14285 bytes to /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/treasury/symbol=2026/data.ndjson
+2026-09-13 11:35:33,809 [virtual-84] INFO  c.h.i.service.AbstractIngestService - Done: treasury [2026]
+2026-09-13 11:35:33,812 [main] INFO  c.h.ingest.store.SilverTransformer - Silver generic wrote /media/sandeep/DataDrive2/hedge-fund/datalake/data/silver/treasury/treasury.csv
+2026-09-13 11:35:33,812 [main] INFO  c.h.i.service.AbstractIngestService - Ingest complete: source=treasury
+2026-09-13 11:35:38,941 [main] INFO  c.hedgefund.config.ConfigValidator - Config validation passed for environment='development', sources=22
+2026-09-13 11:35:38,947 [main] INFO  c.h.ingest.config.IngestConfigLoader - Loaded config for source 'treasury' from /media/sandeep/DataDrive2/hedge-fund/config/treasury/treasury.yaml
+2026-09-13 11:35:39,192 [main] INFO  c.h.i.service.AbstractIngestService - Ingest start: source=treasury symbols=11
+2026-09-13 11:35:40,283 [virtual-28] DEBUG c.h.ingest.store.BronzeWriter - Bronze wrote 16584 bytes to /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/treasury/symbol=2016/data.ndjson
+2026-09-13 11:35:40,284 [virtual-28] INFO  c.h.i.service.AbstractIngestService - Done: treasury [2016]
+2026-09-13 11:35:40,846 [virtual-30] DEBUG c.h.ingest.store.BronzeWriter - Bronze wrote 16584 bytes to /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/treasury/symbol=2017/data.ndjson
+2026-09-13 11:35:40,846 [virtual-30] INFO  c.h.i.service.AbstractIngestService - Done: treasury [2017]
+2026-09-13 11:35:41,831 [virtual-45] DEBUG c.h.ingest.store.BronzeWriter - Bronze wrote 16978 bytes to /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/treasury/symbol=2018/data.ndjson
+2026-09-13 11:35:41,831 [virtual-45] INFO  c.h.i.service.AbstractIngestService - Done: treasury [2018]
+2026-09-13 11:35:42,815 [virtual-48] DEBUG c.h.ingest.store.BronzeWriter - Bronze wrote 17841 bytes to /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/treasury/symbol=2019/data.ndjson
+2026-09-13 11:35:42,815 [virtual-48] INFO  c.h.i.service.AbstractIngestService - Done: treasury [2019]
+2026-09-13 11:35:43,857 [virtual-53] DEBUG c.h.ingest.store.BronzeWriter - Bronze wrote 17912 bytes to /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/treasury/symbol=2020/data.ndjson
+2026-09-13 11:35:43,857 [virtual-53] INFO  c.h.i.service.AbstractIngestService - Done: treasury [2020]
+2026-09-13 11:35:44,914 [virtual-58] DEBUG c.h.ingest.store.BronzeWriter - Bronze wrote 17912 bytes to /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/treasury/symbol=2021/data.ndjson
+2026-09-13 11:35:44,915 [virtual-58] INFO  c.h.i.service.AbstractIngestService - Done: treasury [2021]
+2026-09-13 11:35:46,029 [virtual-64] DEBUG c.h.ingest.store.BronzeWriter - Bronze wrote 18226 bytes to /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/treasury/symbol=2022/data.ndjson
+2026-09-13 11:35:46,029 [virtual-64] INFO  c.h.i.service.AbstractIngestService - Done: treasury [2022]
+2026-09-13 11:35:47,617 [virtual-70] DEBUG c.h.ingest.store.BronzeWriter - Bronze wrote 19098 bytes to /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/treasury/symbol=2023/data.ndjson
+2026-09-13 11:35:47,617 [virtual-70] INFO  c.h.i.service.AbstractIngestService - Done: treasury [2023]
+2026-09-13 11:35:47,865 [virtual-72] DEBUG c.h.ingest.store.BronzeWriter - Bronze wrote 19098 bytes to /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/treasury/symbol=2024/data.ndjson
+2026-09-13 11:35:47,865 [virtual-72] INFO  c.h.i.service.AbstractIngestService - Done: treasury [2024]
+2026-09-13 11:35:48,959 [virtual-75] DEBUG c.h.ingest.store.BronzeWriter - Bronze wrote 20155 bytes to /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/treasury/symbol=2025/data.ndjson
+2026-09-13 11:35:48,960 [virtual-75] INFO  c.h.i.service.AbstractIngestService - Done: treasury [2025]
+2026-09-13 11:35:50,100 [virtual-79] DEBUG c.h.ingest.store.BronzeWriter - Bronze wrote 14285 bytes to /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/treasury/symbol=2026/data.ndjson
+2026-09-13 11:35:50,100 [virtual-79] INFO  c.h.i.service.AbstractIngestService - Done: treasury [2026]
+2026-09-13 11:35:50,103 [main] INFO  c.h.ingest.store.SilverTransformer - Silver generic wrote /media/sandeep/DataDrive2/hedge-fund/datalake/data/silver/treasury/treasury.csv
+2026-09-13 11:35:50,104 [main] INFO  c.h.i.service.AbstractIngestService - Ingest complete: source=treasury
+2026-09-13 11:36:08,235 [main] INFO  c.hedgefund.config.ConfigValidator - Config validation passed for environment='development', sources=22
+2026-09-13 11:36:08,479 [main] INFO  c.h.i.service.AbstractIngestService - Ingest start: source=treasury symbols=1
+2026-09-13 11:36:08,484 [virtual-28] ERROR c.h.i.service.AbstractIngestService - Failed: treasury [treasury]
+java.lang.NumberFormatException: For input string: ""
+	at java.base/java.lang.NumberFormatException.forInputString(NumberFormatException.java:67)
+	at java.base/java.lang.Integer.parseInt(Integer.java:672)
+	at java.base/java.lang.Integer.parseInt(Integer.java:778)
+	at com.hedgefund.treasury.ingest.TreasuryIngestService.buildUrl(TreasuryIngestService.java:43)
+	at com.hedgefund.treasury.ingest.TreasuryIngestService.ingestSymbol(TreasuryIngestService.java:34)
+	at com.hedgefund.ingest.service.AbstractIngestService.lambda$run$0(AbstractIngestService.java:52)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:572)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at java.base/java.lang.VirtualThread.run(VirtualThread.java:329)
+2026-09-13 11:36:20,625 [main] INFO  c.hedgefund.config.ConfigValidator - Config validation passed for environment='development', sources=22
+2026-09-13 11:36:20,887 [main] INFO  c.h.i.service.AbstractIngestService - Ingest start: source=treasury symbols=1
+2026-09-13 11:36:20,891 [virtual-28] ERROR c.h.i.service.AbstractIngestService - Failed: treasury [treasury]
+java.lang.NumberFormatException: For input string: ""
+	at java.base/java.lang.NumberFormatException.forInputString(NumberFormatException.java:67)
+	at java.base/java.lang.Integer.parseInt(Integer.java:672)
+	at java.base/java.lang.Integer.parseInt(Integer.java:778)
+	at com.hedgefund.treasury.ingest.TreasuryIngestService.buildUrl(TreasuryIngestService.java:43)
+	at com.hedgefund.treasury.ingest.TreasuryIngestService.ingestSymbol(TreasuryIngestService.java:34)
+	at com.hedgefund.ingest.service.AbstractIngestService.lambda$run$0(AbstractIngestService.java:52)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:572)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at java.base/java.lang.VirtualThread.run(VirtualThread.java:329)
+2026-09-13 11:37:20,552 [main] INFO  c.hedgefund.config.ConfigValidator - Config validation passed for environment='development', sources=22
+2026-09-13 11:37:20,558 [main] INFO  c.h.ingest.config.IngestConfigLoader - Loaded config for source 'treasury' from /media/sandeep/DataDrive2/hedge-fund/config/treasury/treasury.yaml
+2026-09-13 11:37:20,819 [main] INFO  c.h.i.service.AbstractIngestService - Ingest start: source=treasury symbols=11
+2026-09-13 11:37:22,077 [virtual-28] DEBUG c.h.ingest.store.BronzeWriter - Bronze wrote 16584 bytes to /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/treasury/symbol=2016/data.ndjson
+2026-09-13 11:37:22,078 [virtual-28] INFO  c.h.i.service.AbstractIngestService - Done: treasury [2016]
+2026-09-13 11:37:22,549 [virtual-30] DEBUG c.h.ingest.store.BronzeWriter - Bronze wrote 16584 bytes to /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/treasury/symbol=2017/data.ndjson
+2026-09-13 11:37:22,550 [virtual-30] INFO  c.h.i.service.AbstractIngestService - Done: treasury [2017]
+2026-09-13 11:37:23,530 [virtual-44] DEBUG c.h.ingest.store.BronzeWriter - Bronze wrote 16978 bytes to /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/treasury/symbol=2018/data.ndjson
+2026-09-13 11:37:23,531 [virtual-44] INFO  c.h.i.service.AbstractIngestService - Done: treasury [2018]
+2026-09-13 11:37:24,516 [virtual-50] DEBUG c.h.ingest.store.BronzeWriter - Bronze wrote 17841 bytes to /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/treasury/symbol=2019/data.ndjson
+2026-09-13 11:37:24,516 [virtual-50] INFO  c.h.i.service.AbstractIngestService - Done: treasury [2019]
+2026-09-13 11:37:25,491 [virtual-54] DEBUG c.h.ingest.store.BronzeWriter - Bronze wrote 17912 bytes to /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/treasury/symbol=2020/data.ndjson
+2026-09-13 11:37:25,491 [virtual-54] INFO  c.h.i.service.AbstractIngestService - Done: treasury [2020]
+2026-09-13 11:37:26,543 [virtual-59] DEBUG c.h.ingest.store.BronzeWriter - Bronze wrote 17912 bytes to /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/treasury/symbol=2021/data.ndjson
+2026-09-13 11:37:26,543 [virtual-59] INFO  c.h.i.service.AbstractIngestService - Done: treasury [2021]
+2026-09-13 11:37:27,515 [virtual-64] DEBUG c.h.ingest.store.BronzeWriter - Bronze wrote 18226 bytes to /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/treasury/symbol=2022/data.ndjson
+2026-09-13 11:37:27,515 [virtual-64] INFO  c.h.i.service.AbstractIngestService - Done: treasury [2022]
+2026-09-13 11:37:28,560 [virtual-69] DEBUG c.h.ingest.store.BronzeWriter - Bronze wrote 19098 bytes to /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/treasury/symbol=2023/data.ndjson
+2026-09-13 11:37:28,560 [virtual-69] INFO  c.h.i.service.AbstractIngestService - Done: treasury [2023]
+2026-09-13 11:37:29,542 [virtual-74] DEBUG c.h.ingest.store.BronzeWriter - Bronze wrote 19098 bytes to /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/treasury/symbol=2024/data.ndjson
+2026-09-13 11:37:29,542 [virtual-74] INFO  c.h.i.service.AbstractIngestService - Done: treasury [2024]
+2026-09-13 11:37:30,567 [virtual-79] DEBUG c.h.ingest.store.BronzeWriter - Bronze wrote 20155 bytes to /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/treasury/symbol=2025/data.ndjson
+2026-09-13 11:37:30,567 [virtual-79] INFO  c.h.i.service.AbstractIngestService - Done: treasury [2025]
+2026-09-13 11:37:31,621 [virtual-82] DEBUG c.h.ingest.store.BronzeWriter - Bronze wrote 14285 bytes to /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/treasury/symbol=2026/data.ndjson
+2026-09-13 11:37:31,621 [virtual-82] INFO  c.h.i.service.AbstractIngestService - Done: treasury [2026]
+2026-09-13 11:37:31,624 [main] INFO  c.h.ingest.store.SilverTransformer - Silver generic wrote /media/sandeep/DataDrive2/hedge-fund/datalake/data/silver/treasury/treasury.csv
+2026-09-13 11:37:31,624 [main] INFO  c.h.i.service.AbstractIngestService - Ingest complete: source=treasury
+2026-09-13 11:37:37,920 [main] INFO  c.hedgefund.config.ConfigValidator - Config validation passed for environment='development', sources=22
+2026-09-13 11:37:37,928 [main] INFO  c.h.ingest.config.IngestConfigLoader - Loaded config for source 'treasury' from /media/sandeep/DataDrive2/hedge-fund/config/treasury/treasury.yaml
+2026-09-13 11:37:38,170 [main] INFO  c.h.i.service.AbstractIngestService - Ingest start: source=treasury symbols=11
+2026-09-13 11:37:39,468 [virtual-28] DEBUG c.h.ingest.store.BronzeWriter - Bronze wrote 16584 bytes to /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/treasury/symbol=2016/data.ndjson
+2026-09-13 11:37:39,469 [virtual-28] INFO  c.h.i.service.AbstractIngestService - Done: treasury [2016]
+2026-09-13 11:37:39,876 [virtual-30] DEBUG c.h.ingest.store.BronzeWriter - Bronze wrote 16584 bytes to /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/treasury/symbol=2017/data.ndjson
+2026-09-13 11:37:39,876 [virtual-30] INFO  c.h.i.service.AbstractIngestService - Done: treasury [2017]
+2026-09-13 11:37:40,865 [virtual-46] DEBUG c.h.ingest.store.BronzeWriter - Bronze wrote 16978 bytes to /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/treasury/symbol=2018/data.ndjson
+2026-09-13 11:37:40,866 [virtual-46] INFO  c.h.i.service.AbstractIngestService - Done: treasury [2018]
+2026-09-13 11:37:41,883 [virtual-51] DEBUG c.h.ingest.store.BronzeWriter - Bronze wrote 17841 bytes to /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/treasury/symbol=2019/data.ndjson
+2026-09-13 11:37:41,883 [virtual-51] INFO  c.h.i.service.AbstractIngestService - Done: treasury [2019]
+2026-09-13 11:37:42,883 [virtual-56] DEBUG c.h.ingest.store.BronzeWriter - Bronze wrote 17912 bytes to /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/treasury/symbol=2020/data.ndjson
+2026-09-13 11:37:42,883 [virtual-56] INFO  c.h.i.service.AbstractIngestService - Done: treasury [2020]
+2026-09-13 11:37:43,812 [virtual-63] DEBUG c.h.ingest.store.BronzeWriter - Bronze wrote 17912 bytes to /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/treasury/symbol=2021/data.ndjson
+2026-09-13 11:37:43,812 [virtual-63] INFO  c.h.i.service.AbstractIngestService - Done: treasury [2021]
+2026-09-13 11:37:44,869 [virtual-67] DEBUG c.h.ingest.store.BronzeWriter - Bronze wrote 18226 bytes to /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/treasury/symbol=2022/data.ndjson
+2026-09-13 11:37:44,870 [virtual-67] INFO  c.h.i.service.AbstractIngestService - Done: treasury [2022]
+2026-09-13 11:37:45,907 [virtual-71] DEBUG c.h.ingest.store.BronzeWriter - Bronze wrote 19098 bytes to /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/treasury/symbol=2023/data.ndjson
+2026-09-13 11:37:45,908 [virtual-71] INFO  c.h.i.service.AbstractIngestService - Done: treasury [2023]
+2026-09-13 11:37:46,955 [virtual-75] DEBUG c.h.ingest.store.BronzeWriter - Bronze wrote 19098 bytes to /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/treasury/symbol=2024/data.ndjson
+2026-09-13 11:37:46,955 [virtual-75] INFO  c.h.i.service.AbstractIngestService - Done: treasury [2024]
+2026-09-13 11:37:47,835 [virtual-80] DEBUG c.h.ingest.store.BronzeWriter - Bronze wrote 20155 bytes to /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/treasury/symbol=2025/data.ndjson
+2026-09-13 11:37:47,836 [virtual-80] INFO  c.h.i.service.AbstractIngestService - Done: treasury [2025]
+2026-09-13 11:37:48,832 [virtual-86] DEBUG c.h.ingest.store.BronzeWriter - Bronze wrote 14285 bytes to /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/treasury/symbol=2026/data.ndjson
+2026-09-13 11:37:48,833 [virtual-86] INFO  c.h.i.service.AbstractIngestService - Done: treasury [2026]
+2026-09-13 11:37:48,835 [main] INFO  c.h.ingest.store.SilverTransformer - Silver generic wrote /media/sandeep/DataDrive2/hedge-fund/datalake/data/silver/treasury/treasury.csv
+2026-09-13 11:37:48,836 [main] INFO  c.h.i.service.AbstractIngestService - Ingest complete: source=treasury
+2026-09-13 11:38:41,745 [main] INFO  c.hedgefund.config.ConfigValidator - Config validation passed for environment='development', sources=22
+2026-09-13 11:38:41,788 [main] INFO  c.h.ingest.config.IngestConfigLoader - Loaded config for source 'bls' from /media/sandeep/DataDrive2/hedge-fund/config/bls/bls.yaml
+2026-09-13 11:38:42,442 [main] INFO  c.h.i.service.AbstractIngestService - Ingest start: source=bls symbols=3
+2026-09-13 11:38:42,472 [main] INFO  c.hedgefund.config.ConfigValidator - Config validation passed for environment='development', sources=22
+2026-09-13 11:38:42,501 [main] INFO  c.h.ingest.config.IngestConfigLoader - Loaded config for source 'sina' from /media/sandeep/DataDrive2/hedge-fund/config/sina/sina.yaml
+2026-09-13 11:38:43,148 [main] INFO  c.h.i.service.AbstractIngestService - Ingest start: source=sina symbols=1
+2026-09-13 11:38:43,534 [virtual-30] WARN  c.h.ingest.client.AbstractHttpClient - Fetch failed 1/3 https://download.bls.gov/pub/time.series/ap/ap.data.0.Current -> retry 800ms java.io.IOException: HTTP 403 <!DOCTYPE HTML>
+<html lang="en-us">      
+               <head> 
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Access Denied</title>
+</head>
+  <style type="text/css">
+    .centerDiv
+    {
+      width: 60%;
+      height:200px;
+      margin: 0 auto;
+      background-color:#FFFFFF ;
+    }
+  </style>
+<body>
+<div class="centerDiv">
+               <h1><a href=https://www.b
+2026-09-13 11:38:43,534 [virtual-28] WARN  c.h.ingest.client.AbstractHttpClient - Fetch failed 1/3 https://download.bls.gov/pub/time.series/ap/ap.data.0.Current -> retry 800ms java.io.IOException: HTTP 403 <!DOCTYPE HTML>
+<html lang="en-us">      
+               <head> 
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Access Denied</title>
+</head>
+  <style type="text/css">
+    .centerDiv
+    {
+      width: 60%;
+      height:200px;
+      margin: 0 auto;
+      background-color:#FFFFFF ;
+    }
+  </style>
+<body>
+<div class="centerDiv">
+               <h1><a href=https://www.b
+2026-09-13 11:38:43,872 [main] INFO  c.hedgefund.config.ConfigValidator - Config validation passed for environment='development', sources=22
+2026-09-13 11:38:43,900 [main] INFO  c.h.ingest.config.IngestConfigLoader - Loaded config for source 'treasury' from /media/sandeep/DataDrive2/hedge-fund/config/treasury/treasury.yaml
+2026-09-13 11:38:44,201 [main] INFO  c.h.i.service.AbstractIngestService - Ingest start: source=treasury symbols=11
+2026-09-13 11:38:44,526 [virtual-28] WARN  c.h.ingest.client.AbstractHttpClient - Fetch failed 2/3 https://download.bls.gov/pub/time.series/ap/ap.data.0.Current -> retry 1600ms java.io.IOException: HTTP 403 <!DOCTYPE HTML>
+<html lang="en-us">      
+               <head> 
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Access Denied</title>
+</head>
+  <style type="text/css">
+    .centerDiv
+    {
+      width: 60%;
+      height:200px;
+      margin: 0 auto;
+      background-color:#FFFFFF ;
+    }
+  </style>
+<body>
+<div class="centerDiv">
+               <h1><a href=https://www.b
+2026-09-13 11:38:44,996 [virtual-30] WARN  c.h.ingest.client.AbstractHttpClient - Fetch failed 2/3 https://download.bls.gov/pub/time.series/ap/ap.data.0.Current -> retry 1600ms java.io.IOException: HTTP 403 <!DOCTYPE HTML>
+<html lang="en-us">      
+               <head> 
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Access Denied</title>
+</head>
+  <style type="text/css">
+    .centerDiv
+    {
+      width: 60%;
+      height:200px;
+      margin: 0 auto;
+      background-color:#FFFFFF ;
+    }
+  </style>
+<body>
+<div class="centerDiv">
+               <h1><a href=https://www.b
+2026-09-13 11:38:45,373 [virtual-30] DEBUG c.h.ingest.store.BronzeWriter - Bronze wrote 16584 bytes to /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/treasury/symbol=2017/data.ndjson
+2026-09-13 11:38:45,374 [virtual-30] INFO  c.h.i.service.AbstractIngestService - Done: treasury [2017]
+2026-09-13 11:38:46,102 [virtual-28] DEBUG c.h.ingest.store.BronzeWriter - Bronze wrote 16584 bytes to /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/treasury/symbol=2016/data.ndjson
+2026-09-13 11:38:46,103 [virtual-28] INFO  c.h.i.service.AbstractIngestService - Done: treasury [2016]
+2026-09-13 11:38:46,398 [virtual-28] ERROR c.h.i.service.AbstractIngestService - Failed: bls [CUUR0000SA0]
+java.io.IOException: HTTP 403 <!DOCTYPE HTML>
+<html lang="en-us">      
+               <head> 
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Access Denied</title>
+</head>
+  <style type="text/css">
+    .centerDiv
+    {
+      width: 60%;
+      height:200px;
+      margin: 0 auto;
+      background-color:#FFFFFF ;
+    }
+  </style>
+<body>
+<div class="centerDiv">
+               <h1><a href=https://www.b
+	at com.hedgefund.ingest.client.AbstractHttpClient.fetchWithRetry(AbstractHttpClient.java:68)
+	at com.hedgefund.bls.client.BlsClient.fetchViaCsv(BlsClient.java:63)
+	at com.hedgefund.bls.client.BlsClient.fetchBlsSeries(BlsClient.java:39)
+	at com.hedgefund.bls.ingest.BlsIngestService.ingestSymbol(BlsIngestService.java:35)
+	at com.hedgefund.ingest.service.AbstractIngestService.lambda$run$0(AbstractIngestService.java:52)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:572)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at java.base/java.lang.VirtualThread.run(VirtualThread.java:329)
+2026-09-13 11:38:46,899 [virtual-53] WARN  c.h.ingest.client.AbstractHttpClient - Fetch failed 1/3 https://download.bls.gov/pub/time.series/ap/ap.data.0.Current -> retry 800ms java.io.IOException: HTTP 403 <!DOCTYPE HTML>
+<html lang="en-us">      
+               <head> 
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Access Denied</title>
+</head>
+  <style type="text/css">
+    .centerDiv
+    {
+      width: 60%;
+      height:200px;
+      margin: 0 auto;
+      background-color:#FFFFFF ;
+    }
+  </style>
+<body>
+<div class="centerDiv">
+               <h1><a href=https://www.b
+2026-09-13 11:38:46,978 [virtual-45] DEBUG c.h.ingest.store.BronzeWriter - Bronze wrote 16978 bytes to /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/treasury/symbol=2018/data.ndjson
+2026-09-13 11:38:46,978 [virtual-45] INFO  c.h.i.service.AbstractIngestService - Done: treasury [2018]
+2026-09-13 11:38:47,331 [virtual-30] ERROR c.h.i.service.AbstractIngestService - Failed: bls [LNS14000000]
+java.io.IOException: HTTP 403 <!DOCTYPE HTML>
+<html lang="en-us">      
+               <head> 
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Access Denied</title>
+</head>
+  <style type="text/css">
+    .centerDiv
+    {
+      width: 60%;
+      height:200px;
+      margin: 0 auto;
+      background-color:#FFFFFF ;
+    }
+  </style>
+<body>
+<div class="centerDiv">
+               <h1><a href=https://www.b
+	at com.hedgefund.ingest.client.AbstractHttpClient.fetchWithRetry(AbstractHttpClient.java:68)
+	at com.hedgefund.bls.client.BlsClient.fetchViaCsv(BlsClient.java:63)
+	at com.hedgefund.bls.client.BlsClient.fetchBlsSeries(BlsClient.java:39)
+	at com.hedgefund.bls.ingest.BlsIngestService.ingestSymbol(BlsIngestService.java:35)
+	at com.hedgefund.ingest.service.AbstractIngestService.lambda$run$0(AbstractIngestService.java:52)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:572)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at java.base/java.lang.VirtualThread.run(VirtualThread.java:329)
+2026-09-13 11:38:47,827 [virtual-53] WARN  c.h.ingest.client.AbstractHttpClient - Fetch failed 2/3 https://download.bls.gov/pub/time.series/ap/ap.data.0.Current -> retry 1600ms java.io.IOException: HTTP 403 <!DOCTYPE HTML>
+<html lang="en-us">      
+               <head> 
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Access Denied</title>
+</head>
+  <style type="text/css">
+    .centerDiv
+    {
+      width: 60%;
+      height:200px;
+      margin: 0 auto;
+      background-color:#FFFFFF ;
+    }
+  </style>
+<body>
+<div class="centerDiv">
+               <h1><a href=https://www.b
+2026-09-13 11:38:47,901 [virtual-49] DEBUG c.h.ingest.store.BronzeWriter - Bronze wrote 17841 bytes to /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/treasury/symbol=2019/data.ndjson
+2026-09-13 11:38:47,901 [virtual-49] INFO  c.h.i.service.AbstractIngestService - Done: treasury [2019]
+2026-09-13 11:38:48,874 [virtual-51] DEBUG c.h.ingest.store.BronzeWriter - Bronze wrote 17912 bytes to /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/treasury/symbol=2020/data.ndjson
+2026-09-13 11:38:48,874 [virtual-51] INFO  c.h.i.service.AbstractIngestService - Done: treasury [2020]
+2026-09-13 11:38:49,675 [virtual-53] ERROR c.h.i.service.AbstractIngestService - Failed: bls [CES0000000001]
+java.io.IOException: HTTP 403 <!DOCTYPE HTML>
+<html lang="en-us">      
+               <head> 
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Access Denied</title>
+</head>
+  <style type="text/css">
+    .centerDiv
+    {
+      width: 60%;
+      height:200px;
+      margin: 0 auto;
+      background-color:#FFFFFF ;
+    }
+  </style>
+<body>
+<div class="centerDiv">
+               <h1><a href=https://www.b
+	at com.hedgefund.ingest.client.AbstractHttpClient.fetchWithRetry(AbstractHttpClient.java:68)
+	at com.hedgefund.bls.client.BlsClient.fetchViaCsv(BlsClient.java:63)
+	at com.hedgefund.bls.client.BlsClient.fetchBlsSeries(BlsClient.java:39)
+	at com.hedgefund.bls.ingest.BlsIngestService.ingestSymbol(BlsIngestService.java:35)
+	at com.hedgefund.ingest.service.AbstractIngestService.lambda$run$0(AbstractIngestService.java:52)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:572)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at java.base/java.lang.VirtualThread.run(VirtualThread.java:329)
+2026-09-13 11:38:49,787 [virtual-28] WARN  c.h.ingest.client.AbstractHttpClient - Fetch failed 1/3 https://hq.sinajs.cn/list=sh600000 -> retry 800ms java.io.IOException: HTTP 403 Forbidden
+2026-09-13 11:38:49,886 [virtual-57] DEBUG c.h.ingest.store.BronzeWriter - Bronze wrote 17912 bytes to /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/treasury/symbol=2021/data.ndjson
+2026-09-13 11:38:49,887 [virtual-57] INFO  c.h.i.service.AbstractIngestService - Done: treasury [2021]
+2026-09-13 11:38:50,931 [virtual-64] DEBUG c.h.ingest.store.BronzeWriter - Bronze wrote 18226 bytes to /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/treasury/symbol=2022/data.ndjson
+2026-09-13 11:38:50,931 [virtual-64] INFO  c.h.i.service.AbstractIngestService - Done: treasury [2022]
+2026-09-13 11:38:51,862 [virtual-70] DEBUG c.h.ingest.store.BronzeWriter - Bronze wrote 19098 bytes to /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/treasury/symbol=2023/data.ndjson
+2026-09-13 11:38:51,863 [virtual-70] INFO  c.h.i.service.AbstractIngestService - Done: treasury [2023]
+2026-09-13 11:38:52,874 [virtual-76] DEBUG c.h.ingest.store.BronzeWriter - Bronze wrote 19098 bytes to /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/treasury/symbol=2024/data.ndjson
+2026-09-13 11:38:52,874 [virtual-76] INFO  c.h.i.service.AbstractIngestService - Done: treasury [2024]
+2026-09-13 11:38:53,935 [virtual-81] DEBUG c.h.ingest.store.BronzeWriter - Bronze wrote 20155 bytes to /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/treasury/symbol=2025/data.ndjson
+2026-09-13 11:38:53,935 [virtual-81] INFO  c.h.i.service.AbstractIngestService - Done: treasury [2025]
+2026-09-13 11:38:54,966 [virtual-86] DEBUG c.h.ingest.store.BronzeWriter - Bronze wrote 14285 bytes to /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/treasury/symbol=2026/data.ndjson
+2026-09-13 11:38:54,966 [virtual-86] INFO  c.h.i.service.AbstractIngestService - Done: treasury [2026]
+2026-09-13 11:38:55,025 [main] INFO  c.h.ingest.store.SilverTransformer - Silver generic wrote /media/sandeep/DataDrive2/hedge-fund/datalake/data/silver/treasury/treasury.csv
+2026-09-13 11:38:55,026 [main] INFO  c.h.i.service.AbstractIngestService - Ingest complete: source=treasury
+2026-09-13 11:38:56,180 [virtual-28] WARN  c.h.ingest.client.AbstractHttpClient - Fetch failed 2/3 https://hq.sinajs.cn/list=sh600000 -> retry 1600ms java.io.IOException: HTTP 403 Forbidden
+2026-09-13 11:39:03,257 [virtual-28] ERROR c.h.i.service.AbstractIngestService - Failed: sina [sh600000]
+java.io.IOException: HTTP 403 Forbidden
+	at com.hedgefund.ingest.client.AbstractHttpClient.fetchWithRetry(AbstractHttpClient.java:68)
+	at com.hedgefund.sina.client.SinaClient.fetchRaw(SinaClient.java:26)
+	at com.hedgefund.sina.ingest.SinaIngestService.ingestSymbol(SinaIngestService.java:34)
+	at com.hedgefund.ingest.service.AbstractIngestService.lambda$run$0(AbstractIngestService.java:52)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:572)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at java.base/java.lang.VirtualThread.run(VirtualThread.java:329)
+2026-09-13 11:39:14,528 [main] INFO  c.hedgefund.config.ConfigValidator - Config validation passed for environment='development', sources=22
+2026-09-13 11:39:14,565 [main] INFO  c.h.ingest.config.IngestConfigLoader - Loaded config for source 'bls' from /media/sandeep/DataDrive2/hedge-fund/config/bls/bls.yaml
+2026-09-13 11:39:15,023 [main] INFO  c.h.i.service.AbstractIngestService - Ingest start: source=bls symbols=3
+2026-09-13 11:39:15,847 [virtual-30] WARN  c.h.ingest.client.AbstractHttpClient - Fetch failed 1/3 https://download.bls.gov/pub/time.series/ap/ap.data.0.Current -> retry 800ms java.io.IOException: HTTP 403 <!DOCTYPE HTML>
+<html lang="en-us">      
+               <head> 
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Access Denied</title>
+</head>
+  <style type="text/css">
+    .centerDiv
+    {
+      width: 60%;
+      height:200px;
+      margin: 0 auto;
+      background-color:#FFFFFF ;
+    }
+  </style>
+<body>
+<div class="centerDiv">
+               <h1><a href=https://www.b
+2026-09-13 11:39:15,848 [virtual-28] WARN  c.h.ingest.client.AbstractHttpClient - Fetch failed 1/3 https://download.bls.gov/pub/time.series/ap/ap.data.0.Current -> retry 800ms java.io.IOException: HTTP 403 <!DOCTYPE HTML>
+<html lang="en-us">      
+               <head> 
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Access Denied</title>
+</head>
+  <style type="text/css">
+    .centerDiv
+    {
+      width: 60%;
+      height:200px;
+      margin: 0 auto;
+      background-color:#FFFFFF ;
+    }
+  </style>
+<body>
+<div class="centerDiv">
+               <h1><a href=https://www.b
+2026-09-13 11:39:16,783 [virtual-30] WARN  c.h.ingest.client.AbstractHttpClient - Fetch failed 2/3 https://download.bls.gov/pub/time.series/ap/ap.data.0.Current -> retry 1600ms java.io.IOException: HTTP 403 <!DOCTYPE HTML>
+<html lang="en-us">      
+               <head> 
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Access Denied</title>
+</head>
+  <style type="text/css">
+    .centerDiv
+    {
+      width: 60%;
+      height:200px;
+      margin: 0 auto;
+      background-color:#FFFFFF ;
+    }
+  </style>
+<body>
+<div class="centerDiv">
+               <h1><a href=https://www.b
+2026-09-13 11:39:17,263 [virtual-28] WARN  c.h.ingest.client.AbstractHttpClient - Fetch failed 2/3 https://download.bls.gov/pub/time.series/ap/ap.data.0.Current -> retry 1600ms java.io.IOException: HTTP 403 <!DOCTYPE HTML>
+<html lang="en-us">      
+               <head> 
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Access Denied</title>
+</head>
+  <style type="text/css">
+    .centerDiv
+    {
+      width: 60%;
+      height:200px;
+      margin: 0 auto;
+      background-color:#FFFFFF ;
+    }
+  </style>
+<body>
+<div class="centerDiv">
+               <h1><a href=https://www.b
+2026-09-13 11:39:18,540 [virtual-30] ERROR c.h.i.service.AbstractIngestService - Failed: bls [LNS14000000]
+java.io.IOException: HTTP 403 <!DOCTYPE HTML>
+<html lang="en-us">      
+               <head> 
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Access Denied</title>
+</head>
+  <style type="text/css">
+    .centerDiv
+    {
+      width: 60%;
+      height:200px;
+      margin: 0 auto;
+      background-color:#FFFFFF ;
+    }
+  </style>
+<body>
+<div class="centerDiv">
+               <h1><a href=https://www.b
+	at com.hedgefund.ingest.client.AbstractHttpClient.fetchWithRetry(AbstractHttpClient.java:68)
+	at com.hedgefund.bls.client.BlsClient.fetchViaCsv(BlsClient.java:63)
+	at com.hedgefund.bls.client.BlsClient.fetchBlsSeries(BlsClient.java:39)
+	at com.hedgefund.bls.ingest.BlsIngestService.ingestSymbol(BlsIngestService.java:35)
+	at com.hedgefund.ingest.service.AbstractIngestService.lambda$run$0(AbstractIngestService.java:52)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:572)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at java.base/java.lang.VirtualThread.run(VirtualThread.java:329)
+2026-09-13 11:39:18,997 [virtual-52] WARN  c.h.ingest.client.AbstractHttpClient - Fetch failed 1/3 https://download.bls.gov/pub/time.series/ap/ap.data.0.Current -> retry 800ms java.io.IOException: HTTP 403 <!DOCTYPE HTML>
+<html lang="en-us">      
+               <head> 
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Access Denied</title>
+</head>
+  <style type="text/css">
+    .centerDiv
+    {
+      width: 60%;
+      height:200px;
+      margin: 0 auto;
+      background-color:#FFFFFF ;
+    }
+  </style>
+<body>
+<div class="centerDiv">
+               <h1><a href=https://www.b
+2026-09-13 11:39:19,500 [virtual-28] ERROR c.h.i.service.AbstractIngestService - Failed: bls [CUUR0000SA0]
+java.io.IOException: HTTP 403 <!DOCTYPE HTML>
+<html lang="en-us">      
+               <head> 
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Access Denied</title>
+</head>
+  <style type="text/css">
+    .centerDiv
+    {
+      width: 60%;
+      height:200px;
+      margin: 0 auto;
+      background-color:#FFFFFF ;
+    }
+  </style>
+<body>
+<div class="centerDiv">
+               <h1><a href=https://www.b
+	at com.hedgefund.ingest.client.AbstractHttpClient.fetchWithRetry(AbstractHttpClient.java:68)
+	at com.hedgefund.bls.client.BlsClient.fetchViaCsv(BlsClient.java:63)
+	at com.hedgefund.bls.client.BlsClient.fetchBlsSeries(BlsClient.java:39)
+	at com.hedgefund.bls.ingest.BlsIngestService.ingestSymbol(BlsIngestService.java:35)
+	at com.hedgefund.ingest.service.AbstractIngestService.lambda$run$0(AbstractIngestService.java:52)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:572)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at java.base/java.lang.VirtualThread.run(VirtualThread.java:329)
+2026-09-13 11:39:20,002 [virtual-52] WARN  c.h.ingest.client.AbstractHttpClient - Fetch failed 2/3 https://download.bls.gov/pub/time.series/ap/ap.data.0.Current -> retry 1600ms java.io.IOException: HTTP 403 <!DOCTYPE HTML>
+<html lang="en-us">      
+               <head> 
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Access Denied</title>
+</head>
+  <style type="text/css">
+    .centerDiv
+    {
+      width: 60%;
+      height:200px;
+      margin: 0 auto;
+      background-color:#FFFFFF ;
+    }
+  </style>
+<body>
+<div class="centerDiv">
+               <h1><a href=https://www.b
+2026-09-13 11:39:21,660 [virtual-52] ERROR c.h.i.service.AbstractIngestService - Failed: bls [CES0000000001]
+java.io.IOException: HTTP 403 <!DOCTYPE HTML>
+<html lang="en-us">      
+               <head> 
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Access Denied</title>
+</head>
+  <style type="text/css">
+    .centerDiv
+    {
+      width: 60%;
+      height:200px;
+      margin: 0 auto;
+      background-color:#FFFFFF ;
+    }
+  </style>
+<body>
+<div class="centerDiv">
+               <h1><a href=https://www.b
+	at com.hedgefund.ingest.client.AbstractHttpClient.fetchWithRetry(AbstractHttpClient.java:68)
+	at com.hedgefund.bls.client.BlsClient.fetchViaCsv(BlsClient.java:63)
+	at com.hedgefund.bls.client.BlsClient.fetchBlsSeries(BlsClient.java:39)
+	at com.hedgefund.bls.ingest.BlsIngestService.ingestSymbol(BlsIngestService.java:35)
+	at com.hedgefund.ingest.service.AbstractIngestService.lambda$run$0(AbstractIngestService.java:52)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:572)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at java.base/java.lang.VirtualThread.run(VirtualThread.java:329)
+2026-09-13 11:39:26,143 [main] INFO  c.hedgefund.config.ConfigValidator - Config validation passed for environment='development', sources=22
+2026-09-13 11:39:26,157 [main] INFO  c.h.ingest.config.IngestConfigLoader - Loaded config for source 'sina' from /media/sandeep/DataDrive2/hedge-fund/config/sina/sina.yaml
+2026-09-13 11:39:26,526 [main] INFO  c.h.i.service.AbstractIngestService - Ingest start: source=sina symbols=1
+2026-09-13 11:39:32,212 [virtual-28] WARN  c.h.ingest.client.AbstractHttpClient - Fetch failed 1/3 https://hq.sinajs.cn/list=sh600000 -> retry 800ms java.io.IOException: HTTP 403 Forbidden
+2026-09-13 11:39:38,517 [virtual-28] WARN  c.h.ingest.client.AbstractHttpClient - Fetch failed 2/3 https://hq.sinajs.cn/list=sh600000 -> retry 1600ms java.io.IOException: HTTP 403 Forbidden
+2026-09-13 11:39:45,499 [virtual-28] ERROR c.h.i.service.AbstractIngestService - Failed: sina [sh600000]
+java.io.IOException: HTTP 403 Forbidden
+	at com.hedgefund.ingest.client.AbstractHttpClient.fetchWithRetry(AbstractHttpClient.java:68)
+	at com.hedgefund.sina.client.SinaClient.fetchRaw(SinaClient.java:26)
+	at com.hedgefund.sina.ingest.SinaIngestService.ingestSymbol(SinaIngestService.java:34)
+	at com.hedgefund.ingest.service.AbstractIngestService.lambda$run$0(AbstractIngestService.java:52)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:572)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at java.base/java.lang.VirtualThread.run(VirtualThread.java:329)
+2026-09-13 22:53:07,078 [main] INFO  c.hedgefund.config.ConfigValidator - Config validation passed for environment='development', sources=22
+2026-09-13 22:53:07,121 [main] INFO  c.h.ingest.config.IngestConfigLoader - Loaded config for source 'fred' from /media/sandeep/DataDrive2/hedge-fund/config/fred/fred.yaml
+2026-09-13 22:53:37,837 [main] INFO  c.hedgefund.config.ConfigValidator - Config validation passed for environment='development', sources=22
+2026-09-13 22:53:37,851 [main] INFO  c.h.ingest.config.IngestConfigLoader - Loaded config for source 'sec' from /media/sandeep/DataDrive2/hedge-fund/config/sec/sec.yaml
+2026-09-13 22:53:40,358 [main] INFO  c.hedgefund.config.ConfigValidator - Config validation passed for environment='development', sources=22
+2026-09-13 22:53:40,388 [main] INFO  c.h.ingest.config.IngestConfigLoader - Loaded config for source 'worldbank' from /media/sandeep/DataDrive2/hedge-fund/config/worldbank/worldbank.yaml
+2026-09-13 22:53:41,391 [main] INFO  c.hedgefund.config.ConfigValidator - Config validation passed for environment='development', sources=22
+2026-09-13 22:53:41,408 [main] INFO  c.h.ingest.config.IngestConfigLoader - Loaded config for source 'binance' from /media/sandeep/DataDrive2/hedge-fund/config/binance/binance.yaml
+2026-09-13 22:53:57,346 [main] INFO  c.hedgefund.config.ConfigValidator - Config validation passed for environment='development', sources=22
+2026-09-13 22:53:57,357 [main] INFO  c.h.ingest.config.IngestConfigLoader - Loaded config for source 'worldbank' from /media/sandeep/DataDrive2/hedge-fund/config/worldbank/worldbank.yaml
+2026-09-13 22:53:57,795 [virtual-28] INFO  c.h.w.ingest.WorldBankIngestService - Fetching batch 1/1 [NY.GDP.MKTP.CD, NY.GDP.MKTP.KD.ZG, FP.CPI.TOTL.ZG, SL.UEM.TOTL.ZS, NE.EXP.GNFS.ZS, DT.DOD.DECT.CD, SI.POV.DDAY, SP.POP.TOTL] date 2016:2026 countries [all]
+2026-09-13 22:54:04,952 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=1.json
+2026-09-13 22:54:04,953 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=2.json
+2026-09-13 22:54:04,954 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=3.json
+2026-09-13 22:54:04,955 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=4.json
+2026-09-13 22:54:04,956 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=5.json
+2026-09-13 22:54:04,957 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=6.json
+2026-09-13 22:54:04,958 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=7.json
+2026-09-13 22:54:04,959 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=8.json
+2026-09-13 22:54:04,960 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=9.json
+2026-09-13 22:54:04,962 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=10.json
+2026-09-13 22:54:04,963 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=11.json
+2026-09-13 22:54:04,964 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=12.json
+2026-09-13 22:54:04,966 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=13.json
+2026-09-13 22:54:04,969 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=14.json
+2026-09-13 22:54:04,970 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=15.json
+2026-09-13 22:54:04,971 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=16.json
+2026-09-13 22:54:04,972 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=17.json
+2026-09-13 22:54:04,973 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=18.json
+2026-09-13 22:54:04,974 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=19.json
+2026-09-13 22:54:04,974 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=20.json
+2026-09-13 22:54:04,975 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=21.json
+2026-09-13 22:54:04,975 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=22.json
+2026-09-13 22:54:05,152 [virtual-28] INFO  c.h.w.ingest.WorldBankIngestService - Batch [NY.GDP.MKTP.CD, NY.GDP.MKTP.KD.ZG, FP.CPI.TOTL.ZG, SL.UEM.TOTL.ZS, NE.EXP.GNFS.ZS, DT.DOD.DECT.CD, SI.POV.DDAY, SP.POP.TOTL] done 22 pages 21200 points
+2026-09-13 22:55:55,172 [main] INFO  c.hedgefund.config.ConfigValidator - Config validation passed for environment='development', sources=22
+2026-09-13 22:55:55,188 [main] INFO  c.h.ingest.config.IngestConfigLoader - Loaded config for source 'worldbank' from /media/sandeep/DataDrive2/hedge-fund/config/worldbank/worldbank.yaml
+2026-09-13 22:55:55,621 [virtual-28] INFO  c.h.w.ingest.WorldBankIngestService - Fetching batch 1/1 [NY.GDP.MKTP.CD, NY.GDP.MKTP.KD.ZG, FP.CPI.TOTL.ZG, SL.UEM.TOTL.ZS, NE.EXP.GNFS.ZS, DT.DOD.DECT.CD, SI.POV.DDAY, SP.POP.TOTL] date 2016:2026 countries [all]
+2026-09-13 22:56:00,549 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=1.json
+2026-09-13 22:56:00,551 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=2.json
+2026-09-13 22:56:00,552 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=3.json
+2026-09-13 22:56:00,554 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=4.json
+2026-09-13 22:56:00,555 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=5.json
+2026-09-13 22:56:00,556 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=6.json
+2026-09-13 22:56:00,557 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=7.json
+2026-09-13 22:56:00,558 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=8.json
+2026-09-13 22:56:00,560 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=9.json
+2026-09-13 22:56:00,561 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=10.json
+2026-09-13 22:56:00,562 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=11.json
+2026-09-13 22:56:00,563 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=12.json
+2026-09-13 22:56:00,564 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=13.json
+2026-09-13 22:56:00,565 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=14.json
+2026-09-13 22:56:00,566 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=15.json
+2026-09-13 22:56:00,567 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=16.json
+2026-09-13 22:56:00,567 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=17.json
+2026-09-13 22:56:00,568 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=18.json
+2026-09-13 22:56:00,569 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=19.json
+2026-09-13 22:56:00,569 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=20.json
+2026-09-13 22:56:00,570 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=21.json
+2026-09-13 22:56:00,622 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=22.json
+2026-09-13 22:56:00,880 [virtual-28] INFO  c.h.w.ingest.WorldBankIngestService - Batch [NY.GDP.MKTP.CD, NY.GDP.MKTP.KD.ZG, FP.CPI.TOTL.ZG, SL.UEM.TOTL.ZS, NE.EXP.GNFS.ZS, DT.DOD.DECT.CD, SI.POV.DDAY, SP.POP.TOTL] done 22 pages 21200 points
+2026-09-13 22:58:33,583 [main] INFO  c.hedgefund.config.ConfigValidator - Config validation passed for environment='development', sources=22
+2026-09-13 22:58:33,609 [main] INFO  c.h.ingest.config.IngestConfigLoader - Loaded config for source 'worldbank' from /media/sandeep/DataDrive2/hedge-fund/config/worldbank/worldbank.yaml
+2026-09-13 22:58:34,048 [virtual-28] INFO  c.h.w.ingest.WorldBankIngestService - Fetching batch 1/1 [NY.GDP.MKTP.CD, NY.GDP.MKTP.KD.ZG, FP.CPI.TOTL.ZG, SL.UEM.TOTL.ZS, NE.EXP.GNFS.ZS, DT.DOD.DECT.CD, SI.POV.DDAY, SP.POP.TOTL] date 2016:2026 countries [all]
+2026-09-13 22:58:39,126 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=1.json
+2026-09-13 22:58:39,127 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=2.json
+2026-09-13 22:58:39,128 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=3.json
+2026-09-13 22:58:39,129 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=4.json
+2026-09-13 22:58:39,131 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=5.json
+2026-09-13 22:58:39,134 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=6.json
+2026-09-13 22:58:39,136 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=7.json
+2026-09-13 22:58:39,137 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=8.json
+2026-09-13 22:58:39,139 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=9.json
+2026-09-13 22:58:39,140 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=10.json
+2026-09-13 22:58:39,141 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=11.json
+2026-09-13 22:58:39,142 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=12.json
+2026-09-13 22:58:39,143 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=13.json
+2026-09-13 22:58:39,143 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=14.json
+2026-09-13 22:58:39,144 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=15.json
+2026-09-13 22:58:39,145 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=16.json
+2026-09-13 22:58:39,146 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=17.json
+2026-09-13 22:58:39,147 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=18.json
+2026-09-13 22:58:39,148 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=19.json
+2026-09-13 22:58:39,148 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=20.json
+2026-09-13 22:58:39,149 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=21.json
+2026-09-13 22:58:39,149 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=22.json
+2026-09-13 22:58:39,352 [virtual-28] INFO  c.h.w.ingest.WorldBankIngestService - Batch [NY.GDP.MKTP.CD, NY.GDP.MKTP.KD.ZG, FP.CPI.TOTL.ZG, SL.UEM.TOTL.ZS, NE.EXP.GNFS.ZS, DT.DOD.DECT.CD, SI.POV.DDAY, SP.POP.TOTL] done 22 pages 21200 points
+2026-09-13 23:02:08,783 [main] INFO  c.hedgefund.config.ConfigValidator - Config validation passed for environment='development', sources=22
+2026-09-13 23:02:08,799 [main] INFO  c.h.ingest.config.IngestConfigLoader - Loaded config for source 'worldbank' from /media/sandeep/DataDrive2/hedge-fund/config/worldbank/worldbank.yaml
+2026-09-13 23:02:09,256 [virtual-28] INFO  c.h.w.ingest.WorldBankIngestService - Fetching batch 1/1 [NY.GDP.MKTP.CD, NY.GDP.MKTP.KD.ZG, FP.CPI.TOTL.ZG, SL.UEM.TOTL.ZS, NE.EXP.GNFS.ZS, DT.DOD.DECT.CD, SI.POV.DDAY, SP.POP.TOTL] date 2016:2026 countries [all]
+2026-09-13 23:02:14,221 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=1.json
+2026-09-13 23:02:14,222 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=2.json
+2026-09-13 23:02:14,223 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=3.json
+2026-09-13 23:02:14,224 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=4.json
+2026-09-13 23:02:14,225 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=5.json
+2026-09-13 23:02:14,226 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=6.json
+2026-09-13 23:02:14,227 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=7.json
+2026-09-13 23:02:14,228 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=8.json
+2026-09-13 23:02:14,229 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=9.json
+2026-09-13 23:02:14,230 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=10.json
+2026-09-13 23:02:14,231 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=11.json
+2026-09-13 23:02:14,232 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=12.json
+2026-09-13 23:02:14,233 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=13.json
+2026-09-13 23:02:14,234 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=14.json
+2026-09-13 23:02:14,235 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=15.json
+2026-09-13 23:02:14,236 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=16.json
+2026-09-13 23:02:14,237 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=17.json
+2026-09-13 23:02:14,238 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=18.json
+2026-09-13 23:02:14,239 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=19.json
+2026-09-13 23:02:14,239 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=20.json
+2026-09-13 23:02:14,240 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=21.json
+2026-09-13 23:02:14,241 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=22.json
+2026-09-13 23:02:14,473 [virtual-28] INFO  c.h.w.ingest.WorldBankIngestService - Batch [NY.GDP.MKTP.CD, NY.GDP.MKTP.KD.ZG, FP.CPI.TOTL.ZG, SL.UEM.TOTL.ZS, NE.EXP.GNFS.ZS, DT.DOD.DECT.CD, SI.POV.DDAY, SP.POP.TOTL] done 22 pages 21200 points
+2026-09-13 23:02:49,166 [main] INFO  c.h.w.store.SilverTransformer - Silver streamed 4473470 rows to /media/sandeep/DataDrive2/hedge-fund/datalake/data/silver/worldbank/worldbank_observations/observations.csv
+2026-09-13 23:02:49,167 [main] INFO  c.h.w.ingest.WorldBankIngestService - Ingest complete, watermark /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/_watermark.json
+2026-09-13 23:28:04,330 [main] INFO  c.hedgefund.config.ConfigValidator - Config validation passed for environment='development', sources=22
+2026-09-13 23:28:04,363 [main] INFO  c.h.ingest.config.IngestConfigLoader - Loaded config for source 'worldbank' from /media/sandeep/DataDrive2/hedge-fund/config/worldbank/worldbank.yaml
+2026-09-13 23:28:04,819 [virtual-28] INFO  c.h.w.ingest.WorldBankIngestService - Fetching batch 1/1 [NY.GDP.MKTP.CD, NY.GDP.MKTP.KD.ZG, FP.CPI.TOTL.ZG, SL.UEM.TOTL.ZS, NE.EXP.GNFS.ZS, DT.DOD.DECT.CD, SI.POV.DDAY, SP.POP.TOTL] date 2016:2026 countries [all]
+2026-09-13 23:28:09,826 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=1.json
+2026-09-13 23:28:09,827 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=2.json
+2026-09-13 23:28:09,828 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=3.json
+2026-09-13 23:28:09,830 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=4.json
+2026-09-13 23:28:09,831 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=5.json
+2026-09-13 23:28:09,831 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=6.json
+2026-09-13 23:28:09,832 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=7.json
+2026-09-13 23:28:09,833 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=8.json
+2026-09-13 23:28:09,834 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=9.json
+2026-09-13 23:28:09,836 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=10.json
+2026-09-13 23:28:09,837 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=11.json
+2026-09-13 23:28:09,838 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=12.json
+2026-09-13 23:28:09,839 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=13.json
+2026-09-13 23:28:09,840 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=14.json
+2026-09-13 23:28:09,841 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=15.json
+2026-09-13 23:28:09,841 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=16.json
+2026-09-13 23:28:09,842 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=17.json
+2026-09-13 23:28:09,843 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=18.json
+2026-09-13 23:28:09,844 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=19.json
+2026-09-13 23:28:09,845 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=20.json
+2026-09-13 23:28:09,846 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=21.json
+2026-09-13 23:28:09,846 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=22.json
+2026-09-13 23:28:10,093 [virtual-28] INFO  c.h.w.ingest.WorldBankIngestService - Batch [NY.GDP.MKTP.CD, NY.GDP.MKTP.KD.ZG, FP.CPI.TOTL.ZG, SL.UEM.TOTL.ZS, NE.EXP.GNFS.ZS, DT.DOD.DECT.CD, SI.POV.DDAY, SP.POP.TOTL] done 22 pages 21200 points
+2026-09-13 23:28:42,471 [main] INFO  c.hedgefund.config.ConfigValidator - Config validation passed for environment='development', sources=22
+2026-09-13 23:28:42,484 [main] INFO  c.h.ingest.config.IngestConfigLoader - Loaded config for source 'worldbank' from /media/sandeep/DataDrive2/hedge-fund/config/worldbank/worldbank.yaml
+2026-09-13 23:28:42,833 [virtual-28] INFO  c.h.w.ingest.WorldBankIngestService - Fetching batch 1/1 [NY.GDP.MKTP.CD, NY.GDP.MKTP.KD.ZG, FP.CPI.TOTL.ZG, SL.UEM.TOTL.ZS, NE.EXP.GNFS.ZS, DT.DOD.DECT.CD, SI.POV.DDAY, SP.POP.TOTL] date 2016:2026 countries [all]
+2026-09-13 23:28:47,839 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=1.json
+2026-09-13 23:28:47,839 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=2.json
+2026-09-13 23:28:47,840 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=3.json
+2026-09-13 23:28:47,841 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=4.json
+2026-09-13 23:28:47,841 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=5.json
+2026-09-13 23:28:47,842 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=6.json
+2026-09-13 23:28:47,843 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=7.json
+2026-09-13 23:28:47,844 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=8.json
+2026-09-13 23:28:47,845 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=9.json
+2026-09-13 23:28:47,879 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=10.json
+2026-09-13 23:28:47,880 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=11.json
+2026-09-13 23:28:47,881 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=12.json
+2026-09-13 23:28:47,881 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=13.json
+2026-09-13 23:28:47,882 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=14.json
+2026-09-13 23:28:47,883 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=15.json
+2026-09-13 23:28:47,883 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=16.json
+2026-09-13 23:28:47,884 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=17.json
+2026-09-13 23:28:47,885 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=18.json
+2026-09-13 23:28:47,885 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=19.json
+2026-09-13 23:28:47,886 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=20.json
+2026-09-13 23:28:47,928 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=21.json
+2026-09-13 23:28:47,929 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=22.json
+2026-09-13 23:28:48,097 [virtual-28] INFO  c.h.w.ingest.WorldBankIngestService - Batch [NY.GDP.MKTP.CD, NY.GDP.MKTP.KD.ZG, FP.CPI.TOTL.ZG, SL.UEM.TOTL.ZS, NE.EXP.GNFS.ZS, DT.DOD.DECT.CD, SI.POV.DDAY, SP.POP.TOTL] done 22 pages 21200 points
+2026-09-13 23:29:13,299 [main] INFO  c.hedgefund.config.ConfigValidator - Config validation passed for environment='development', sources=22
+2026-09-13 23:29:13,312 [main] INFO  c.h.ingest.config.IngestConfigLoader - Loaded config for source 'worldbank' from /media/sandeep/DataDrive2/hedge-fund/config/worldbank/worldbank.yaml
+2026-09-13 23:29:13,699 [virtual-28] INFO  c.h.w.ingest.WorldBankIngestService - Fetching batch 1/1 [NY.GDP.MKTP.CD, NY.GDP.MKTP.KD.ZG, FP.CPI.TOTL.ZG, SL.UEM.TOTL.ZS, NE.EXP.GNFS.ZS, DT.DOD.DECT.CD, SI.POV.DDAY, SP.POP.TOTL] date 2016:2026 countries [all]
+2026-09-13 23:29:18,658 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=1.json
+2026-09-13 23:29:18,660 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=2.json
+2026-09-13 23:29:18,663 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=3.json
+2026-09-13 23:29:18,664 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=4.json
+2026-09-13 23:29:18,665 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=5.json
+2026-09-13 23:29:18,666 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=6.json
+2026-09-13 23:29:18,667 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=7.json
+2026-09-13 23:29:18,667 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=8.json
+2026-09-13 23:29:18,668 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=9.json
+2026-09-13 23:29:18,669 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=10.json
+2026-09-13 23:29:18,670 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=11.json
+2026-09-13 23:29:18,671 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=12.json
+2026-09-13 23:29:18,672 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=13.json
+2026-09-13 23:29:18,673 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=14.json
+2026-09-13 23:29:18,674 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=15.json
+2026-09-13 23:29:18,675 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=16.json
+2026-09-13 23:29:18,676 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=17.json
+2026-09-13 23:29:18,677 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=18.json
+2026-09-13 23:29:18,678 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=19.json
+2026-09-13 23:29:18,679 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=20.json
+2026-09-13 23:29:18,679 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=21.json
+2026-09-13 23:29:18,680 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=22.json
+2026-09-13 23:29:18,871 [virtual-28] INFO  c.h.w.ingest.WorldBankIngestService - Batch [NY.GDP.MKTP.CD, NY.GDP.MKTP.KD.ZG, FP.CPI.TOTL.ZG, SL.UEM.TOTL.ZS, NE.EXP.GNFS.ZS, DT.DOD.DECT.CD, SI.POV.DDAY, SP.POP.TOTL] done 22 pages 21200 points
+2026-09-13 23:29:29,422 [main] INFO  c.hedgefund.config.ConfigValidator - Config validation passed for environment='development', sources=22
+2026-09-13 23:29:29,447 [main] INFO  c.h.ingest.config.IngestConfigLoader - Loaded config for source 'worldbank' from /media/sandeep/DataDrive2/hedge-fund/config/worldbank/worldbank.yaml
+2026-09-13 23:29:29,843 [virtual-28] INFO  c.h.w.ingest.WorldBankIngestService - Fetching batch 1/1 [NY.GDP.MKTP.CD, NY.GDP.MKTP.KD.ZG, FP.CPI.TOTL.ZG, SL.UEM.TOTL.ZS, NE.EXP.GNFS.ZS, DT.DOD.DECT.CD, SI.POV.DDAY, SP.POP.TOTL] date 2016:2026 countries [all]
+2026-09-13 23:29:34,922 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=1.json
+2026-09-13 23:29:34,923 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=2.json
+2026-09-13 23:29:34,924 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=3.json
+2026-09-13 23:29:34,925 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=4.json
+2026-09-13 23:29:34,926 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=5.json
+2026-09-13 23:29:34,928 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=6.json
+2026-09-13 23:29:34,929 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=7.json
+2026-09-13 23:29:34,930 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=8.json
+2026-09-13 23:29:34,931 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=9.json
+2026-09-13 23:29:34,933 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=10.json
+2026-09-13 23:29:34,934 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=11.json
+2026-09-13 23:29:34,936 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=12.json
+2026-09-13 23:29:34,937 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=13.json
+2026-09-13 23:29:34,939 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=14.json
+2026-09-13 23:29:34,945 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=15.json
+2026-09-13 23:29:34,947 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=16.json
+2026-09-13 23:29:34,948 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=17.json
+2026-09-13 23:29:34,948 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=18.json
+2026-09-13 23:29:34,949 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=19.json
+2026-09-13 23:29:34,955 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=20.json
+2026-09-13 23:29:34,955 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=21.json
+2026-09-13 23:29:34,956 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=22.json
+2026-09-13 23:29:35,151 [virtual-28] INFO  c.h.w.ingest.WorldBankIngestService - Batch [NY.GDP.MKTP.CD, NY.GDP.MKTP.KD.ZG, FP.CPI.TOTL.ZG, SL.UEM.TOTL.ZS, NE.EXP.GNFS.ZS, DT.DOD.DECT.CD, SI.POV.DDAY, SP.POP.TOTL] done 22 pages 21200 points
+2026-09-13 23:30:12,861 [main] INFO  c.hedgefund.config.ConfigValidator - Config validation passed for environment='development', sources=22
+2026-09-13 23:30:12,871 [main] INFO  c.h.ingest.config.IngestConfigLoader - Loaded config for source 'worldbank' from /media/sandeep/DataDrive2/hedge-fund/config/worldbank/worldbank.yaml
+2026-09-13 23:30:13,258 [virtual-28] INFO  c.h.w.ingest.WorldBankIngestService - Fetching batch 1/1 [NY.GDP.MKTP.CD, NY.GDP.MKTP.KD.ZG, FP.CPI.TOTL.ZG, SL.UEM.TOTL.ZS, NE.EXP.GNFS.ZS, DT.DOD.DECT.CD, SI.POV.DDAY, SP.POP.TOTL] date 2016:2026 countries [all]
+2026-09-13 23:30:18,171 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=1.json
+2026-09-13 23:30:18,172 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=2.json
+2026-09-13 23:30:18,173 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=3.json
+2026-09-13 23:30:18,174 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=4.json
+2026-09-13 23:30:18,174 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=5.json
+2026-09-13 23:30:18,175 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=6.json
+2026-09-13 23:30:18,176 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=7.json
+2026-09-13 23:30:18,177 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=8.json
+2026-09-13 23:30:18,186 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=9.json
+2026-09-13 23:30:18,187 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=10.json
+2026-09-13 23:30:18,188 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=11.json
+2026-09-13 23:30:18,189 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=12.json
+2026-09-13 23:30:18,190 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=13.json
+2026-09-13 23:30:18,190 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=14.json
+2026-09-13 23:30:18,191 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=15.json
+2026-09-13 23:30:18,192 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=16.json
+2026-09-13 23:30:18,192 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=17.json
+2026-09-13 23:30:18,193 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=18.json
+2026-09-13 23:30:18,194 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=19.json
+2026-09-13 23:30:18,194 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=20.json
+2026-09-13 23:30:18,195 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=21.json
+2026-09-13 23:30:18,196 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=22.json
+2026-09-13 23:30:18,396 [virtual-28] INFO  c.h.w.ingest.WorldBankIngestService - Batch [NY.GDP.MKTP.CD, NY.GDP.MKTP.KD.ZG, FP.CPI.TOTL.ZG, SL.UEM.TOTL.ZS, NE.EXP.GNFS.ZS, DT.DOD.DECT.CD, SI.POV.DDAY, SP.POP.TOTL] done 22 pages 21200 points
+2026-09-13 23:30:48,305 [main] INFO  c.hedgefund.config.ConfigValidator - Config validation passed for environment='development', sources=22
+2026-09-13 23:30:48,317 [main] INFO  c.h.ingest.config.IngestConfigLoader - Loaded config for source 'worldbank' from /media/sandeep/DataDrive2/hedge-fund/config/worldbank/worldbank.yaml
+2026-09-13 23:30:48,720 [virtual-28] INFO  c.h.w.ingest.WorldBankIngestService - Fetching batch 1/1 [NY.GDP.MKTP.CD, NY.GDP.MKTP.KD.ZG, FP.CPI.TOTL.ZG, SL.UEM.TOTL.ZS, NE.EXP.GNFS.ZS, DT.DOD.DECT.CD, SI.POV.DDAY, SP.POP.TOTL] date 2016:2026 countries [all]
+2026-09-13 23:30:53,753 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=1.json
+2026-09-13 23:30:53,754 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=2.json
+2026-09-13 23:30:53,754 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=3.json
+2026-09-13 23:30:53,755 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=4.json
+2026-09-13 23:30:53,756 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=5.json
+2026-09-13 23:30:53,756 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=6.json
+2026-09-13 23:30:53,757 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=7.json
+2026-09-13 23:30:53,758 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=8.json
+2026-09-13 23:30:53,758 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=9.json
+2026-09-13 23:30:53,759 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=10.json
+2026-09-13 23:30:53,760 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=11.json
+2026-09-13 23:30:53,760 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=12.json
+2026-09-13 23:30:53,761 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=13.json
+2026-09-13 23:30:53,763 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=14.json
+2026-09-13 23:30:53,766 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=15.json
+2026-09-13 23:30:53,772 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=16.json
+2026-09-13 23:30:53,773 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=17.json
+2026-09-13 23:30:53,774 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=18.json
+2026-09-13 23:30:53,775 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=19.json
+2026-09-13 23:30:53,775 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=20.json
+2026-09-13 23:30:53,776 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=21.json
+2026-09-13 23:30:53,777 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=22.json
+2026-09-13 23:30:53,951 [virtual-28] INFO  c.h.w.ingest.WorldBankIngestService - Batch [NY.GDP.MKTP.CD, NY.GDP.MKTP.KD.ZG, FP.CPI.TOTL.ZG, SL.UEM.TOTL.ZS, NE.EXP.GNFS.ZS, DT.DOD.DECT.CD, SI.POV.DDAY, SP.POP.TOTL] done 22 pages 21200 points
+2026-09-13 23:31:38,950 [main] INFO  c.hedgefund.config.ConfigValidator - Config validation passed for environment='development', sources=22
+2026-09-13 23:31:38,966 [main] INFO  c.h.ingest.config.IngestConfigLoader - Loaded config for source 'worldbank' from /media/sandeep/DataDrive2/hedge-fund/config/worldbank/worldbank.yaml
+2026-09-13 23:31:39,332 [virtual-28] INFO  c.h.w.ingest.WorldBankIngestService - Fetching batch 1/1 [NY.GDP.MKTP.CD, NY.GDP.MKTP.KD.ZG, FP.CPI.TOTL.ZG, SL.UEM.TOTL.ZS, NE.EXP.GNFS.ZS, DT.DOD.DECT.CD, SI.POV.DDAY, SP.POP.TOTL] date 2016:2026 countries [all]
+2026-09-13 23:31:44,261 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=1.json
+2026-09-13 23:31:44,262 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=2.json
+2026-09-13 23:31:44,263 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=3.json
+2026-09-13 23:31:44,264 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=4.json
+2026-09-13 23:31:44,265 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=5.json
+2026-09-13 23:31:44,266 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=6.json
+2026-09-13 23:31:44,267 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=7.json
+2026-09-13 23:31:44,268 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=8.json
+2026-09-13 23:31:44,269 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=9.json
+2026-09-13 23:31:44,271 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=10.json
+2026-09-13 23:31:44,275 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=11.json
+2026-09-13 23:31:44,277 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=12.json
+2026-09-13 23:31:44,278 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=13.json
+2026-09-13 23:31:44,279 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=14.json
+2026-09-13 23:31:44,280 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=15.json
+2026-09-13 23:31:44,280 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=16.json
+2026-09-13 23:31:44,281 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=17.json
+2026-09-13 23:31:44,282 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=18.json
+2026-09-13 23:31:44,282 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=19.json
+2026-09-13 23:31:44,283 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=20.json
+2026-09-13 23:31:44,284 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=21.json
+2026-09-13 23:31:44,284 [virtual-28] INFO  c.h.worldbank.store.BronzeWriter - Wrote bronze /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/indicator=batch_0000/date=2016_2026/_raw_page=22.json
+2026-09-13 23:31:44,481 [virtual-28] INFO  c.h.w.ingest.WorldBankIngestService - Batch [NY.GDP.MKTP.CD, NY.GDP.MKTP.KD.ZG, FP.CPI.TOTL.ZG, SL.UEM.TOTL.ZS, NE.EXP.GNFS.ZS, DT.DOD.DECT.CD, SI.POV.DDAY, SP.POP.TOTL] done 22 pages 21200 points
+2026-09-13 23:32:55,674 [main] INFO  c.h.w.store.SilverTransformer - Silver wrote 4335054 rows to /media/sandeep/DataDrive2/hedge-fund/datalake/data/silver/worldbank/worldbank_observations/observations.parquet
+2026-09-13 23:32:55,894 [main] INFO  c.h.w.ingest.WorldBankIngestService - Ingest complete, watermark /media/sandeep/DataDrive2/hedge-fund/datalake/data/bronze/worldbank/_watermark.json

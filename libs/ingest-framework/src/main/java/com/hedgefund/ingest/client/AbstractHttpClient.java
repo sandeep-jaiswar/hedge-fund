@@ -1,5 +1,7 @@
 package com.hedgefund.ingest.client;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.hedgefund.common.Json;
 import com.hedgefund.ingest.config.IngestConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +14,7 @@ import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.util.Collections;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -21,7 +24,9 @@ public abstract class AbstractHttpClient {
 
     protected final IngestConfig config;
     protected final HttpClient http;
-    protected long lastRequestAt = 0;
+
+    /** Shared rate limiters per base URL — prevents 22 sources from overwhelming a single API. */
+    private static final ConcurrentHashMap<String, long[]> RATE_LIMITERS = new ConcurrentHashMap<>();
 
     /** Shared connection pool: one HttpClient for all sources (HTTP/1.1 keep-alive + virtual threads). */
     private static final HttpClient SHARED = HttpClient.newBuilder()
@@ -39,15 +44,28 @@ public abstract class AbstractHttpClient {
         return Collections.emptyMap();
     }
 
-    protected synchronized void throttle() throws InterruptedException {
+    protected void throttle() throws InterruptedException {
+        String baseUrl = config.baseUrl();
         double qps = config.rateLimit().qps();
         long minGapMs = (long) (1000 / qps);
-        long now = System.currentTimeMillis();
-        long gap = now - lastRequestAt;
-        if (gap < minGapMs) {
-            Thread.sleep(minGapMs - gap);
+        long[] lastRequest = RATE_LIMITERS.computeIfAbsent(baseUrl, k -> new long[]{0});
+        synchronized (lastRequest) {
+            long now = System.currentTimeMillis();
+            long gap = now - lastRequest[0];
+            if (gap < minGapMs) {
+                Thread.sleep(minGapMs - gap);
+            }
+            lastRequest[0] = System.currentTimeMillis();
         }
-        lastRequestAt = System.currentTimeMillis();
+    }
+
+    public String fetchRaw(String url) throws Exception {
+        return fetchWithRetry(url);
+    }
+
+    public JsonNode fetchJson(String url) throws Exception {
+        String raw = fetchWithRetry(url);
+        return Json.shared().readTree(raw);
     }
 
     protected String fetchWithRetry(String url) throws Exception {

@@ -2,10 +2,6 @@ package com.hedgefund.baostock.ingest;
 
 import com.hedgefund.baostock.client.BaostockClient;
 import com.hedgefund.baostock.config.BaostockConfig;
-import com.hedgefund.baostock.store.BaostockBronzeWriter;
-import com.hedgefund.baostock.store.BaostockSilverTransformer;
-import java.nio.file.*;
-import java.util.*;
 import java.nio.file.Path;
 import java.util.List;
 import com.hedgefund.ingest.service.AbstractIngestService;
@@ -15,15 +11,11 @@ public class BaostockIngestService extends AbstractIngestService {
 
     private final BaostockConfig cfg;
     private final BaostockClient client;
-    private final BaostockBronzeWriter bronzeWriter;
-    private final BaostockSilverTransformer silverTransformer;
 
     public BaostockIngestService(BaostockConfig cfg, Path datalakeRoot) {
         super(cfg.ingestConfig(), datalakeRoot);
         this.cfg = cfg;
         this.client = new BaostockClient(cfg);
-        this.bronzeWriter = new BaostockBronzeWriter(bronzeRoot);
-        this.silverTransformer = new BaostockSilverTransformer();
     }
 
     @Override
@@ -33,12 +25,12 @@ public class BaostockIngestService extends AbstractIngestService {
 
     @Override
     protected void ingestSymbol(String symbol) throws Exception {
-        bronzeWriter.write(symbol, client.fetchRaw(buildUrl(symbol)));
+        bronze.writeRawJson(symbol, client.fetchRaw(buildUrl(symbol)));
     }
 
     @Override
     protected void transformSilver() throws Exception {
-        silverTransformer.transform(bronzeRoot, silverRoot, "baostock.csv");
+        silver.transformGeneric(bronzeRoot, silverRoot, "baostock.csv");
     }
 
     private String buildUrl(String key) {

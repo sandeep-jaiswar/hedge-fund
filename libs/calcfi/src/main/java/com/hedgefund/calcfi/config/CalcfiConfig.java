@@ -31,6 +31,6 @@ public record CalcfiConfig(String baseUrl, List<String> series, IngestConfig ing
     }
 
     public List<String> effectiveKeys() {
-        return series != null && !series.isEmpty() ? series : ingestConfig().symbols();
+        return ingestConfig.resolveSymbols(series);
     }
 }

@@ -1,0 +1,20 @@
+2026-09-13 11:13:10,966 [Test worker] WARN  c.h.ingest.config.IngestConfigLoader - Source 'yahoo' not found in config file: /tmp/junit-13431449864530540874/test.yaml, using defaults
+2026-09-13 11:13:10,993 [Test worker] WARN  c.h.ingest.config.IngestConfigLoader - Config file not found: /nonexistent/file.yaml, using defaults for yahoo
+2026-09-13 11:13:11,007 [Test worker] INFO  c.h.ingest.config.IngestConfigLoader - Loaded config for source 'yahoo' from /tmp/junit-6000254890395203322/test.yaml
+2026-09-13 11:13:11,022 [Test worker] DEBUG c.h.ingest.store.BronzeWriter - Bronze wrote 12 bytes to /tmp/junit-8504029400190775402/symbol=TEST/data.ndjson
+2026-09-13 11:13:11,026 [Test worker] DEBUG c.h.ingest.store.BronzeWriter - Bronze wrote 38 bytes to /tmp/junit-16193738664156533931/symbol=AAPL/data.ndjson
+2026-09-13 22:45:55,168 [Test worker] WARN  c.h.ingest.config.IngestConfigLoader - Source 'yahoo' not found in config file: /tmp/junit-1867146820937277157/test.yaml, using defaults
+2026-09-13 22:45:55,194 [Test worker] WARN  c.h.ingest.config.IngestConfigLoader - Config file not found: /nonexistent/file.yaml, using defaults for yahoo
+2026-09-13 22:45:55,200 [Test worker] INFO  c.h.ingest.config.IngestConfigLoader - Loaded config for source 'yahoo' from /tmp/junit-6118722383926630678/test.yaml
+2026-09-13 22:45:55,213 [Test worker] DEBUG c.h.ingest.store.BronzeWriter - Bronze wrote 12 bytes to /tmp/junit-12405826714737152790/symbol=TEST/data.ndjson
+2026-09-13 22:45:55,216 [Test worker] DEBUG c.h.ingest.store.BronzeWriter - Bronze wrote 38 bytes to /tmp/junit-6093899055796554703/symbol=AAPL/data.ndjson
+2026-09-13 22:49:03,812 [Test worker] WARN  c.h.ingest.config.IngestConfigLoader - Source 'yahoo' not found in config file: /tmp/junit-17893325628140192927/test.yaml, using defaults
+2026-09-13 22:49:03,837 [Test worker] WARN  c.h.ingest.config.IngestConfigLoader - Config file not found: /nonexistent/file.yaml, using defaults for yahoo
+2026-09-13 22:49:03,844 [Test worker] INFO  c.h.ingest.config.IngestConfigLoader - Loaded config for source 'yahoo' from /tmp/junit-15787581451960437013/test.yaml
+2026-09-13 22:49:03,863 [Test worker] DEBUG c.h.ingest.store.BronzeWriter - Bronze wrote 12 bytes to /tmp/junit-15103156126014891074/symbol=TEST/data.ndjson
+2026-09-13 22:49:03,867 [Test worker] DEBUG c.h.ingest.store.BronzeWriter - Bronze wrote 38 bytes to /tmp/junit-6231211393656267956/symbol=AAPL/data.ndjson
+2026-09-13 23:33:34,579 [Test worker] WARN  c.h.ingest.config.IngestConfigLoader - Source 'yahoo' not found in config file: /tmp/junit-170184771786988324/test.yaml, using defaults
+2026-09-13 23:33:34,647 [Test worker] WARN  c.h.ingest.config.IngestConfigLoader - Config file not found: /nonexistent/file.yaml, using defaults for yahoo
+2026-09-13 23:33:34,654 [Test worker] INFO  c.h.ingest.config.IngestConfigLoader - Loaded config for source 'yahoo' from /tmp/junit-13800025614295412071/test.yaml
+2026-09-13 23:33:34,683 [Test worker] DEBUG c.h.ingest.store.BronzeWriter - Bronze wrote 12 bytes to /tmp/junit-2713312646010306562/symbol=TEST/data.ndjson
+2026-09-13 23:33:34,687 [Test worker] DEBUG c.h.ingest.store.BronzeWriter - Bronze wrote 38 bytes to /tmp/junit-14518723523567838994/symbol=AAPL/data.ndjson

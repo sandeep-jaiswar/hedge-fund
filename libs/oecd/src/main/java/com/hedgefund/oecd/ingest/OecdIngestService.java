@@ -2,8 +2,6 @@ package com.hedgefund.oecd.ingest;
 
 import com.hedgefund.oecd.client.OecdClient;
 import com.hedgefund.oecd.config.OecdConfig;
-import com.hedgefund.oecd.store.OecdBronzeWriter;
-import com.hedgefund.oecd.store.OecdSilverTransformer;
 import java.nio.file.Path;
 import java.util.List;
 import com.hedgefund.ingest.service.AbstractIngestService;
@@ -13,15 +11,11 @@ public class OecdIngestService extends AbstractIngestService {
 
     private final OecdConfig cfg;
     private final OecdClient client;
-    private final OecdBronzeWriter bronzeWriter;
-    private final OecdSilverTransformer silverTransformer;
 
     public OecdIngestService(OecdConfig cfg, Path datalakeRoot) {
         super(cfg.ingestConfig(), datalakeRoot);
         this.cfg = cfg;
         this.client = new OecdClient(cfg);
-        this.bronzeWriter = new OecdBronzeWriter(bronzeRoot);
-        this.silverTransformer = new OecdSilverTransformer();
     }
 
     @Override
@@ -31,12 +25,12 @@ public class OecdIngestService extends AbstractIngestService {
 
     @Override
     protected void ingestSymbol(String symbol) throws Exception {
-        bronzeWriter.write(symbol, client.fetchRaw(buildUrl(symbol)));
+        bronze.writeRawJson(symbol, client.fetchRaw(buildUrl(symbol)));
     }
 
     @Override
     protected void transformSilver() throws Exception {
-        silverTransformer.transform(bronzeRoot, silverRoot, "oecd.csv");
+        silver.transformGeneric(bronzeRoot, silverRoot, "oecd.csv");
     }
 
     private String buildUrl(String key) {

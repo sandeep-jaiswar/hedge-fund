@@ -55,9 +55,6 @@ public record InvestingConfig(
     }
 
     public List<String> effectiveKeys() {
-        if (!series.isEmpty() && !series.get(0).equals("investing")) return series;
-        if (!tickers.isEmpty() && !tickers.get(0).equals("investing")) return tickers;
-        if (!protocols.isEmpty() && !protocols.get(0).equals("investing")) return protocols;
-        return symbols;
+        return ingestConfig.resolveSymbols(symbols);
     }
 }

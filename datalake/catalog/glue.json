@@ -26,6 +26,11 @@
       "LocationUri": "s3://hedge-macro/"
     },
     {
+      "Name": "hedge_bronze",
+      "Description": "Bronze-layer raw data (NDJSON, CSV)",
+      "LocationUri": "s3://hedge-market/"
+    },
+    {
       "Name": "market",
       "Description": "Market domain views (ohlcv, crypto, filings)",
       "LocationUri": "s3://hedge-market/"

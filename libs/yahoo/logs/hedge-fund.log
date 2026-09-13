@@ -1,3 +1,12 @@
-2026-09-12 11:32:21,864 [Test worker] INFO  c.hedgefund.yahoo.client.YahooClient - Fetched 2 bars for AAPL
-2026-09-12 11:32:21,919 [Test worker] INFO  c.hedgefund.yahoo.client.YahooClient - Fetched 2 bars for AAPL
-2026-09-12 11:32:21,950 [Test worker] INFO  c.hedgefund.yahoo.client.YahooClient - Fetched 2 bars for AAPL
+2026-09-13 11:13:17,589 [Test worker] INFO  c.hedgefund.yahoo.client.YahooClient - Fetched 2 bars for AAPL
+2026-09-13 11:13:17,639 [Test worker] INFO  c.hedgefund.yahoo.client.YahooClient - Fetched 2 bars for AAPL
+2026-09-13 11:13:17,679 [Test worker] INFO  c.hedgefund.yahoo.client.YahooClient - Fetched 2 bars for AAPL
+2026-09-13 22:46:01,107 [Test worker] INFO  c.hedgefund.yahoo.client.YahooClient - Fetched 2 bars for AAPL
+2026-09-13 22:46:01,150 [Test worker] INFO  c.hedgefund.yahoo.client.YahooClient - Fetched 2 bars for AAPL
+2026-09-13 22:46:01,179 [Test worker] INFO  c.hedgefund.yahoo.client.YahooClient - Fetched 2 bars for AAPL
+2026-09-13 22:49:09,512 [Test worker] INFO  c.hedgefund.yahoo.client.YahooClient - Fetched 2 bars for AAPL
+2026-09-13 22:49:09,884 [Test worker] INFO  c.hedgefund.yahoo.client.YahooClient - Fetched 2 bars for AAPL
+2026-09-13 22:49:10,382 [Test worker] INFO  c.hedgefund.yahoo.client.YahooClient - Fetched 2 bars for AAPL
+2026-09-13 23:33:40,774 [Test worker] INFO  c.hedgefund.yahoo.client.YahooClient - Fetched 2 bars for AAPL
+2026-09-13 23:33:41,138 [Test worker] INFO  c.hedgefund.yahoo.client.YahooClient - Fetched 2 bars for AAPL
+2026-09-13 23:33:41,637 [Test worker] INFO  c.hedgefund.yahoo.client.YahooClient - Fetched 2 bars for AAPL

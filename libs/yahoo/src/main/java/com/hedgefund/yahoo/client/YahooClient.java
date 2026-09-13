@@ -1,8 +1,7 @@
 package com.hedgefund.yahoo.client;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hedgefund.common.Json;
 import com.hedgefund.ingest.client.AbstractHttpClient;
 import com.hedgefund.yahoo.config.YahooConfig;
 import com.hedgefund.yahoo.model.Bar;
@@ -23,13 +22,10 @@ public class YahooClient extends AbstractHttpClient {
     private static final Logger log = LoggerFactory.getLogger(YahooClient.class);
 
     private final YahooConfig yahooConfig;
-    private final ObjectMapper om;
 
     public YahooClient(YahooConfig config) {
         super(config.ingestConfig());
         this.yahooConfig = config;
-        this.om = new ObjectMapper();
-        om.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     }
 
     public List<Bar> fetchChart(String symbol) throws Exception {
@@ -40,7 +36,7 @@ public class YahooClient extends AbstractHttpClient {
             "&includePrePost=false";
 
         String body = fetchWithRetry(url);
-        JsonNode root = om.readTree(body);
+        JsonNode root = Json.shared().readTree(body);
         JsonNode result = root.path("chart").path("result");
 
         if (!result.isArray() || result.size() == 0) {

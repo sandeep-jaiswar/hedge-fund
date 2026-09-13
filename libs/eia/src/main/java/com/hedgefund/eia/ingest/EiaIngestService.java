@@ -2,8 +2,6 @@ package com.hedgefund.eia.ingest;
 
 import com.hedgefund.eia.client.EiaClient;
 import com.hedgefund.eia.config.EiaConfig;
-import com.hedgefund.eia.store.EiaBronzeWriter;
-import com.hedgefund.eia.store.EiaSilverTransformer;
 import java.nio.file.Path;
 import java.util.List;
 import com.hedgefund.ingest.service.AbstractIngestService;
@@ -13,15 +11,11 @@ public class EiaIngestService extends AbstractIngestService {
 
     private final EiaConfig cfg;
     private final EiaClient client;
-    private final EiaBronzeWriter bronzeWriter;
-    private final EiaSilverTransformer silverTransformer;
 
     public EiaIngestService(EiaConfig cfg, Path datalakeRoot) {
         super(cfg.ingestConfig(), datalakeRoot);
         this.cfg = cfg;
         this.client = new EiaClient(cfg);
-        this.bronzeWriter = new EiaBronzeWriter(bronzeRoot);
-        this.silverTransformer = new EiaSilverTransformer();
     }
 
     @Override
@@ -31,12 +25,12 @@ public class EiaIngestService extends AbstractIngestService {
 
     @Override
     protected void ingestSymbol(String symbol) throws Exception {
-        bronzeWriter.write(symbol, client.fetchRaw(buildUrl(symbol)));
+        bronze.writeRawJson(symbol, client.fetchRaw(buildUrl(symbol)));
     }
 
     @Override
     protected void transformSilver() throws Exception {
-        silverTransformer.transform(bronzeRoot, silverRoot, "eia.csv");
+        silver.transformGeneric(bronzeRoot, silverRoot, "eia.csv");
     }
 
     private String buildUrl(String key) {

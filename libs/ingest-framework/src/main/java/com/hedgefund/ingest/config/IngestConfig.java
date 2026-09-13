@@ -26,4 +26,9 @@ public record IngestConfig(
             new Paths("data/bronze/" + sourceId, "data/silver/" + sourceId, "catalog/glue.json")
         );
     }
+
+    /** Resolve source-specific symbols, falling back to ingestConfig.symbols(). */
+    public List<String> resolveSymbols(List<String> sourceSymbols) {
+        return sourceSymbols != null && !sourceSymbols.isEmpty() ? sourceSymbols : this.symbols();
+    }
 }

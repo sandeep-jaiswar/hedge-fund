@@ -17,10 +17,6 @@ public record SecConfig(
     int limit,
     IngestConfig ingestConfig
 ) {
-    public record Retry(int maxAttempts, long backoffMs, long maxBackoffMs) {}
-    public record RateLimit(double qps, int burst) {}
-    public record Paths(String bronze, String silver, String catalog) {}
-
     @SuppressWarnings("unchecked")
     public static SecConfig fromYaml(Path path) throws IOException {
         Yaml yaml = new Yaml();
@@ -61,12 +57,7 @@ public record SecConfig(
     }
 
     public List<String> effectiveKeys() {
-        if (tickers != null && !tickers.isEmpty()) return tickers;
-        return ingestConfig().symbols();
+        return ingestConfig.resolveSymbols(tickers);
     }
 
-    public Retry retry() { return new Retry(ingestConfig().retry().maxAttempts(), ingestConfig().retry().backoffMs(), ingestConfig().retry().maxBackoffMs()); }
-    public RateLimit rateLimit() { return new RateLimit(ingestConfig().rateLimit().qps(), ingestConfig().rateLimit().burst()); }
-    public Paths paths() { return new Paths(ingestConfig().paths().bronze(), ingestConfig().paths().silver(), ingestConfig().paths().catalog()); }
-    public int concurrency() { return ingestConfig().concurrency(); }
 }

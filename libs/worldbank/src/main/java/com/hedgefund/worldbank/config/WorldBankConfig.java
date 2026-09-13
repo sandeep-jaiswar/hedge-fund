@@ -26,18 +26,14 @@ public record WorldBankConfig(
         int concurrency,
         int maxIndicatorsPerRequest,
         int maxCountriesPerRequest,
-        Retry retry,
-        RateLimit rateLimit,
-        Paths paths,
+        IngestConfig.Retry retry,
+        IngestConfig.RateLimit rateLimit,
+        IngestConfig.Paths paths,
         boolean fullCrawl,
         int maxPages,
         String source,
         IngestConfig ingestConfig
 ) {
-    public record Retry(int maxAttempts, long backoffMs, long maxBackoffMs) {}
-    public record RateLimit(double qps, int burst) {}
-    public record Paths(String bronze, String silver, String catalog) {}
-
     @SuppressWarnings("unchecked")
     public static WorldBankConfig fromYaml(Path p) throws IOException {
         Yaml yaml = new Yaml();
@@ -62,11 +58,11 @@ public record WorldBankConfig(
         String source = str(wb, "source", "2");
 
         Map<String, Object> retryM = (Map<String, Object>) wb.getOrDefault("retry", Map.of());
-        Retry retry = new Retry(intVal(retryM, "maxAttempts", 3), longVal(retryM, "backoffMs", 500), longVal(retryM, "maxBackoffMs", 8000));
+        IngestConfig.Retry retry = new IngestConfig.Retry(intVal(retryM, "maxAttempts", 3), longVal(retryM, "backoffMs", 500), longVal(retryM, "maxBackoffMs", 8000));
         Map<String, Object> rlM = (Map<String, Object>) wb.getOrDefault("rateLimit", Map.of());
-        RateLimit rl = new RateLimit(doubleVal(rlM, "qps", 5), intVal(rlM, "burst", 10));
+        IngestConfig.RateLimit rl = new IngestConfig.RateLimit(doubleVal(rlM, "qps", 5), intVal(rlM, "burst", 10));
         Map<String, Object> pathsM = (Map<String, Object>) wb.getOrDefault("paths", Map.of());
-        Paths paths = new Paths(str(pathsM, "bronze", "data/bronze/worldbank"), str(pathsM, "silver", "data/silver/worldbank"), str(pathsM, "catalog", "catalog/glue.json"));
+        IngestConfig.Paths paths = new IngestConfig.Paths(str(pathsM, "bronze", "data/bronze/worldbank"), str(pathsM, "silver", "data/silver/worldbank"), str(pathsM, "catalog", "catalog/glue.json"));
 
         // env overrides
         String envBase = System.getenv("WORLDBANK_BASE_URL");
@@ -78,7 +74,7 @@ public record WorldBankConfig(
     }
 
     public static WorldBankConfig defaults() {
-        return new WorldBankConfig("https://api.worldbank.org/v2", List.of(), List.of("all"), "2010:2024", null, null, 1000, 8, 20, 20, new Retry(3,500,8000), new RateLimit(5,10), new Paths("data/bronze/worldbank","data/silver/worldbank","catalog/glue.json"), false, 0, "2", IngestConfig.defaults("worldbank"));
+        return new WorldBankConfig("https://api.worldbank.org/v2", List.of(), List.of("all"), "2010:2024", null, null, 1000, 8, 20, 20, new IngestConfig.Retry(3,500,8000), new IngestConfig.RateLimit(5,10), new IngestConfig.Paths("data/bronze/worldbank","data/silver/worldbank","catalog/glue.json"), false, 0, "2", IngestConfig.defaults("worldbank"));
     }
 
     private static String str(Map<String,Object> m, String k, String def){ Object v=m.get(k); return v==null?def:v.toString();}
