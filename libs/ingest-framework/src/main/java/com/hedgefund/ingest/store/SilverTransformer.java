@@ -69,6 +69,38 @@ public class SilverTransformer {
         return parquetPath;
     }
 
+    /**
+     * Generic passthrough silver: one row per bronze data file
+     * (source_key,raw_len,bronze_path). Replaces the 17 identical
+     * per-source *SilverTransformer copies.
+     */
+    public Path transformGeneric(Path bronzeRoot, Path silverPath, String outputFileName) throws IOException {
+        Files.createDirectories(silverPath);
+        Path out = silverPath.resolve(outputFileName);
+
+        StringBuilder csv = new StringBuilder();
+        csv.append("source_key,raw_len,bronze_path\n");
+
+        if (Files.exists(bronzeRoot)) {
+            try (var stream = Files.walk(bronzeRoot)) {
+                stream.filter(p -> p.getFileName().toString().startsWith("data.")).forEach(p -> {
+                    try {
+                        String key = p.getParent().getFileName().toString().replace("key=", "");
+                        long len = Files.size(p);
+                        csv.append(key).append(",").append(len).append(",")
+                            .append(p.toString().replace(",", "_")).append("\n");
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+            }
+        }
+
+        atomicWrite(out, csv.toString());
+        log.info("Silver generic wrote {}", out);
+        return out;
+    }
+
     private void atomicWrite(Path target, String content) throws IOException {
         Path tmp = target.resolveSibling(target.getFileName() + ".tmp");
         Files.writeString(tmp, content);

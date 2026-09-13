@@ -1,57 +1,46 @@
 package com.hedgefund.defillama.ingest;
+
 import com.hedgefund.defillama.client.DefillamaClient;
 import com.hedgefund.defillama.config.DefillamaConfig;
 import com.hedgefund.defillama.store.DefillamaBronzeWriter;
 import com.hedgefund.defillama.store.DefillamaSilverTransformer;
-import com.hedgefund.observability.logging.CorrelationId;
-import org.slf4j.*;
 import java.nio.file.*;
 import java.util.*;
-import java.util.concurrent.*;
-public class DefillamaIngestService {
-    private static final Logger log=LoggerFactory.getLogger(DefillamaIngestService.class);
+import java.nio.file.Path;
+import java.util.List;
+import com.hedgefund.ingest.service.AbstractIngestService;
+
+/** Thin source adapter: URL + fetch only. Concurrency, retry, watermark via framework. */
+public class DefillamaIngestService extends AbstractIngestService {
+
     private final DefillamaConfig cfg;
     private final DefillamaClient client;
-    private final DefillamaBronzeWriter bronze;
-    private final DefillamaSilverTransformer silver;
-    private final Path bronzeRoot;
-    private final Path silverRoot;
-    public DefillamaIngestService(DefillamaConfig cfg, Path datalakeRoot){
-        this.cfg=cfg;
-        this.client=new DefillamaClient(cfg);
-        this.bronzeRoot=datalakeRoot.resolve(cfg.ingestConfig().paths().bronze());
-        this.silverRoot=datalakeRoot.resolve(cfg.ingestConfig().paths().silver());
-        this.bronze=new DefillamaBronzeWriter(bronzeRoot);
-        this.silver=new DefillamaSilverTransformer();
+    private final DefillamaBronzeWriter bronzeWriter;
+    private final DefillamaSilverTransformer silverTransformer;
+
+    public DefillamaIngestService(DefillamaConfig cfg, Path datalakeRoot) {
+        super(cfg.ingestConfig(), datalakeRoot);
+        this.cfg = cfg;
+        this.client = new DefillamaClient(cfg);
+        this.bronzeWriter = new DefillamaBronzeWriter(bronzeRoot);
+        this.silverTransformer = new DefillamaSilverTransformer();
     }
-    public void run() throws Exception {
-        CorrelationId.withContext("defillama");
-        try {
-            log.info("defillama ingest start keys={} base={}", cfg.symbols(), cfg.baseUrl());
-            Files.createDirectories(bronzeRoot);
-            Files.createDirectories(silverRoot);
-            try (var exec = Executors.newVirtualThreadPerTaskExecutor()) {
-            Semaphore sem=new Semaphore(cfg.ingestConfig().concurrency());
-            List<Future<?>> futures=new ArrayList<>();
-            for(String key: cfg.symbols()){
-                sem.acquire();
-                futures.add(exec.submit(()->{
-                    try{
-                        String url=buildUrl(key);
-                        String raw=client.fetchRaw(url);
-                        bronze.write(key, raw);
-                        log.info("Done {} len={}", key, raw.length());
-                    }catch(Exception e){ log.error("Failed {}", key, e); throw new RuntimeException(e); }
-                    finally{ sem.release(); }
-                }));
-            }
-            for(Future<?> f: futures) f.get(60, TimeUnit.SECONDS);
-            }
-            log.info("defillama ingest done.");
-        } finally {
-            CorrelationId.clear();
-        }
+
+    @Override
+    protected List<String> keys() {
+        return cfg.symbols();
     }
+
+    @Override
+    protected void ingestSymbol(String symbol) throws Exception {
+        bronzeWriter.write(symbol, client.fetchRaw(buildUrl(symbol)));
+    }
+
+    @Override
+    protected void transformSilver() throws Exception {
+        silverTransformer.transform(bronzeRoot, silverRoot, "defillama.csv");
+    }
+
     private String buildUrl(String key){
         String base=cfg.baseUrl();
         return base+"/protocol/"+key;

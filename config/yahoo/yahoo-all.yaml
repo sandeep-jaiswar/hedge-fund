@@ -1,0 +1,72 @@
+yahoo:
+  baseUrl: "https://query1.finance.yahoo.com/v8/finance/chart"
+  symbols:
+    # US Major Indices
+    - "^GSPC"  # S&P 500
+    - "^DJI"   # Dow Jones
+    - "^IXIC"  # Nasdaq
+    - "^RUT"   # Russell 2000
+    - "^VIX"   # VIX
+
+    # FAANG + Major Tech
+    - "AAPL"   # Apple
+    - "MSFT"   # Microsoft
+    - "GOOGL"  # Alphabet
+    - "AMZN"   # Amazon
+    - "META"   # Meta
+    - "NVDA"   # NVIDIA
+    - "TSLA"   # Tesla
+    - "NFLX"   # Netflix
+    - "AMD"    # AMD
+    - "INTC"   # Intel
+
+    # Financial
+    - "JPM"    # JPMorgan
+    - "BAC"    # Bank of America
+    - "WFC"    # Wells Fargo
+    - "GS"     # Goldman Sachs
+    - "MS"     # Morgan Stanley
+    - "V"      # Visa
+    - "MA"     # Mastercard
+
+    # Healthcare
+    - "JNJ"    # Johnson & Johnson
+    - "UNH"    # UnitedHealth
+    - "PFE"    # Pfizer
+    - "ABBV"   # AbbVie
+    - "MRK"    # Merck
+
+    # Consumer
+    - "WMT"    # Walmart
+    - "PG"     # Procter & Gamble
+    - "KO"     # Coca-Cola
+    - "PEP"    # PepsiCo
+    - "COST"   # Costco
+
+    # Energy
+    - "XOM"    # ExxonMobil
+    - "CVX"    # Chevron
+    - "COP"    # ConocoPhillips
+
+    # ETFs
+    - "SPY"    # S&P 500 ETF
+    - "QQQ"    # Nasdaq 100 ETF
+    - "IWM"    # Russell 2000 ETF
+    - "GLD"    # Gold ETF
+    - "TLT"    # 20+ Year Treasury Bond ETF
+
+    # Crypto
+    - "BTC-USD"  # Bitcoin
+    - "ETH-USD"  # Ethereum
+
+    # International
+    - "EEM"    # Emerging Markets ETF
+    - "FXI"    # China Large-Cap ETF
+    - "EWJ"    # Japan ETF
+
+  range: "10y"
+  interval: "1d"
+  concurrency: 8
+  retry: {maxAttempts: 3, backoffMs: 800, maxBackoffMs: 8000}
+  rateLimit: {qps: 4, burst: 8}
+  paths: {bronze: "data/bronze/yahoo", silver: "data/silver/yahoo", catalog: "catalog/glue.json"}

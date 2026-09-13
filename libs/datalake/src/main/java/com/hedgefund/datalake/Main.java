@@ -34,6 +34,20 @@ public class Main {
                 lake.provisionSampleData();
                 System.out.println("Provisioned at " + lake.getRoot());
             }
+            case "merge" -> {
+                // Usage: merge [datalake-root] — CSV silver -> partitioned Parquet ZSTD
+                String root = args.length > 1 ? args[1] : lake.getRoot().toString();
+                SilverMerger.main(new String[]{root});
+            }
+            case "apply-views" -> {
+                // Usage: apply-views [duckdb-file] — apply 011 thin Parquet views directly
+                // (bypasses Liquibase, which cannot init on DuckDB 1.3.2; statements are idempotent)
+                String dbFile = "hedge-fund.duckdb";
+                for (int i = 1; i < args.length; i++) {
+                    if (!args[i].startsWith("-")) dbFile = args[i];
+                }
+                applyViews(java.nio.file.Path.of(dbFile));
+            }
             case "catalog" -> {
                 var cat = lake.loadCatalog();
                 System.out.println("Databases:");
@@ -73,6 +87,28 @@ public class Main {
                 }
             }
             default -> System.out.println("Unknown command: " + args[0]);
+        }
+    }
+
+    /** Execute every <sql> statement in 011-parquet-views.xml against the given DB file. */
+    static void applyViews(java.nio.file.Path dbFile) throws Exception {
+        java.nio.file.Path changelog = java.nio.file.Path.of("").toAbsolutePath();
+        for (java.nio.file.Path p = changelog; p != null; p = p.getParent()) {
+            if (java.nio.file.Files.exists(p.resolve("datalake/data"))) { changelog = p; break; }
+        }
+        String xml = java.nio.file.Files.readString(
+            changelog.resolve("libs/datalake/src/main/resources/db/changelog/changes/011-parquet-views.xml"));
+        var stmts = new java.util.ArrayList<String>();
+        var m = java.util.regex.Pattern.compile("<sql>(.*?)</sql>", java.util.regex.Pattern.DOTALL).matcher(xml);
+        while (m.find()) stmts.add(m.group(1).strip());
+        System.out.println("Applying " + stmts.size() + " view statements to " + dbFile.toAbsolutePath());
+        Class.forName("org.duckdb.DuckDBDriver");
+        try (var conn = java.sql.DriverManager.getConnection("jdbc:duckdb:" + dbFile.toAbsolutePath());
+             var st = conn.createStatement()) {
+            for (String sql : stmts) {
+                st.execute(sql);
+                System.out.println("  OK " + sql.substring(0, Math.min(90, sql.length())));
+            }
         }
     }
 }

@@ -6,4 +6,5 @@
     <!-- Complete 3NF schema reset: 8 dims + 5 facts + gold views + compat views -->
     <!-- Old 001-009 are archived in changes/ for reference — not included here -->
     <include file="db/changelog/changes/010-reset.xml"/>
+    <include file="db/changelog/changes/011-parquet-views.xml"/>
 </databaseChangeLog>

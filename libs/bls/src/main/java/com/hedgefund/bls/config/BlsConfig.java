@@ -11,7 +11,7 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 
-public record BlsConfig(String baseUrl, List<String> series, IngestConfig ingestConfig) {
+public record BlsConfig(String baseUrl, String apiKey, List<String> series, IngestConfig ingestConfig) {
 
     @SuppressWarnings("unchecked")
     public static BlsConfig fromYaml(Path path) throws IOException {
@@ -22,12 +22,13 @@ public record BlsConfig(String baseUrl, List<String> series, IngestConfig ingest
             root = yaml.load(in);
         }
         Map<String, Object> m = (Map<String, Object>) root.getOrDefault("bls", Map.of());
+        String apiKey = (String) m.getOrDefault("apiKey", "");
         List<String> series = (List<String>) m.getOrDefault("series", ingest.symbols());
-        return new BlsConfig(ingest.baseUrl(), series, ingest);
+        return new BlsConfig(ingest.baseUrl(), apiKey, series, ingest);
     }
 
     public static BlsConfig defaults() {
-        return new BlsConfig("https://download.bls.gov", List.of(), IngestConfig.defaults("bls"));
+        return new BlsConfig("https://download.bls.gov", "", List.of(), IngestConfig.defaults("bls"));
     }
 
     public List<String> effectiveKeys() {

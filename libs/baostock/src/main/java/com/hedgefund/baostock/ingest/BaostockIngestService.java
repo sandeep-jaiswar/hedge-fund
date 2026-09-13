@@ -1,59 +1,49 @@
 package com.hedgefund.baostock.ingest;
+
 import com.hedgefund.baostock.client.BaostockClient;
 import com.hedgefund.baostock.config.BaostockConfig;
 import com.hedgefund.baostock.store.BaostockBronzeWriter;
 import com.hedgefund.baostock.store.BaostockSilverTransformer;
-import com.hedgefund.observability.logging.CorrelationId;
-import org.slf4j.*;
 import java.nio.file.*;
 import java.util.*;
-import java.util.concurrent.*;
-public class BaostockIngestService {
-    private static final Logger log=LoggerFactory.getLogger(BaostockIngestService.class);
+import java.nio.file.Path;
+import java.util.List;
+import com.hedgefund.ingest.service.AbstractIngestService;
+
+/** Thin source adapter: URL + fetch only. Concurrency, retry, watermark via framework. */
+public class BaostockIngestService extends AbstractIngestService {
+
     private final BaostockConfig cfg;
     private final BaostockClient client;
-    private final BaostockBronzeWriter bronze;
-    private final BaostockSilverTransformer silver;
-    private final Path bronzeRoot;
-    private final Path silverRoot;
-    public BaostockIngestService(BaostockConfig cfg, Path datalakeRoot){
-        this.cfg=cfg;
-        this.client=new BaostockClient(cfg);
-        this.bronzeRoot=datalakeRoot.resolve(cfg.ingestConfig().paths().bronze());
-        this.silverRoot=datalakeRoot.resolve(cfg.ingestConfig().paths().silver());
-        this.bronze=new BaostockBronzeWriter(bronzeRoot);
-        this.silver=new BaostockSilverTransformer();
+    private final BaostockBronzeWriter bronzeWriter;
+    private final BaostockSilverTransformer silverTransformer;
+
+    public BaostockIngestService(BaostockConfig cfg, Path datalakeRoot) {
+        super(cfg.ingestConfig(), datalakeRoot);
+        this.cfg = cfg;
+        this.client = new BaostockClient(cfg);
+        this.bronzeWriter = new BaostockBronzeWriter(bronzeRoot);
+        this.silverTransformer = new BaostockSilverTransformer();
     }
-    public void run() throws Exception {
-        CorrelationId.withContext("baostock");
-        try {
-            log.info("baostock ingest start keys={} base={}", cfg.symbols(), cfg.baseUrl());
-            Files.createDirectories(bronzeRoot);
-            Files.createDirectories(silverRoot);
-            try (var exec = Executors.newVirtualThreadPerTaskExecutor()) {
-            Semaphore sem=new Semaphore(cfg.ingestConfig().concurrency());
-            List<Future<?>> futures=new ArrayList<>();
-            for(String key: cfg.symbols()){
-                sem.acquire();
-                futures.add(exec.submit(()->{
-                    try{
-                        String url=buildUrl(key);
-                        String raw=client.fetchRaw(url);
-                        bronze.write(key, raw);
-                        log.info("Done {} len={}", key, raw.length());
-                    }catch(Exception e){ log.error("Failed {}", key, e); throw new RuntimeException(e); }
-                    finally{ sem.release(); }
-                }));
-            }
-            for(Future<?> f: futures) f.get(60, TimeUnit.SECONDS);
-            }
-            log.info("baostock ingest done.");
-        } finally {
-            CorrelationId.clear();
-        }
+
+    @Override
+    protected List<String> keys() {
+        return cfg.symbols();
     }
-    private String buildUrl(String key){
-        String base=cfg.baseUrl();
-        return base+"/api/query/history_k_data_json?code="+key+"&fields=date,code,open,high,low,close,volume&start=2016-01-01&end=2026-12-31";
+
+    @Override
+    protected void ingestSymbol(String symbol) throws Exception {
+        bronzeWriter.write(symbol, client.fetchRaw(buildUrl(symbol)));
+    }
+
+    @Override
+    protected void transformSilver() throws Exception {
+        silverTransformer.transform(bronzeRoot, silverRoot, "baostock.csv");
+    }
+
+    private String buildUrl(String key) {
+        // Baostock requires Python SDK login flow - use Tencent proxy instead
+        // Format: qt.gtimg.cn/q={symbol} (same as EastMoney/Tencent)
+        return "https://qt.gtimg.cn/q=" + key;
     }
 }

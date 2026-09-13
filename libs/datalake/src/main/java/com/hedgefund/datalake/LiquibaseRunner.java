@@ -20,21 +20,63 @@ import java.sql.*;
  */
 public class LiquibaseRunner {
 
+    private static String rewriteForDuckDB(String sql) {
+        if (sql == null || sql.trim().isEmpty()) return "SELECT 1";
+        if (sql.trim().equalsIgnoreCase("call current_schema")) return "SELECT current_schema()";
+        if (sql.toUpperCase().contains("FOR UPDATE")) sql = sql.replaceAll("(?i)\\s+FOR\\s+UPDATE", "");
+        if (sql.toUpperCase().contains("FOR SHARE")) sql = sql.replaceAll("(?i)\\s+FOR\\s+SHARE", "");
+        return sql;
+    }
+
+    private static java.sql.CallableStatement wrapCallable(java.sql.PreparedStatement ps) {
+        return (java.sql.CallableStatement) Proxy.newProxyInstance(
+            ps.getClass().getClassLoader(), new Class[]{java.sql.CallableStatement.class},
+            (proxy, method, args) -> {
+                try {
+                    return method.invoke(ps, args);
+                } catch (InvocationTargetException e) {
+                    throw e.getCause();
+                } catch (IllegalArgumentException e) {
+                    // CallableStatement-only methods (out params) — not supported by DuckDB
+                    throw new java.sql.SQLFeatureNotSupportedException(method.getName());
+                }
+            });
+    }
+
+    private static java.sql.Statement wrapStatement(java.sql.Statement st) {
+        return (java.sql.Statement) Proxy.newProxyInstance(
+            st.getClass().getClassLoader(), new Class[]{java.sql.Statement.class},
+            (proxy, method, args) -> {
+                if (args != null && args.length >= 1 && args[0] instanceof String) {
+                    args[0] = rewriteForDuckDB((String) args[0]);
+                }
+                try { return method.invoke(st, args); }
+                catch (InvocationTargetException e) { throw e.getCause(); }
+            });
+    }
+
     private static Connection wrapDuckDB(Connection raw) {
         return (Connection) Proxy.newProxyInstance(
             raw.getClass().getClassLoader(), new Class[]{Connection.class},
             (proxy, method, args) -> {
                 if ("prepareCall".equals(method.getName()) && args != null && args.length >= 1 && args[0] instanceof String) {
-                    String sql = (String) args[0];
-                    if (sql == null || sql.trim().isEmpty()) sql = "SELECT 1";
-                    if (sql.toUpperCase().contains("FOR UPDATE")) sql = sql.replaceAll("(?i)\\s+FOR\\s+UPDATE", "");
-                    if (sql.toUpperCase().contains("FOR SHARE")) sql = sql.replaceAll("(?i)\\s+FOR\\s+SHARE", "");
-                    if (args.length == 1) return raw.prepareStatement(sql);
-                    if (args.length == 3) return raw.prepareStatement(sql, (Integer) args[1], (Integer) args[2]);
-                    return raw.prepareStatement(sql);
+                    String sql = rewriteForDuckDB((String) args[0]);
+                    java.sql.PreparedStatement ps;
+                    if (args.length == 1) ps = raw.prepareStatement(sql);
+                    else if (args.length == 3) ps = raw.prepareStatement(sql, (Integer) args[1], (Integer) args[2]);
+                    else ps = raw.prepareStatement(sql);
+                    return wrapCallable(ps);
                 }
-                try { return method.invoke(raw, args); }
+                if ("prepareStatement".equals(method.getName()) && args != null && args.length >= 1 && args[0] instanceof String) {
+                    args[0] = rewriteForDuckDB((String) args[0]);
+                }
+                Object result;
+                try { result = method.invoke(raw, args); }
                 catch (InvocationTargetException e) { throw e.getCause(); }
+                if ("createStatement".equals(method.getName()) && result instanceof java.sql.Statement) {
+                    return wrapStatement((java.sql.Statement) result);
+                }
+                return result;
             });
     }
 

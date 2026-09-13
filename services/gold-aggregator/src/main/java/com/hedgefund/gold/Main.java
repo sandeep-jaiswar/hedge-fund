@@ -44,6 +44,47 @@ public class Main {
             Files.writeString(outAll, sb.toString());
             System.out.println("Gold all_sources_summary -> "+outAll);
         }
+
+        // FRED typed gold: real rates, yield curve
+        {
+            String fredSilver = root.resolve("data/silver/fred/fred.csv").toString();
+            if (Files.exists(Path.of(fredSilver))) {
+                Path out = goldRoot.resolve("fred_real_rates.csv");
+                c.createStatement().execute("COPY (SELECT series_id, date, value, CASE WHEN series_id='DGS10' AND EXISTS(SELECT 1 FROM read_csv('" + fredSilver + "', header=true) WHERE series_id='CPIAUCSL') THEN (SELECT AVG(value) FROM read_csv('" + fredSilver + "', header=true) WHERE series_id='CPIAUCSL') END as cpi_avg, value - (SELECT AVG(value) FROM read_csv('" + fredSilver + "', header=true) WHERE series_id='CPIAUCSL') as real_rate FROM read_csv('" + fredSilver + "', header=true) WHERE series_id IN ('DGS10', 'T10Y2Y', 'DFF') ORDER BY series_id, date) TO '" + out.toString() + "' (HEADER, DELIMITER ',')");
+                System.out.println("Gold fred_real_rates -> " + out);
+            }
+        }
+
+        // Treasury yield curve gold
+        {
+            String treasurySilver = root.resolve("data/silver/treasury/treasury.csv").toString();
+            if (Files.exists(Path.of(treasurySilver))) {
+                Path out = goldRoot.resolve("treasury_yield_curve.csv");
+                c.createStatement().execute("COPY (SELECT date, \"1 Mo\", \"3 Mo\", \"6 Mo\", \"1 Yr\", \"2 Yr\", \"3 Yr\", \"5 Yr\", \"7 Yr\", \"10 Yr\", \"20 Yr\", \"30 Yr\" FROM read_csv('" + treasurySilver + "', header=true) ORDER BY date) TO '" + out.toString() + "' (HEADER, DELIMITER ',')");
+                System.out.println("Gold treasury_yield_curve -> " + out);
+            }
+        }
+
+        // EIA oil prices gold
+        {
+            String eiaSilver = root.resolve("data/silver/eia/eia.csv").toString();
+            if (Files.exists(Path.of(eiaSilver))) {
+                Path out = goldRoot.resolve("eia_oil_prices.csv");
+                c.createStatement().execute("COPY (SELECT date, price, 'WTI' as type FROM read_csv('" + eiaSilver + "', header=true) ORDER BY date) TO '" + out.toString() + "' (HEADER, DELIMITER ',')");
+                System.out.println("Gold eia_oil_prices -> " + out);
+            }
+        }
+
+        // SEC filings gold (placeholder - needs XBRL parsing)
+        {
+            String secSilver = root.resolve("data/silver/sec/sec.csv").toString();
+            if (Files.exists(Path.of(secSilver))) {
+                Path out = goldRoot.resolve("sec_filings.csv");
+                c.createStatement().execute("COPY (SELECT * FROM read_csv('" + secSilver + "', header=true)) TO '" + out.toString() + "' (HEADER, DELIMITER ',')");
+                System.out.println("Gold sec_filings -> " + out);
+            }
+        }
+
         System.out.println("Gold aggregation done. Root="+goldRoot);
     }
 }

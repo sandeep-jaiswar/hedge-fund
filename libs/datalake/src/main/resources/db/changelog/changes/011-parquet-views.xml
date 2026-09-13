@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <!-- 011: Thin Parquet views. Parquet is the source of truth, DuckDB is the query engine.
+         All paths RELATIVE to project root (LiquibaseRunner sets CWD accordingly).
+         runOnChange=true so edits re-apply without reset.
+         Single-file parquets are written by SilverMerger (merge CLI); partitioned dirs
+         under market/ohlcv and macro/observations allow hive-pruning queries. -->
+
+    <changeSet id="011-01-silver-parquet-views" author="hedge-fund" runOnChange="true">
+        <sql>CREATE OR REPLACE VIEW hedge_silver.yahoo_ohlcv AS SELECT * FROM read_parquet('datalake/data/silver/market/ohlcv.parquet')</sql>
+        <sql>CREATE OR REPLACE VIEW hedge_silver.worldbank_observations AS SELECT * FROM read_parquet('datalake/data/silver/macro/observations.parquet')</sql>
+        <sql>CREATE OR REPLACE VIEW hedge_silver.fred AS SELECT * FROM read_parquet('datalake/data/silver/fred.parquet')</sql>
+        <sql>CREATE OR REPLACE VIEW hedge_silver.sec AS SELECT * FROM read_parquet('datalake/data/silver/sec.parquet')</sql>
+        <sql>CREATE OR REPLACE VIEW hedge_silver.treasury AS SELECT * FROM read_parquet('datalake/data/silver/treasury.parquet')</sql>
+        <sql>CREATE OR REPLACE VIEW hedge_silver.binance AS SELECT * FROM read_parquet('datalake/data/silver/binance.parquet')</sql>
+        <sql>CREATE OR REPLACE VIEW hedge_silver.coinbase AS SELECT * FROM read_parquet('datalake/data/silver/coinbase.parquet')</sql>
+        <sql>CREATE OR REPLACE VIEW hedge_silver.defillama AS SELECT * FROM read_parquet('datalake/data/silver/defillama.parquet')</sql>
+        <sql>CREATE OR REPLACE VIEW hedge_silver.cboe AS SELECT * FROM read_parquet('datalake/data/silver/cboe.parquet')</sql>
+        <rollback><comment>Views recreated by 010-23 on rollback</comment></rollback>
+    </changeSet>
+
+    <changeSet id="011-02-gold-parquet-views" author="hedge-fund" runOnChange="true">
+        <sql>CREATE OR REPLACE VIEW hedge_gold.yahoo_summary_parquet AS SELECT * FROM read_parquet('datalake/data/gold/yahoo_summary.parquet')</sql>
+        <sql>CREATE OR REPLACE VIEW hedge_gold.worldbank_yoy_parquet AS SELECT * FROM read_parquet('datalake/data/gold/worldbank_yoy.parquet')</sql>
+        <sql>CREATE OR REPLACE VIEW hedge_gold.all_sources_summary_parquet AS SELECT * FROM read_parquet('datalake/data/gold/all_sources_summary.parquet')</sql>
+        <rollback><comment>No rollback needed</comment></rollback>
+    </changeSet>
+</databaseChangeLog>

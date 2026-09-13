@@ -4,6 +4,7 @@ import org.duckdb.DuckDBConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.nio.file.*;
 import java.sql.*;
 import java.util.*;
@@ -33,6 +34,13 @@ public class SilverMerger {
         Path bronzeRoot = datalakeRoot.resolve("data/bronze/yahoo");
         Path silverRoot = datalakeRoot.resolve("data/silver/market/ohlcv");
         Files.createDirectories(silverRoot);
+        Path marketCsv = datalakeRoot.resolve("data/silver/yahoo/yahoo_ohlcv.csv");
+        Path marketSingle = datalakeRoot.resolve("data/silver/market/ohlcv.parquet");
+        String marketFp = fingerprint(Files.exists(marketCsv) ? marketCsv : bronzeRoot);
+        if (Files.exists(marketSingle) && unchanged(datalakeRoot, "market/ohlcv", marketFp)) {
+            log.info("skip unchanged market ohlcv");
+            return;
+        }
         String bronzeGlob = datalakeRoot.resolve("data/bronze/yahoo/**/data.ndjson").toString();
         // Fallback: if no ndjson, use existing csv as source (migration path)
         String csvPath = datalakeRoot.resolve("data/silver/yahoo/yahoo_ohlcv.csv").toString();
@@ -49,7 +57,9 @@ public class SilverMerger {
                       FROM read_csv('%s', header=true)
                     ) WHERE rn=1
                     """, csvPath.replace("'", "''")));
-                log.info("tmp from csv count={}", c.createStatement().executeQuery("SELECT count(*) FROM tmp").getLong(1));
+                var tmpCount = c.createStatement().executeQuery("SELECT count(*) FROM tmp");
+                tmpCount.next();
+                log.info("tmp from csv count={}", tmpCount.getLong(1));
             } else if (Files.exists(bronzeRoot)) {
                 c.createStatement().execute(String.format("""
                     CREATE OR REPLACE TABLE tmp AS
@@ -75,8 +85,11 @@ public class SilverMerger {
             // Also keep single file for simple read_parquet(**/*.parquet)
             Path single = datalakeRoot.resolve("data/silver/market/ohlcv.parquet");
             c.createStatement().execute(String.format("COPY tmp TO '%s' (FORMAT PARQUET, COMPRESSION ZSTD)", single.toString().replace("'", "''")));
-            long cnt = c.createStatement().executeQuery("SELECT count(*) FROM tmp").getLong(1);
+            var cntRs = c.createStatement().executeQuery("SELECT count(*) FROM tmp");
+            cntRs.next();
+            long cnt = cntRs.getLong(1);
             log.info("silver_market_ohlcv merged {} rows -> {}", cnt, silverRoot);
+            markDone(datalakeRoot, "market/ohlcv", marketFp);
         }
     }
 
@@ -85,6 +98,12 @@ public class SilverMerger {
         Path outRoot = datalakeRoot.resolve("data/silver/macro/observations");
         Files.createDirectories(outRoot);
         if (!Files.exists(Path.of(csv))) { log.warn("No worldbank csv {}", csv); return; }
+        String wbFp = fingerprint(Path.of(csv));
+        Path wbSingle = datalakeRoot.resolve("data/silver/macro/observations.parquet");
+        if (Files.exists(wbSingle) && unchanged(datalakeRoot, "macro/observations", wbFp)) {
+            log.info("skip unchanged macro observations");
+            return;
+        }
         try (Connection c = DriverManager.getConnection("jdbc:duckdb:")) {
             c.createStatement().execute(String.format("""
                 CREATE OR REPLACE TABLE tmp AS
@@ -103,12 +122,19 @@ public class SilverMerger {
             Path single = datalakeRoot.resolve("data/silver/macro/observations.parquet");
             c.createStatement().execute(String.format("COPY tmp TO '%s' (FORMAT PARQUET, COMPRESSION ZSTD)", single.toString().replace("'", "''")));
             log.info("silver_macro_observations merged {} rows -> {}", cnt, outRoot);
+            markDone(datalakeRoot, "macro/observations", wbFp);
         }
     }
 
     /** Generic CSV -> partitioned Parquet for any silver csv (cboe, binance, etc. — passthrough, no dedup yet) */
     public static void copyCsvToParquet(Path csv, Path parquet) throws Exception {
         if (!Files.exists(csv)) return;
+        Path root = findSilverRoot(parquet);
+        String unit = root != null ? root.relativize(parquet).toString() : parquet.getFileName().toString();
+        if (root != null && unchanged(root, unit, fingerprint(csv))) {
+            log.info("skip unchanged {} -> {}", csv, parquet);
+            return;
+        }
         Files.createDirectories(parquet.getParent());
         try (Connection c = DriverManager.getConnection("jdbc:duckdb:")) {
             c.createStatement().execute(String.format("COPY (SELECT * FROM read_csv('%s', header=true)) TO '%s' (FORMAT PARQUET, COMPRESSION ZSTD)",
@@ -116,6 +142,84 @@ public class SilverMerger {
             ResultSet rs = c.createStatement().executeQuery(String.format("SELECT count(*) FROM read_csv('%s', header=true)", csv.toString().replace("'", "''")));
             rs.next(); log.info("copy {} -> {} rows={}", csv, parquet, rs.getLong(1));
         }
+        if (root != null) markDone(root, unit, fingerprint(csv));
+    }
+
+    // ---- incremental skip: fingerprint inputs, remember per-unit state ----
+
+    private static Path findSilverRoot(Path p) {
+        for (Path cur = p.toAbsolutePath(); cur != null; cur = cur.getParent()) {
+            if (cur.getFileName() != null && cur.getFileName().toString().equals("silver")
+                && Files.exists(cur.getParent().resolve("bronze"))) {
+                return cur.getParent();
+            }
+        }
+        return null;
+    }
+
+    /** Fingerprint = max mtime + total size + file count over inputs (metadata walk, no reads). */
+    static String fingerprint(Path... inputs) throws IOException {
+        long maxMtime = 0, totalSize = 0, count = 0;
+        for (Path in : inputs) {
+            if (!Files.exists(in)) continue;
+            if (Files.isRegularFile(in)) {
+                maxMtime = Math.max(maxMtime, Files.getLastModifiedTime(in).toMillis());
+                totalSize += Files.size(in);
+                count++;
+            } else {
+                try (var stream = Files.walk(in)) {
+                    for (Path p : (Iterable<Path>) stream::iterator) {
+                        if (Files.isRegularFile(p)) {
+                            maxMtime = Math.max(maxMtime, Files.getLastModifiedTime(p).toMillis());
+                            totalSize += Files.size(p);
+                            count++;
+                        }
+                    }
+                }
+            }
+        }
+        return maxMtime + ":" + totalSize + ":" + count;
+    }
+
+    private static Map<String, String> loadState(Path datalakeRoot) {
+        Path state = datalakeRoot.resolve("data/silver/.merge_state.json");
+        if (!Files.exists(state)) return new HashMap<>();
+        try {
+            String json = Files.readString(state).trim();
+            Map<String, String> out = new HashMap<>();
+            if (json.startsWith("{")) {
+                for (String kv : json.substring(1, json.lastIndexOf('}')).split(",")) {
+                    String[] parts = kv.split(":", 2);
+                    if (parts.length == 2) out.put(parts[0].trim().replaceAll("^\"|\"$", ""),
+                        parts[1].trim().replaceAll("^\"|\"$", ""));
+                }
+            }
+            return out;
+        } catch (Exception e) {
+            return new HashMap<>();
+        }
+    }
+
+    private static void saveState(Path datalakeRoot, Map<String, String> state) {
+        try {
+            StringBuilder sb = new StringBuilder("{");
+            state.forEach((k, v) -> sb.append("\"").append(k).append("\":\"").append(v).append("\","));
+            if (sb.length() > 1) sb.setLength(sb.length() - 1);
+            sb.append("}");
+            Files.writeString(datalakeRoot.resolve("data/silver/.merge_state.json"), sb.toString());
+        } catch (Exception e) {
+            log.warn("merge state save failed", e);
+        }
+    }
+
+    private static boolean unchanged(Path datalakeRoot, String unit, String fp) {
+        return fp.equals(loadState(datalakeRoot).get(unit));
+    }
+
+    private static void markDone(Path datalakeRoot, String unit, String fp) {
+        Map<String, String> state = loadState(datalakeRoot);
+        state.put(unit, fp);
+        saveState(datalakeRoot, state);
     }
 
     public static void main(String[] args) throws Exception {

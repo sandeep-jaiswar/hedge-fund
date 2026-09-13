@@ -40,4 +40,13 @@ public final class TestDataFactory {
         return """
             {"chart":{"result":[{"meta":{"symbol":"%s"},"timestamp":[1700000000,1700086400],"indicators":{"quote":[{"open":[100.0,101.0],"high":[105.0,106.0],"low":[99.0,100.0],"close":[103.0,104.0],"volume":[1000000,1100000]}],"adjclose":[{"adjclose":[103.0,104.0]}]}}]}}""".formatted(symbol);
     }
+
+    public static String sampleBinanceKlinesResponse(String symbol) {
+        return "[[1700000000000,\"100.00\",\"105.00\",\"99.00\",\"103.00\",\"1000000\",1700086400000,\"1000000\",1000,\"500000\",\"1000000\",0]]";
+    }
+
+    public static String sampleFredObservationsResponse(String seriesId) {
+        return """
+            {"realtime_start":"2024-01-01","realtime_end":"2024-01-01","observation_start":"1970-01-01","observation_end":"2024-01-01","units":"lin","output_type":1,"file_type":json","order_by":"observation_date","sort_order":"asc","count":1,"offset":0,"limit":1,"observations":[{"realtime_start":"2024-01-01","realtime_end":"2024-01-01","date":"2024-01-01","value":"4.25"}]}""";
+    }
 }

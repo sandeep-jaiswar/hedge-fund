@@ -4,78 +4,39 @@ import com.hedgefund.sec.client.SecClient;
 import com.hedgefund.sec.config.SecConfig;
 import com.hedgefund.sec.store.SecBronzeWriter;
 import com.hedgefund.sec.store.SecSilverTransformer;
-import com.hedgefund.observability.logging.CorrelationId;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.*;
+import com.hedgefund.ingest.service.AbstractIngestService;
 
-public class SecIngestService {
-
-    private static final Logger log = LoggerFactory.getLogger(SecIngestService.class);
+/** Thin source adapter: URL + fetch only. Concurrency, retry, watermark via framework. */
+public class SecIngestService extends AbstractIngestService {
 
     private final SecConfig cfg;
     private final SecClient client;
-    private final SecBronzeWriter bronze;
-    private final SecSilverTransformer silver;
-    private final Path bronzeRoot;
-    private final Path silverRoot;
+    private final SecBronzeWriter bronzeWriter;
+    private final SecSilverTransformer silverTransformer;
 
     public SecIngestService(SecConfig cfg, Path datalakeRoot) {
+        super(cfg.ingestConfig(), datalakeRoot);
         this.cfg = cfg;
         this.client = new SecClient(cfg);
-        this.bronzeRoot = datalakeRoot.resolve(cfg.paths().bronze());
-        this.silverRoot = datalakeRoot.resolve(cfg.paths().silver());
-        this.bronze = new SecBronzeWriter(bronzeRoot);
-        this.silver = new SecSilverTransformer();
+        this.bronzeWriter = new SecBronzeWriter(bronzeRoot);
+        this.silverTransformer = new SecSilverTransformer();
     }
 
-    public void run() throws Exception {
-        CorrelationId.withContext("sec");
-        log.info("sec ingest start keys={} base={}", cfg.effectiveKeys(), cfg.baseUrl());
+    @Override
+    protected List<String> keys() {
+        return cfg.effectiveKeys();
+    }
 
-        Files.createDirectories(bronzeRoot);
-        Files.createDirectories(silverRoot);
+    @Override
+    protected void ingestSymbol(String symbol) throws Exception {
+        bronzeWriter.write(symbol, client.fetchRaw(buildUrl(symbol)));
+    }
 
-        try (var exec = Executors.newVirtualThreadPerTaskExecutor()) {
-            Semaphore sem = new Semaphore(cfg.concurrency());
-            List<Future<?>> futures = new ArrayList<>();
-
-            for (String key : cfg.effectiveKeys()) {
-                sem.acquire();
-                futures.add(exec.submit(() -> {
-                    CorrelationId.withContext("sec");
-                    try {
-                        String url = buildUrl(key);
-                        String raw = client.fetchRaw(url);
-                        bronze.write(key, raw);
-                        log.info("Done {} len={}", key, raw.length());
-                    } catch (Exception e) {
-                        log.error("Failed {}", key, e);
-                        throw new RuntimeException(e);
-                    } finally {
-                        sem.release();
-                        CorrelationId.clear();
-                    }
-                }));
-            }
-
-            for (Future<?> f : futures) {
-                f.get(60, TimeUnit.SECONDS);
-            }
-        }
-
-        Path out = silver.transform(bronzeRoot, silverRoot, "sec.csv");
-        log.info("Silver wrote {}", out);
-
-        Files.writeString(bronzeRoot.resolve("_watermark.json"),
-            "{\"lastRun\":\"" + java.time.Instant.now() + "\",\"keys\":" + cfg.effectiveKeys().size() + "}");
-
-        CorrelationId.clear();
+    @Override
+    protected void transformSilver() throws Exception {
+        silverTransformer.transform(bronzeRoot, silverRoot, "sec.csv");
     }
 
     private String buildUrl(String key) {

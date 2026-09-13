@@ -12,6 +12,7 @@ import java.util.Map;
 
 public record FredConfig(
     String baseUrl,
+    String apiKey,
     List<String> series,
     String interval,
     int limit,
@@ -24,6 +25,7 @@ public record FredConfig(
         if (m == null) m = Map.of();
 
         String baseUrl = (String) m.getOrDefault("baseUrl", "https://fred.stlouisfed.org");
+        String apiKey = (String) m.getOrDefault("apiKey", "");
         List<String> series = (List<String>) m.getOrDefault("series",
             m.getOrDefault("tickers",
                 m.getOrDefault("protocols",
@@ -32,12 +34,13 @@ public record FredConfig(
         int limit = ((Number) m.getOrDefault("limit", 30)).intValue();
 
         IngestConfig ingest = IngestConfigLoader.loadFromYaml(path, "fred");
-        return new FredConfig(baseUrl, series, interval, limit, ingest);
+        return new FredConfig(baseUrl, apiKey, series, interval, limit, ingest);
     }
 
     public static FredConfig defaults() {
         return new FredConfig(
             "https://fred.stlouisfed.org",
+            "",
             List.of("DGS10"),
             "1d",
             30,

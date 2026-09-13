@@ -21,12 +21,15 @@ public abstract class AbstractHttpClient {
     protected final HttpClient http;
     protected long lastRequestAt = 0;
 
+    /** Shared connection pool: one HttpClient for all sources (HTTP/1.1 keep-alive + virtual threads). */
+    private static final HttpClient SHARED = HttpClient.newBuilder()
+        .connectTimeout(Duration.ofSeconds(10))
+        .executor(Executors.newVirtualThreadPerTaskExecutor())
+        .build();
+
     protected AbstractHttpClient(IngestConfig config) {
         this.config = config;
-        this.http = HttpClient.newBuilder()
-            .connectTimeout(Duration.ofSeconds(10))
-            .executor(Executors.newVirtualThreadPerTaskExecutor())
-            .build();
+        this.http = SHARED;
     }
 
     protected synchronized void throttle() throws InterruptedException {

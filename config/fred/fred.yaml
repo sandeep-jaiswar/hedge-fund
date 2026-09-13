@@ -1,5 +1,6 @@
 fred:
   baseUrl: "https://fred.stlouisfed.org"
+  apiKey: ""  # Register at https://fred.stlouisfed.org/docs/api/api_key.html for free API key
   series: ["DGS10", "DFF", "UNRATE", "CPIAUCSL", "T10Y2Y"]
   limit: 3650
   concurrency: 3

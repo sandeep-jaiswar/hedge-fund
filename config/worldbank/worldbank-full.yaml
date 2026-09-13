@@ -3,7 +3,7 @@ worldbank:
   fullCrawl: true
   countries: ["all"]
   source: "2"
-  date: "2020:2024"
+  date: "2015:2024"
   perPage: 1000
   maxPages: 0
   maxIndicatorsPerRequest: 20

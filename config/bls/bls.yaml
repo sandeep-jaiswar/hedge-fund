@@ -1,6 +1,7 @@
 bls:
-  baseUrl: "https://download.bls.gov"
-  symbols: ["cpi"]
+  baseUrl: "https://api.bls.gov"
+  apiKey: ""  # Register at https://www.bls.gov/developers/ for free API key (500 requests/day)
+  symbols: ["CUUR0000SA0", "LNS14000000", "CES0000000001"]  # CPI-U, Unemployment Rate, Total Nonfarm Payroll
   concurrency: 2
   retry: {maxAttempts: 3, backoffMs: 800, maxBackoffMs: 8000}
   rateLimit: {qps: 2, burst: 4}

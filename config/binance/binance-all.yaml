@@ -1,0 +1,49 @@
+binance:
+  baseUrl: "https://api.binance.com"
+  symbols:
+    # Major Crypto
+    - "BTCUSDT"
+    - "ETHUSDT"
+    - "BNBUSDT"
+    - "SOLUSDT"
+    - "XRPUSDT"
+    - "ADAUSDT"
+    - "DOGEUSDT"
+    - "DOTUSDT"
+    - "AVAXUSDT"
+    - "LINKUSDT"
+    - "MATICUSDT"
+    - "UNIUSDT"
+    - "ATOMUSDT"
+    - "LTCUSDT"
+    - "FILUSDT"
+
+    # DeFi
+    - "AAVEUSDT"
+    - "MKRUSDT"
+    - "COMPUSDT"
+    - "SNXUSDT"
+    - "CRVUSDT"
+
+    # Layer 1
+    - "NEARUSDT"
+    - "APTUSDT"
+    - "SUIUSDT"
+    - "HBARUSDT"
+    - "ICPUSDT"
+
+    # Memecoins
+    - "SHIBUSDT"
+    - "PEPEUSDT"
+    - "FLOKIUSDT"
+
+    # Stablecoin Pairs
+    - "BTCBUSD"
+    - "ETHBUSD"
+
+  interval: "1d"
+  limit: 3650
+  concurrency: 4
+  retry: {maxAttempts: 3, backoffMs: 800, maxBackoffMs: 8000}
+  rateLimit: {qps: 2, burst: 4}
+  paths: {bronze: "data/bronze/binance", silver: "data/silver/binance", catalog: "catalog/glue.json"}
